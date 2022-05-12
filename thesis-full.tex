@@ -19,22 +19,33 @@
 
 \bibliographystyle{plainurl}% the mandatory bibstyle
 
-\title{Master's Thesis} %TODO Please add
+\title{Master's Thesis} %TODO: Please add
 
-%\titlerunning{Dummy short title} %TODO optional, please use if title is longer than one line
+%\titlerunning{Dummy short title} %TODO: optional, please use if title is longer than one line
 
-%\author{VR Sathiyanarayana {Open Access}}{Chennai Mathematical Institute, India \and \url{http://www.cmi.ac.in} }{sathiyanarayana@cmi.ac.in}{https://orcid.org/0000-0002-1825-0097}{(Optional) author-specific funding acknowledgements}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional. Use additional curly braces to indicate the correct name splitting when the last name consists of multiple name parts.
-\author{VR Sathiyanarayana}{Chennai Mathematical Institute, India \and \url{http://sathiyavrs.netlify.com} }{sathiyanarayana@cmi.ac.in}{}{}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional. Use additional curly braces to indicate the correct name splitting when the last name consists of multiple name parts.
+\author{V.R. Sathiyanarayana}{Chennai Mathematical Institute, India \and \url{http://sathiyavrs.netlify.app}}{sathiyanarayana@cmi.ac.in}{}{}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional. Use additional curly braces to indicate the correct name splitting when the last name consists of multiple name parts.
 
 %\author{Joan R. Public\footnote{Optional footnote, e.g. to mark corresponding author}}{Department of Informatics, Dummy College, [optional: Address], Country}{joanrpublic@dummycollege.org}{[orcid]}{[funding]}
 
-\authorrunning{J. Open Access and J.\,R. Public} %TODO mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
+\authorrunning{V.R. Sathiyanarayana} % mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
 
-\Copyright{Jane Open Access and Joan R. Public} %TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+\Copyright{Jane Open Access and Joan R. Public} %TODO: mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/ % TODO: Fill something here
 
-\ccsdesc[100]{\textcolor{red}{Replace ccsdesc macro with valid one}} %TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10003752.10003790.10003793</concept_id>
+<concept_desc>Theory of computation~Modal and temporal logics</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
 
-\keywords{Logic} %TODO mandatory; please add comma-separated list of keywords
+\ccsdesc[500]{Theory of computation~Modal and temporal logics}
+
+%\ccsdesc[100]{\textcolor{red}{Replace ccsdesc macro with valid one}} %TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm
+
+\keywords{Logic, Modal and temporal logic} %TODO mandatory; please add comma-separated list of keywords
 
 \category{} %optional, e.g. invited paper
 
@@ -83,9 +94,9 @@ The separation property, invented by Dov Gabbay, is a strangely influential cons
 
 Before discussing separation, we define some standard notions. A flow of time is simply a non-empty set $T$ partially ordered by the binary relation $<$. We symbolically refer to these flows by the pair $(T, <)$. Examples include $(\mathbb{N}, <)$ and $(\mathbb{R}, <)$ with their natural ordering, unordered trees with the descendant relation, and Mazurkiewicz traces. We will consider the truth values of propositions (from a fixed set $\mathcal{P}$) at points on these flows.
 
-The first-order vocabulary over these structures contains the ordering relation $<$ and a collection of *monadic* relations $Q_1, Q_2, \cdots$ that match the propositions $q_1, q_2, \cdots$ in $\mathcal{P}$. An assignment $h$ of atoms in a time flow $(T, <)$ assigns to each $Q_i$ a subset of $T$ where the atom $q_i$ is true. Augmented with the assignment, the triplet $(T, <, h)$ is called a *temporal structure*. First-order formulas are evaluated over these structures in the usual way. In this discussion, we pay special attention to first-order formulas with a single free-variable; they quite naturally mirror temporal formulas.
+The first-order vocabulary over these structures contains the ordering relation $<$ and a collection of \textit{monadic} relations $Q_1, Q_2, \cdots$ that match the propositions $q_1, q_2, \cdots$ in $\mathcal{P}$. An assignment $h$ of atoms in a time flow $(T, <)$ assigns to each $Q_i$ a subset of $T$ where the atom $q_i$ is true. Augmented with the assignment, the triplet $(T, <, h)$ is called a \textit{temporal structure}. First-order formulas are evaluated over these structures in the usual way. In this discussion, we pay special attention to first-order formulas with a single free-variable; they quite naturally mirror temporal formulas.
 
-Instead of free variables and quantification, temporal languages employ *connectives* to reason through time. Popular connectives include $F$, $P$, $G$, $H$, $U$, and $S$, known as \textit{future}, \textit{past}, \textit{globally}, \textit{history}, \textit{until} and \textit{since} respectively. In this paper, we will limit our discussion to connectives that are definable by monadic first-order formulas.
+Instead of free variables and quantification, temporal languages employ \textit{connectives} to reason through time. Popular connectives include $F$, $P$, $G$, $H$, $U$, and $S$, known as \textit{future}, \textit{past}, \textit{globally}, \textit{history}, \textit{until} and \textit{since} respectively. In this paper, we will limit our discussion to connectives that are definable by monadic first-order formulas.
 
 Temporal formulas are evaluated at points in time. In a temporal structure $\mathcal{M} = (T, <, h)$, atoms are evaluated as
 \begin{equation*}
@@ -123,28 +134,28 @@ Note that, unlike the typical definition of $U$, $\varphi_U$ doesn’t rely on t
 \begin{equation*}
     \mathcal{M}, t \vDash A \Longleftrightarrow \mathcal{M}[x \mapsto t] \vDash \varphi(x)
 \end{equation*}
-    For any flow $\mathcal{M}$ in the class. Relatedly, a flow of time $(T, <)$ is termed to be expressively complete if there exists an expressively complete temporal language over it.
+    for any flow $\mathcal{M}$ in the class.
 \end{definition}
+On a related note, a flow of time $(T, <)$ is termed to be expressively complete if there exists an expressively complete temporal language over it.
 
 \section{Linear Flows}
 
 In \cite{gabbay1994}, Gabbay showed how the temporal language $\mathbf{L}$ with the strict until $U$ and since $S$ connectives satisfies the separation property over the integer time flow $(\mathbb{Z}, <)$.
 
 To discuss this further, we need the notion of \textit{regions} and \textit{pure formulas}. Informally, the flow of time $(T, <)$ is partitioned into a set of regions. The positions of these regions depends on the position of the time point $t$ where the temporal formula is being evaluated. For linear flows, Gabbay selected three regions:
-
 \begin{itemize}
     \item The \textit{past} of $t$, formally defined as $\{ x \mid x \in \mathbb{Z} \land x < t\}$.
     \item The \textit{present}, which is simply $\{ t \}$.
     \item The \textit{future} of $t$, which naturally is $\{x \mid x \in \mathbb{Z} \land t < x\}$
 \end{itemize}
-
 Note that these regions are disjoint, and that the union of these regions produces the entire flow. Also, notice that these regions are first-order definable.
 
-Now, we define \textit{pure formulas}. For any flow $(T, <)$, we denote two assignments $h$ and $h'$ to be in agreement over a region $R \subset T$ \textit{iff} for any atom $q \in \mathcal{P}$ and any point $s \in R$,
+% TODO: Consider writing these in \begin{definition}
+Now, we define \textit{pure formulas}. For any flow $(T, <)$, we denote two assignments $h$ and $h'$ to be in \textit{agreement} over a region $R \subset T$ \textit{iff} for any atom $q \in \mathcal{P}$ and any point $s \in R$,
 \begin{equation*}
     s \in h(q) \Longleftrightarrow s \in h'(q)
 \end{equation*}
-Now, call a temporal formula $A$ \textit{pure} with respect to a region $R$ *iff* for any two assignments $h$ and $h'$ that agree on that region,
+Now, call a temporal formula $A$ \textit{pure} with respect to a region $R$ \textit{iff} for any two assignments $h$ and $h'$ that agree on $R$,
 \begin{equation*}
     (T, <, h), t \vDash A \Longleftrightarrow (T, <, h'), t \vDash A
 \end{equation*}
@@ -160,14 +171,14 @@ The proof of this theorem is quite involved, and is presented in full detail in 
 
 \subsection{Separating $S$ and $U$ over linear time}
 
-%As a reminder, we restate the definitions of $U$ and $S$
-%\begin{equation*}
-%    \begin{aligned}
-%        \mathcal{M}, t \vDash U(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (t < x) \land p(x) \land \forall y \left( t < y < x \to q\left( y \right) \right)\\
-%        \mathcal{M}, t \vDash S(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (x < t) \land p(x) \land \forall y \left( x < y < t \to q\left( y \right) \right)
-%    \end{aligned}
-%\end{equation*}
-It's simple enough to notice that, over linear time, a formula composed only of $U$s is a pure future formula, a formula composed of $S$s is a pure past formula. The task, therefore, is to transform formulas with both $U$s and $S$es.
+As a reminder, we restate the definitions of $U$ and $S$
+\begin{equation*}
+    \begin{aligned}
+        \mathcal{M}, t \vDash U(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (t < x) \land p(x) \land \forall y \left( t < y < x \to q\left( y \right) \right)\\
+        \mathcal{M}, t \vDash S(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (x < t) \land p(x) \land \forall y \left( x < y < t \to q\left( y \right) \right)
+    \end{aligned}
+\end{equation*}
+For convenience, we refer to the left condition ($p$) in $U(p, q)$ as the \textit{target} condition and the right condition ($q$) as the \textit{path} condition. Observe that, over linear time, a formula composed only of $U$s is a pure future formula, a formula composed of $S$s is a pure past formula. The task, therefore, is to transform formulas with both $U$s and $S$es.
 
 Over the integer time flow $(\mathbb{Z}, <)$, these connectives naturally possess the following properties
 \begin{equation}
@@ -177,7 +188,7 @@ Over the integer time flow $(\mathbb{Z}, <)$, these connectives naturally posses
         U(\alpha, \beta \land \gamma) &\equiv U(\alpha, \beta) \land U(\alpha, \gamma)
     \end{aligned}
 \end{equation}
-In addition, their negations can be productively rewritten as
+In addition, their negations can be usefully rewritten as
 \begin{equation*}
     \begin{aligned}
         \lnot U(\alpha, \beta) &\equiv G(\lnot \alpha) \lor U(\lnot \alpha \land \lnot \beta, \lnot \alpha) \\
@@ -266,109 +277,81 @@ This is a neat combination of $S(\alpha \land U(\varphi, \psi), \beta)$ and $S(\
 
 \subsubsection{Putting it all together}
 
-The eliminations presented in the previous section lend initial credence to the idea of separation. Amazingly, Gabbay presents a neat induction scheme that builds off these rules to separate \textit{any} temporal formula in the language. In this subsection, we present an overview of his arguments (presented in more detail in \cite{gabbay1994}).
+The eliminations presented in the previous section lend credence to the idea of separation. Amazingly, Gabbay presents a neat induction scheme that builds on these rules to separate \textit{any} temporal formula in the language. In this section, we present an overview of his arguments (presented in more detail in \cite{gabbay1994}).
 
 \begin{lemma}
-\label{lemma:gabbay1}
-    Let $\alpha$ and $\beta$ be pure-present temporal formulas and $\varphi$ and $\psi$ be formulas where the only appearance of $U$ is $U(\alpha, \beta)$ and doesn't appear nested inside a $S$. Then $S(\varphi, \psi)$ can be written as a syntactically separated formula where the only appearance of $U$ is $U(\alpha, \beta)$.
+\label{lemma:separation-linear-step1}
+    Let $\varphi$ and $\psi$ be pure-present formulas and $\alpha$ and $\beta$ be formulas such that the only appearance of a $U$ in either of them is $U(\varphi, \psi)$, and that $U$ isn't nested inside a $S$. Then $S(\alpha, \beta)$ can be written as a syntactically separated formula where the only appearance of $U$ is $U(\varphi, \psi)$.
 \end{lemma}
-
 \begin{proof}
-    We start by writing $\varphi$ and $\psi$ in their conjunctive and disjunctive normal form respectively. In this transformation, we treat all top-level instances of $U$ and $S$ in $\varphi$ and $\psi$ as atomic propositions. This gives us
+    We start by writing $\alpha$ and $\beta$ in their conjunctive and disjunctive normal forms respectively. During this transformation, we treat all top-level instances of $U$ and $S$ in them as atomic propositions. This gives us
     \begin{equation*}
         \begin{aligned}
-            \varphi &\equiv \bigvee_i \left( \varphi_{i, 1} \land \varphi_{i, 2} \land \cdots \land \varphi_{i, m_i} \right)\\
-            \psi &\equiv \bigwedge_i \left( \psi_{i, 1} \lor \psi_{i, 2} \lor \cdots \lor \psi_{i, n_i} \right)
+            \alpha &\equiv \bigvee_i \left( \alpha_{i, 1} \land \alpha_{i, 2} \land \cdots \land \alpha_{i, m_i} \right)\\
+            \beta &\equiv \bigwedge_j \left( \beta_{j, 1} \lor \beta_{j, 2} \lor \cdots \lor \beta_{j, n_j} \right)
         \end{aligned}
     \end{equation*}
-    Now, we can use equation \ref{eq:or-and-S-U} to write $S(\varphi, \psi)$ as
+    Here, the literals $\alpha_{i, k}$ and $\beta_{i, k}$ are composed of propositional atoms, $S$ formulas, and $U(\varphi, \psi)$. We use the above and equation \eqref{eq:or-and-S-U} to write $S(\alpha, \beta)$ as
     \begin{equation*}
         \begin{aligned}
-            S(\varphi, \psi) &\longmapsto S\left(\bigvee_i (\varphi_{i, 1} \land \varphi_{i, 2} \land \cdots \land \varphi_{i, m_i}), \psi\right)\\
-            &\longmapsto \bigvee_i S(\varphi_{i, 1} \land \cdots \land \varphi_{i, m_i}, \psi)\\
-            &\longmapsto \bigvee_i S\left(\varphi_{i, 1} \land \cdots \land \varphi_{i, m_i}, \bigwedge_j \left( \psi_{j, 1} \lor \psi_{j, 2} \lor \cdots \lor \psi_{j, n_i} \right) \right)\\
-            &\longmapsto \bigvee_i \bigwedge_j S\left(\varphi_{i, 1} \land \cdots \land \varphi_{i, m_i}, \psi_{j, 1} \lor \psi_{j, 2} \lor \cdots \lor \psi_{j, n_i} \right)
+            S(\alpha, \beta) &\longmapsto S\left(\bigvee_i (\alpha_{i, 1} \land \cdots \land \alpha_{i, m_i}), \beta\right)\\
+            &\longmapsto \bigvee_i S(\alpha_{i, 1} \land \cdots \land \alpha_{i, m_i}, \beta)\\
+            &\longmapsto \bigvee_i S\left(\alpha_{i, 1} \land \cdots \land \alpha_{i, m_i}, \bigwedge_j \left( \beta_{j, 1} \lor \cdots \lor \beta_{j, n_i} \right) \right)\\
+            &\longmapsto \bigvee_i \bigwedge_j S\left(\alpha_{i, 1} \land \cdots \land \alpha_{i, m_i}, \beta_{j, 1} \lor \cdots \lor \beta_{j, n_i} \right)
         \end{aligned}
     \end{equation*}
-    In this final form, the literals $\varphi_{i_1, i_2}$ and $\psi_{j_1, j_2}$ are composed of atoms $p \in \mathcal{P}$, $S$ formulas, or $U$ formulas.
+    In the resulting formula, the target of each top-level $S$ is a conjunction of literals, and the path condition is a disjunction of literals. Notably, if $U(\varphi, \psi)$ doesn't appear in the target and the path of a top-level $S$ formula, that subformula is a pure-past formula.
+
+    Hence, we focus our attention on the top-level $S$ formulas containing $U(\varphi, \psi)$. In one such formula, let $\alpha'$ be the conjunction of all literals in the target that aren't $U(\varphi, \psi)$ or its negation. Similarly, let $\beta'$ be the disjunction of all literals in the path that aren't $U(\varphi, \psi)$ or its negation. This lets us write that formula as one of the following
+    \begin{equation*}
+        \begin{aligned}
+            &S(\alpha' \land \pm U(\varphi, \psi), \beta')\\
+            &S(\alpha', \beta' \lor \pm U(\varphi, \psi))\\
+            &S(\alpha' \land \pm U(\varphi, \psi), \beta' \lor \pm U(\varphi, \psi))\\
+        \end{aligned}
+    \end{equation*}
+    Clearly, the eliminations we explored in the previous section can separate this formula! Additionally, note that the only $U$ formula in the RHS of the eliminations is $U(\varphi, \psi)$, satisfying the condition specified in the beginning of the lemma.
+
+    Applying these elimination rules to each top-level $S$ containing a $U(\varphi, \psi)$ produces a separated formula equivalent to $S(\varphi, \psi)$. This completes the proof.
 \end{proof}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% This is the basic LIPICS template, and I'm storing it for reference
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{lemma}[Lorem ipsum]
-\label{lemma:lorem}
-Vestibulum sodales dolor et dui cursus iaculis. Nullam ullamcorper purus vel turpis lobortis eu tempus lorem semper. Proin facilisis gravida rutrum. Etiam sed sollicitudin lorem. Proin pellentesque risus at elit hendrerit pharetra. Integer at turpis varius libero rhoncus fermentum vitae vitae metus.
+The second step of the induction scheme is to consider cases where $U(\varphi, \psi)$ is nested under multiple levels of $S$.
+\begin{lemma}
+\label{lemma:separation-linear-step2}
+    Let $\varphi$ and $\psi$ be pure-present formulas, and let $\gamma$ be a formula such that the only appearance of a $U$ in $\alpha$ is $U(\varphi, \psi)$. Then, $\gamma$ can be written as a syntactically separated formula where the only appearance of a $U$ is $U(\varphi, \psi)$.
 \end{lemma}
-
 \begin{proof}
-Cras purus lorem, pulvinar et fermentum sagittis, suscipit quis magna.
-
-
-\proofsubparagraph*{Just some paragraph within the proof.}
-Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-\begin{claim}
-content...
-\end{claim}
-\begin{claimproof}
-content...
-    \begin{enumerate}
-        \item abc abc abc %\claimedhere{}
-    \end{enumerate}
-\end{claimproof}
-
+    We show this lemma by inducting on the pair $(n_1, n_2)$, where $n_1$ is the maximum number of nested $S$es above a $U(\varphi, \psi)$ and $n_2$ is the number of $U(\varphi, \psi)$ nested inside $n_1$ $S$s.
+    \begin{description}
+        \item[Base case.] Here, $n_1 = 0$, and $\gamma$ is already separated.
+        \item[Induction step.] Pick the most deeply nested subformula $S(\alpha, \beta)$ of $\gamma$ such that all instances of $U(\varphi, \psi)$ in $\alpha$ and $\beta$ are not nested inside a $S$. Applying lemma \ref{lemma:separation-linear-step1} to $S(\alpha, \beta)$ strictly reduces $(n_1, n_2)$, allowing us to use the induction hypothesis. Remember, lemma \ref{lemma:separation-linear-step1} only generates formulas where then only appearance of $U$ is $U(\varphi, \psi)$, which is required to use the induction hypothesis.
+    \end{description}
+    This completes the proof.
 \end{proof}
-
-\begin{corollary}[Curabitur pulvinar, \cite{DBLP:books/mk/GrayR93}]
-\label{lemma:curabitur}
-Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-\end{corollary}
-
-\begin{proposition}\label{prop1}
-This is a proposition
-\end{proposition}
-
-\autoref{prop1} and \cref{prop1} \ldots
-
-\subsection{Curabitur dictum felis id sapien}
-
-Curabitur dictum \cref{lemma:curabitur} felis id sapien \autoref{lemma:curabitur} mollis ut venenatis tortor feugiat. Curabitur sed velit diam. Integer aliquam, nunc ac egestas lacinia, nibh est vehicula nibh, ac auctor velit tellus non arcu. Vestibulum lacinia ipsum vitae nisi ultrices eget gravida turpis laoreet. Duis rutrum dapibus ornare. Nulla vehicula vulputate iaculis. Proin a consequat neque. Donec ut rutrum urna. Morbi scelerisque turpis sed elit sagittis eu scelerisque quam condimentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean nec faucibus leo. Cras ut nisl odio, non tincidunt lorem. Integer purus ligula, venenatis et convallis lacinia, scelerisque at erat. Fusce risus libero, convallis at fermentum in, dignissim sed sem. Ut dapibus orci vitae nisl viverra nec adipiscing tortor condimentum \cite{DBLP:journals/cacm/Dijkstra68a}. Donec non suscipit lorem. Nam sit amet enim vitae nisl accumsan pretium.
-
-\begin{lstlisting}[caption={Useless code.},label=list:8-6,captionpos=t,float,abovecaptionskip=-\medskipamount]
-for i:=maxint to 0 do
-begin
-    j:=square(root(i));
-end;
-\end{lstlisting}
-
-\subsection{Proin ac fermentum augue}
-
-Proin ac fermentum augue. Nullam bibendum enim sollicitudin tellus egestas lacinia euismod orci mollis. Nulla facilisi. Vivamus volutpat venenatis sapien, vitae feugiat arcu fringilla ac. Mauris sapien tortor, sagittis eget auctor at, vulputate pharetra magna. Sed congue, dui nec vulputate convallis, sem nunc adipiscing dui, vel venenatis mauris sem in dui. Praesent a pretium quam. Mauris non mauris sit amet eros rutrum aliquam id ut sapien. Nulla aliquet fringilla sagittis. Pellentesque eu metus posuere nunc tincidunt dignissim in tempor dolor. Nulla cursus aliquet enim. Cras sapien risus, accumsan eu cursus ut, commodo vel velit. Praesent aliquet consectetur ligula, vitae iaculis ligula interdum vel. Integer faucibus faucibus felis.
-
-\begin{itemize}
-\item Ut vitae diam augue.
-\item Integer lacus ante, pellentesque sed sollicitudin et, pulvinar adipiscing sem.
-\item Maecenas facilisis, leo quis tincidunt egestas, magna ipsum condimentum orci, vitae facilisis nibh turpis et elit.
-\end{itemize}
-
-\begin{remark}
-content...
-\end{remark}
-
-\section{Pellentesque quis tortor}
-
-Nec urna malesuada sollicitudin. Nulla facilisi. Vivamus aliquam tempus ligula eget ornare. Praesent eget magna ut turpis mattis cursus. Aliquam vel condimentum orci. Nunc congue, libero in gravida convallis \cite{DBLP:conf/focs/HopcroftPV75}, orci nibh sodales quam, id egestas felis mi nec nisi. Suspendisse tincidunt, est ac vestibulum posuere, justo odio bibendum urna, rutrum bibendum dolor sem nec tellus.
-
-\begin{lemma} [Quisque blandit tempus nunc]
-Sed interdum nisl pretium non. Mauris sodales consequat risus vel consectetur. Aliquam erat volutpat. Nunc sed sapien ligula. Proin faucibus sapien luctus nisl feugiat convallis faucibus elit cursus. Nunc vestibulum nunc ac massa pretium pharetra. Nulla facilisis turpis id augue venenatis blandit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+The next step generalizes this approach to different (basic) until subformulas.
+\begin{lemma}
+\label{lemma:separation-linear-step3}
+    Let $\varphi_1, \varphi_2, \ldots \varphi_n$ and $\psi_1, \psi_2, \ldots \psi_n$ be pure present formulas and $\gamma$ be a formula such that all appearances of $U$ in $\gamma$ are of the form $U(\varphi_i, \psi_i)$ for some $i \in \{1, 2, \ldots n\}$. Then, $\gamma$ can be written as a syntactically separated formula.
 \end{lemma}
-
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-
-\section{Morbi eros magna}
-
-Morbi eros magna, vestibulum non posuere non, porta eu quam. Maecenas vitae orci risus, eget imperdiet mauris. Donec massa mauris, pellentesque vel lobortis eu, molestie ac turpis. Sed condimentum convallis dolor, a dignissim est ultrices eu. Donec consectetur volutpat eros, et ornare dui ultricies id. Vivamus eu augue eget dolor euismod ultrices et sit amet nisi. Vivamus malesuada leo ac leo ullamcorper tempor. Donec justo mi, tempor vitae aliquet non, faucibus eu lacus. Donec dictum gravida neque, non porta turpis imperdiet eget. Curabitur quis euismod ligula.
-
+\begin{proof}
+    Predictably, we induct on $n$.
+    \begin{description}
+        \item[Base case.] This is $n = 1$, identical to lemma \ref{lemma:separation-linear-step2}.
+        \item[Induction case.] Introduce new propositional atoms $p_1, p_2, \ldots p_{n-1}$. For each $i \in \{1, \ldots n - 1\}$, replace each occurrence of $U(\varphi_i, \psi_i)$ in $\gamma$ with $p_i$ to produce $\gamma'$. We can apply lemma \ref{lemma:separation-linear-step2} to $\gamma'$ to produce its separated equivalent, $\gamma''$. Replace each instance of $p_i$ in $\gamma''$ with $U(\varphi_i, \psi_i)$ to produce $\gamma'''$. Finally, apply the induction hypothesis on $\gamma'''$ to separate $\gamma$.
+    \end{description}
+    This proves the lemma.
+    \begin{remark*}
+        It isn't difficult to see that we cannot use lemma \ref{lemma:separation-linear-step2} if we introduce a single atom $p_n$ to represent $U(\varphi_n, \psi_n)$. Introducing more atoms is essential to the overall induction structure.
+    \end{remark*}
+\end{proof}
+We can now finally consider the case of nested $U$s.
+\begin{lemma}
+    \label{lemma: separation-linear-step4}
+    Let $\gamma$ be a formula that doesn't contain $S$s nested inside a $U$. Then, $\gamma$ can be separated.
+\end{lemma}
+\begin{proof}
+    We cleverly induct on the maximum nesting depths of $U$s under an $S$. Let $n_1$ be the maximum $U$-nesting depth of a $U$ formula.
+\end{proof}
 
 %%
 %% Bibliography
@@ -378,126 +361,5 @@ Morbi eros magna, vestibulum non posuere non, porta eu quam. Maecenas vitae orci
 
 \bibliography{refs}
 
-\appendix
-
-\section{Styles of lists, enumerations, and descriptions}\label{sec:itemStyles}
-
-List of different predefined enumeration styles:
-
-\begin{itemize}
-\item \verb|\begin{itemize}...\end{itemize}|
-\item \dots
-\item \dots
-%\item \dots
-\end{itemize}
-
-\begin{enumerate}
-\item \verb|\begin{enumerate}...\end{enumerate}|
-\item \dots
-\item \dots
-%\item \dots
-\end{enumerate}
-
-\begin{alphaenumerate}
-\item \verb|\begin{alphaenumerate}...\end{alphaenumerate}|
-\item \dots
-\item \dots
-%\item \dots
-\end{alphaenumerate}
-
-\begin{romanenumerate}
-\item \verb|\begin{romanenumerate}...\end{romanenumerate}|
-\item \dots
-\item \dots
-%\item \dots
-\end{romanenumerate}
-
-\begin{bracketenumerate}
-\item \verb|\begin{bracketenumerate}...\end{bracketenumerate}|
-\item \dots
-\item \dots
-%\item \dots
-\end{bracketenumerate}
-
-\begin{description}
-\item[Description 1] \verb|\begin{description} \item[Description 1]  ...\end{description}|
-\item[Description 2] Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\item[Description 3]  \dots
-%\item \dots
-\end{description}
-
-\cref{testenv-proposition} and \autoref{testenv-proposition} ...
-
-\section{Theorem-like environments}\label{sec:theorem-environments}
-
-List of different predefined enumeration styles:
-
-\begin{theorem}\label{testenv-theorem}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{theorem}
-
-\begin{lemma}\label{testenv-lemma}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{lemma}
-
-\begin{corollary}\label{testenv-corollary}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{corollary}
-
-\begin{proposition}\label{testenv-proposition}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{proposition}
-
-\begin{conjecture}\label{testenv-conjecture}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{conjecture}
-
-\begin{observation}\label{testenv-observation}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{observation}
-
-\begin{exercise}\label{testenv-exercise}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{exercise}
-
-\begin{definition}\label{testenv-definition}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{definition}
-
-\begin{example}\label{testenv-example}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{example}
-
-\begin{note}\label{testenv-note}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{note}
-
-\begin{note*}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{note*}
-
-\begin{remark}\label{testenv-remark}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{remark}
-
-\begin{remark*}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{remark*}
-
-\begin{claim}\label{testenv-claim}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{claim}
-
-\begin{claim*}\label{testenv-claim2}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{claim*}
-
-\begin{proof}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{proof}
-
-\begin{claimproof}
-Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
-\end{claimproof}
-
+% \appendix
 \end{document}
