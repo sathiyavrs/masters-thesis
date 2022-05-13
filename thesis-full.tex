@@ -207,6 +207,7 @@ Here, $\varphi_\alpha$ is the first-order translation of $\alpha$.
 Our strategy involves \textit{pulling-out} $U$s from inside $S$ and vice versa. We accomplish this by writing all temporal formulas in a standard notation, and then applying a sequence of \textit{elimination} rules. In the next section, we describe these rules.
 
 \subsubsection{Eliminations}
+\label{sec:eliminations-linear}
 
 Let $\alpha$, $\beta$, $\varphi$ and $\psi$ be boolean combinations of propositional atoms. In the following subsections, we pull out a $U(\varphi, \psi)$ from inside a $S$ under a variety of minimal configurations. In later sections, we show that these configurations suffice.
 
@@ -346,11 +347,59 @@ The next step generalizes this approach to different (basic) until subformulas.
 \end{proof}
 We can now finally consider the case of nested $U$s.
 \begin{lemma}
-    \label{lemma: separation-linear-step4}
+    \label{lemma:separation-linear-step4}
     Let $\gamma$ be a formula that doesn't contain $S$s nested inside a $U$. Then, $\gamma$ can be separated.
 \end{lemma}
 \begin{proof}
-    We cleverly induct on the maximum nesting depths of $U$s under an $S$. Let $n_1$ be the maximum $U$-nesting depth of a $U$ formula.
+    We cleverly induct on the maximum nesting depths of $U$s under a $S$. Let $n$ be the maximum $U$-nesting depth of $\gamma$.
+    \begin{description}
+        \item[Base case.] This is $n = 1$, which is lemma \ref{lemma:separation-linear-step3}.
+        \item[Induction step.] Suppose there are $m$ subformulas rooted at a $U$ that aren't under a $U$ and are under an $S$. Introduce $2m$ atoms $\{p_1, \ldots p_{2m}\}$ and replace the target and path conditions of these $m$ subformulas with these atoms. This produces a new formula $\gamma'$ that is amenable to lemma \ref{lemma:separation-linear-step3}. Applying the lemma produces a separated formula $\gamma''$ that uses the atoms $\{p_1, \ldots p_{2m}\}$. These atoms may appear under a $S$ in the separated formula $\gamma''$. Now, replace each of these atoms by the target/path condition they substituted earlier. This produces $\gamma'''$, a formula with the maximum $U$-nesting depth under a $S$ strictly $< n$. Applying the induction hypothesis on $\gamma'''$ proves this lemma.
+    \end{description}
+    \begin{remark*}
+        We don't need to consider the value $m$ in our induction hypothesis, as required in the proof of lemma \ref{lemma:separation-linear-step2}.
+    \end{remark*}
+\end{proof}
+Before we finally prove the separation theorem, notice that, since $U$ and $S$ are duals of each other, the eliminations in section \ref{sec:eliminations-linear} and lemmas \ref{lemma:separation-linear-step1}, \ref{lemma:separation-linear-step2}, \ref{lemma:separation-linear-step3} and \ref{lemma:separation-linear-step4} hold when the $U$ and $S$ are swapped.
+\begin{theorem}[Separation Theorem]
+    \label{theorem:separation-linear-final}
+    Any formula $\gamma$ that uses $S$ and $U$ can be separated.
+\end{theorem}
+\begin{proof}
+    We induct over the \textit{junction depth} of the input formula. Define this depth as follows.
+    \begin{definition}[Junction Depth]
+        The junction depth of a temporal formula $\gamma$ is the length of the longest sequence of subformulas $\alpha_1, \alpha_2, \ldots \alpha_n$ of $\gamma$ such that
+        \begin{enumerate}
+            \item The root of all $\alpha_i$ is either a $U$ or a $S$.
+            \item $\alpha_{i+1}$ is a subformula of $\alpha_i$.
+            \item If $\alpha_i$ is rooted by a $U$ (or a $S$), then $\alpha_{i+1}$ is rooted by a $S$ (or a $U$, respectively).
+            \item There is no subformula $\beta$ of $\gamma$ such that \label{item:junction-depth-extra-condition}
+                \begin{enumerate}
+                    \item $\beta$ is a strict subformula of $\alpha_i$.
+                    \item $\alpha_{i+1}$ is a strict subformula of $\beta$.
+                    \item $\beta$ and $\alpha_{i+1}$ are rooted by the same connective.
+                \end{enumerate}
+        \end{enumerate}
+    \end{definition}
+    Note that condition \ref{item:junction-depth-extra-condition} isn't necessary to compute the junction depth. However, I will use it in my proof.
+
+    As an illustration, observe that the junction depth of the formula $U \left(a, S\left( U(c, d), U(e, f) \right) \right)$ is 3, and there are two possible sequences:
+    \begin{itemize}
+        \item $U \left(a, S\left( U(c, d), U(e, f) \right) \right), S(U(c, d), U(e, f)), U(c, d)$.
+        \item $U \left(a, S\left( U(c, d), U(e, f) \right) \right), S(U(c, d), U(e, f)), U(e, f)$.
+    \end{itemize}
+
+    Let the junction depth of $\gamma$ be $n$.
+    \begin{description}
+        \item[Base case 1: $n = 1$.] The formula is already separated.
+        \item[Base case 2: $n = 2$.] In this case, apply lemma \ref{lemma:separation-linear-step4} to separate $\gamma$.
+        \item[Induction step: $n \geq 3$.] Let there be $m$ sequences of subformulas that witness the junction depth $n$. Form a set $A$ of all subformulas at position 3 of these $m$ sequences; the size of $A$ can be less than $m$. Note that condition \ref{item:junction-depth-extra-condition} makes these subformulas maximal; i.e., no formula in $A$ is a subformula of another. This maximality allows us to substitute each formula in $A$ with a newly introduced atom from the set $\{p_1, \ldots p_{|A|}\}$.
+
+        Call the resulting formula $\gamma'$. It isn't difficult to argue that this formula has a junction depth of strictly $< n$, allowing us to apply the induction hypothesis. This produces a separated formula $\gamma''$ with $|A|$ new atoms. Substitute the subformulas in $A$ at the corresponding atoms in $\gamma''$ to produce $\gamma'''$.
+
+        Now, all subformulas in $A$ have a junction depth of $n - 2$. If all of these appear in the pure-present segment of $\gamma''$, the new junction depth of $\gamma'''$ grows to at-most $n - 2$. Similarly, if one of these substitutions occurs inside a pure-past / pure-future segment of $\gamma''$, the junction depth grows to at-most $n - 1$. This allows us to apply the induction hypothesis again, producing the fully separated formula $\gamma'''$.
+    \end{description}
+    This proves the separation theorem over linear time.
 \end{proof}
 
 %%
