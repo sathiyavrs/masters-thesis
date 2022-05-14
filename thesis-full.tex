@@ -16,6 +16,9 @@
 %\hideLIPIcs  %uncomment to remove references to LIPIcs series (logo, DOI, ...), e.g. when preparing a pre-final version to be uploaded to arXiv or another public repository
 
 %\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
+
+\usepackage[dvipsnames]{xcolor}
+% Needed for tikz
 \usepackage{tikzit}
 
 \input{style1.tikzstyles}
@@ -152,6 +155,13 @@ To discuss this further, we need the notion of \textit{regions} and \textit{pure
     \item The \textit{future} of $t$, which naturally is $\{x \mid x \in \mathbb{Z} \land t < x\}$
 \end{itemize}
 Note that these regions are disjoint, and that the union of these regions produces the entire flow. Also, notice that these regions are first-order definable.
+
+\begin{figure}
+    \centering
+    \tikzfig{separation-linear}
+    \caption[]{Regions for linear separation. The present is black, the past is \textcolor{OliveGreen}{green}, and the future is \textcolor{blue}{blue}.}
+    \label{fig:linear-separation-regions}
+\end{figure}
 
 % TODO: Consider writing these in \begin{definition}
 Now, we define \textit{pure formulas}. For any flow $(T, <)$, we denote two assignments $h$ and $h'$ to be in \textit{agreement} over a region $R \subset T$ \textit{iff} for any atom $q \in \mathcal{P}$ and any point $s \in R$,
@@ -426,12 +436,28 @@ In \cite{xpathComplete}, Marx introduced the temporal language $\mathcal{X}_{unt
         \varphi_\Leftarrow(t, X_1, X_2) &\triangleq \exists x.\, \left[ \left( x \prec t \right) \land X_1(x) \land \forall y \left( \left( x \prec y \prec t \right) \to X_2(y) \right) \right]
     \end{aligned}
 \end{equation*}
-Marx suggested a separation result for this temporal language over ordered trees. The regions he proposed were as follows.
-\begin{itemize}
-    \item testing
+Marx suggested a separation result for this temporal language over ordered trees. The regions he proposed, with respect to an arbitrary point $t$ in the flow, were
+\begin{itemize} %TODO: Describe Marx's regions here.
+    \item The \textit{present} point, which we call $t$.
+    \item The \textit{future}, defined as $\{x \mid t < x \}$.
+    \item The \textit{left} of $t$, defined as $\{x \mid x \prec t \lor \exists y.\, y \prec t \land y < x \}$.
+    \item The \textit{right} of $t$, defined analogously as $\{x \mid t \prec x \lor \exists y.\, t \prec y \land y < x \}$.
+    \item The \textit{past}, which was all points not in any of the other regions.
 \end{itemize}
+Figure \ref{fig:marx-regions} shows how these regions partition the tree.
 
-\ctikzfig{separation-tree-marx}
+\begin{figure}
+    \centering
+    \tikzfig{separation-tree-marx}
+    \caption[]{Marx's regions. The black node is the present, the \textcolor{orange}{orange} nodes belong to the \textit{left} region, the \textcolor{red}{red} nodes to the \textit{right}, the \textcolor{blue}{blue} nodes are the \textit{future}, and the \textcolor{OliveGreen}{green} nodes are the \textit{past}. The descendant relation is given by the black lines and the sibling order is denoted by the \textcolor{red}{red} lines. Dashed lines indicate potential intermediate nodes.}
+    \label{fig:marx-regions}
+\end{figure}
+
+Interestingly, Marx's proof of the Separation theorem in \cite{xpathComplete} is incorrect. He fails to take into consideration that the $\Downarrow$ connective is non-deterministic, and hence, one cannot extend equation \eqref{eq:or-and-S-U} to $\Downarrow$, as
+\begin{equation*}
+    \Downarrow(a, b \land c) \not\equiv \Downarrow(a, b) \land \Downarrow(a, c)
+\end{equation*}
+In the next few sections, we show interesting results regarding Marx's regions.
 
 %%
 %% Bibliography
