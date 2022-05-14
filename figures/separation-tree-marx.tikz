@@ -1,0 +1,52 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=present] (0) at (0, 0) {};
+		\node [style=past] (1) at (0, 1) {};
+		\node [style=future] (2) at (0, -1) {};
+		\node [style=future] (3) at (-0.75, -1) {};
+		\node [style=future] (4) at (0.75, -1) {};
+		\node [style=future] (5) at (0, -3) {};
+		\node [style=future] (6) at (-1.5, -3) {};
+		\node [style=future] (7) at (1.5, -3) {};
+		\node [style=left] (8) at (-2.25, 0) {};
+		\node [style=left] (9) at (-2.25, -1) {};
+		\node [style=left] (10) at (-3, -1) {};
+		\node [style=future] (11) at (-0.75, -3) {};
+		\node [style=future] (12) at (0.75, -3) {};
+		\node [style=left] (14) at (-2.25, -3) {};
+		\node [style=left] (15) at (-3, -3) {};
+		\node [style=left] (16) at (-3.75, -3) {};
+		\node [style=right] (22) at (2.25, 0) {};
+		\node [style=right] (23) at (2.25, -1) {};
+		\node [style=right] (24) at (3, -1) {};
+		\node [style=right] (25) at (2.25, -3) {};
+		\node [style=right] (26) at (3, -3) {};
+		\node [style=right] (27) at (3.75, -3) {};
+		\node [style=right] (28) at (2.25, 0) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (0) to (1);
+		\draw [style=dashed] (3) to (6);
+		\draw [style=dashed] (2) to (5);
+		\draw [style=dashed] (4) to (7);
+		\draw [style=dashed] (3) to (11);
+		\draw [style=dashed] (4) to (12);
+		\draw [style=normal] (0) to (3);
+		\draw [style=normal] (0) to (2);
+		\draw [style=normal] (0) to (4);
+		\draw [style=normal] (8) to (9);
+		\draw [style=normal] (8) to (10);
+		\draw [style=dashed] (9) to (14);
+		\draw [style=dashed] (10) to (15);
+		\draw [style=dashed] (10) to (16);
+		\draw [style=rdashed] (0) to (28);
+		\draw [style=normal] (28) to (23);
+		\draw [style=normal] (28) to (24);
+		\draw [style=dashed] (23) to (25);
+		\draw [style=dashed] (24) to (26);
+		\draw [style=dashed] (24) to (27);
+		\draw [style=rdashed, in=180, out=0] (8) to (0);
+		\draw [style=right] (10) to (9);
+		\draw [style=right] (23) to (24);
+	\end{pgfonlayer}
+\end{tikzpicture}

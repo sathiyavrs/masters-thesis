@@ -16,6 +16,11 @@
 %\hideLIPIcs  %uncomment to remove references to LIPIcs series (logo, DOI, ...), e.g. when preparing a pre-final version to be uploaded to arXiv or another public repository
 
 %\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
+\usepackage{tikzit}
+\usepgfplotslibrary{external}
+\tikzexternalize
+
+\input{style1.tikzstyles}
 
 \bibliographystyle{plainurl}% the mandatory bibstyle
 
@@ -401,6 +406,34 @@ Before we finally prove the separation theorem, notice that, since $U$ and $S$ a
     \end{description}
     This proves the separation theorem over linear time.
 \end{proof}
+
+\subsection{Implying Expressive-Completeness}
+
+In this section, we provide an overview of the proof that theorem \ref{theorem:separation-linear-final} implies expressive completeness. %TODO: Finish this proof / remove this section. At the very least, I want to describe the general separation theorem.
+
+\section{Ordered Trees}
+
+% TODO: Think up a better introduction of ordered trees.
+
+Flows of time are often more complicated than the linear structures we've seen so far. A simple extension is the idea of \textit{branching time}, wherein the flow resembles a tree. While temporal languages over unordered trees have been studied quite extensively (see \cite{RabinovichUnordered00}), in this work we look at ordered trees.
+
+In addition to the descendent ordering in unordered trees (which corresponds to the natural forward flow of time), ordered trees include a \textit{sibling} order. Correspondingly, the first-order vocabulary includes two binary relations: $<$ and $\prec$, where $x < y$ indicates $y$ is a descendant of $x$ and $x \prec y$ indicates $y$ comes after $x$ in the sibling order. All immediate children of a node are totally ordered by $\prec$. %TODO: Consider adding an axiom that describes the limits of $\prec$ and $<$.
+
+In \cite{xpathComplete}, Marx introduced the temporal language $\mathcal{X}_{until}$ over ordered trees. This language has the same expressive power as \textit{Conditional XPath}, which Marx proved to be expressively complete in \cite{marx2005conditional}. This language introduces four connectives that are similar to the strict $U$ and $S$ Gabbay defines for linear time. These are $\Leftarrow$, $\Rightarrow$, $\Uparrow$, and $\Downarrow$, defined by the following monadic first-order formulas.
+\begin{equation*}
+    \begin{aligned}
+        \varphi_\Downarrow(t, X_1, X_2) &\triangleq \exists x.\, \left[ \left( t < x \right) \land X_1(x) \land \forall y \left( \left( t < y < x \right) \to X_2(y) \right) \right]\\
+        \varphi_\Uparrow(t, X_1, X_2) &\triangleq \exists x.\, \left[ \left( x < t \right) \land X_1(x) \land \forall y \left( \left( x < y < t \right) \to X_2(y) \right) \right]\\
+        \varphi_\Rightarrow(t, X_1, X_2) &\triangleq \exists x.\, \left[ \left( t \prec x \right) \land X_1(x) \land \forall y \left( \left( t \prec y \prec x \right) \to X_2(y) \right) \right]\\
+        \varphi_\Leftarrow(t, X_1, X_2) &\triangleq \exists x.\, \left[ \left( x \prec t \right) \land X_1(x) \land \forall y \left( \left( x \prec y \prec t \right) \to X_2(y) \right) \right]
+    \end{aligned}
+\end{equation*}
+Marx suggested a separation result for this temporal language over ordered trees. The regions he proposed were as follows.
+\begin{itemize}
+    \item testing
+\end{itemize}
+
+\ctikzfig{separation-tree-marx}
 
 %%
 %% Bibliography
