@@ -1,0 +1,4 @@
+Add paragraph indent to descriptions
+Convert all \ref to \cref
+Fix formula in the eliminations section
+Use thm-restate for the separation property in sec 2 and 3

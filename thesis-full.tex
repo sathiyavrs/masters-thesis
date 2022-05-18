@@ -1,5 +1,5 @@
 
-\documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate]{lipics-v2021}
+\documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate, numberwithinsect]{lipics-v2021}
 %This is a template for producing LIPIcs articles.
 %See lipics-v2021-authors-guidelines.pdf for further information.
 %for A4 paper format use option "a4paper", for US-letter use option "letterpaper"
@@ -176,7 +176,7 @@ In other words, $A$ is true on $h'$ \textit{iff} $A$ is true on $h$. We use the 
 
 Finally, call a formula $A$ \textbf{separated} if it is a Boolean combination of pure formulas. Now, we can state the separation property
 \begin{theorem}[Separation Theorem]
-    \label{separation-theorem-linear-time}
+    \label{theorem:separation-property-linear-time}
     Every temporal formula $A$ in the language of $S$ and $U$ over linear time can be equivalently represented by a separated formula.
 \end{theorem}
 
@@ -374,7 +374,8 @@ We can now finally consider the case of nested $U$s.
     \end{remark*}
 \end{proof}
 Before we finally prove the separation theorem, notice that, since $U$ and $S$ are duals of each other, the eliminations in section \ref{sec:eliminations-linear} and lemmas \ref{lemma:separation-linear-step1}, \ref{lemma:separation-linear-step2}, \ref{lemma:separation-linear-step3} and \ref{lemma:separation-linear-step4} hold when the $U$ and $S$ are swapped.
-\begin{theorem}[Separation Theorem]
+%TODO: Understand and implement Theorem-Restate here
+\begin{theorem}[Separation Property for Linear Time]
     \label{theorem:separation-linear-final}
     Any formula $\gamma$ that uses $S$ and $U$ can be separated.
 \end{theorem}
@@ -417,17 +418,149 @@ Before we finally prove the separation theorem, notice that, since $U$ and $S$ a
 
 \subsection{Implying Expressive-Completeness}
 
-In this section, we provide an overview of the proof that theorem \ref{theorem:separation-linear-final} implies expressive completeness. %TODO: Finish this proof / remove this section. At the very least, I want to describe the general separation theorem.
+In this section, we provide an overview of the proof that \cref{theorem:separation-linear-final} implies expressive completeness. We start by proving an auxiliary result.
+\begin{lemma}
+    \label{lemma:pulling-out-present-lemma}
+    Every formula of $m + 1$ variables $\varphi(t, x_1, \ldots, x_m)$ in the first-order monadic logic of order with the monadic relations $\{Q_1, Q_2, \cdots Q_k\}$ can be written in the form
+    \begin{equation*}
+        \bigvee_i \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m)
+    \end{equation*}
+    for some $i$ where $t, x_1, \ldots, x_m$ are the $m + 1$ free variables in $\varphi$, $\beta_i(t)$ is quantifier free, and no atomic formula of the form $Q(t)$ appears in $\alpha_i(t, x)$ for any $Q \in \{Q_1, \ldots Q_k\}$.
+\end{lemma}
+\begin{proof}
+    We show this lemma by inducting on the quantifier depth of $\varphi$.
+    \begin{description}
+        \item[Base case.] $\varphi$ is quantifier free. In this case, it's easy to see that the DNF form of $\varphi$ is what we need.
+        \item[Induction case.] Suppose the lemma holds for all formulas of quantifier depth $< n$, and $\varphi$ has quantifier depth $n$. Begin by writing all subformulas of the form $\forall y.\, \alpha$ as $\lnot \exists y.\, \lnot \alpha$. After this transformation, $\varphi$ is a boolean combination of atomic formulas of the form $Q(y)$, $y < z$ ($y, z \in \{t, x_1, \ldots, x_m\}$) and quantified subformulas $\exists y.\, \psi$ for some bound variable $y$.
+
+        Observe that each $\psi$ in the previous form has a quantifier depth of $n-1$. Applying the induction hypothesis on $\psi$ gives us an equivalent formula
+        \begin{equation*}
+            \psi \equiv \bigvee_i \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m, y)
+        \end{equation*}
+        Now, we simply push the existential quantifier deeper inside $\exists y.\, \psi$:
+        \begin{equation*}
+            \begin{aligned}
+                \exists y.\, \psi &\longmapsto \exists y.\, \left( \bigvee_i \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m, y) \right)\\
+                &\longmapsto \bigvee_i \exists y.\, \left( \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m, y) \right)\\
+                &\longmapsto \bigvee_i \beta_i(t) \land \exists y.\, \alpha_i(t, x_1, \ldots, x_m, y)\\
+            \end{aligned}
+        \end{equation*}
+        where all $\beta_i(t)$ remain quantifier free and no $Q(t)$ appears in any $\alpha_i$.
+
+        After writing each $\exists y.\, \psi$ in this form, $\varphi$ becomes a boolean combination of $Q(y)$, $y < z$ (again, $y, z \in \{t, x_1, \ldots, x_m\}$), and $\exists y.\, \alpha(t, x_1, \ldots x_m, y)$. We can now take the DNF form of this formula by treating each $\exists y.\, \alpha$ as though it were an atom. It isn't difficult to see that this final formula is what we need, proving the lemma.
+    \end{description}
+\end{proof}
+Notice that the primary arguments in the proof of \cref{lemma:pulling-out-present-lemma} are quite general. These arguments can be reused to show similar results in the case of more complex first-order relational vocabularies. For now, consider a useful corollary.
+\begin{corollary}
+    \label{corollary:separate-present-form-fomlo}
+    Every single-variable formula $\varphi(t)$ in the first-order monadic order of logic can be written in the form
+    \begin{equation*}
+        \bigvee_i \left( \beta_i(t) \land \bigwedge_j \left( \pm \exists y.\, \alpha_{i, j}\left(t, y\right) \right) \right)
+    \end{equation*}
+    where $\beta_i(t)$ is quantifier-free and $Q(t)$ doesn't appear in $\alpha$.
+\end{corollary}
+\begin{proof}
+    This can easily be observed by realizing that, in the case of a single-variable formula, all $\alpha_i$ in \cref{lemma:pulling-out-present-lemma} must be boolean combination of formulas of the form $\exists y.\, \psi$. Considering each of these as atoms and writing the DNF form of the resulting formula gives us what we need.
+\end{proof}
+Finally, we consider the separation theorem.
+\begin{theorem}[Separation Theorem for Linear Time]
+    \label{theorem:separation-theorem-linear-time}
+    Every single-variable formula $\varphi(t)$ of the first-order monadic logic of order with the monadic relations $\{Q_1, \ldots, Q_m\}$ evaluated over linear time can be expressed by a formula in the temporal logic of the strict $S$ and $U$ over linear flows of time.
+\end{theorem}
+\begin{proof}
+    Before we begin the proof, note that, as per the established norms, the temporal language has access to the monadic relations $\{Q_1, \ldots, Q_m\}$ through the use of propositional atoms $\{q_1, \ldots, q_m\}$.
+
+    We induct on the quantifier depth of $\varphi$.
+    \begin{description} %TODO: Figure out how to add indentation to paragraphs within description
+        \item[Base case.] $\varphi(t)$ is quantifier free. Construct a temporal formula by replacing all instances of $Q_i(t)$ in $\varphi$ with the propositional atom $q_i$. This resulting formula is clearly equivalent to $\varphi$ when evaluated at any time point $t$. Notably, it's a \textit{pure-present} formula.
+        \item[Induction case.] Suppose $\varphi(t)$ has quantifier depth $n$. Write $\varphi(t)$ in the form presented in \cref{corollary:separate-present-form-fomlo}.
+        \begin{equation}
+            \label{eq:present-separate-form-fomlo}
+            \varphi(t) \equiv \bigvee_i \left( \beta_i(t) \land \bigwedge_j \left( \pm \exists y.\, \alpha_{i, j}\left(t, y\right) \right) \right)
+        \end{equation}
+        Observe that one can easily construct a pure-present temporal formula $\rho_i$ for each $\beta_i(t)$. Hence, we focus our attention on the $\exists y.\, \alpha(t, y)$. We start by getting rid of all instances of the variable $t$ in $\alpha$ by introducing a few new monadic relations.
+
+        Introduce three new monadic symbols $R_<$, $R_=$, and $R_>$. In each $\alpha$, substitute all atomic formulas that involve $t$ in the following way.
+        \begin{equation*}
+            \begin{aligned}
+                x < t &\longmapsto R_<(x)\\
+                x = t &\longmapsto R_=(x)\\
+                t < x  &\longmapsto R_>(x)
+            \end{aligned}
+        \end{equation*}
+        By \cref{corollary:separate-present-form-fomlo}, these are the only instances of $t$ in $\alpha$.
+
+        This produces a new formula $\alpha'$ that
+        \begin{alphaenumerate}
+            \item Has a quantifier depth of at-most $n - 1$.
+            \item Has a single free variable.
+            \item Is equivalent to $\alpha$ \textit{if} $R_<$, $R_=$, and $R_>$ are modelled appropriately.
+        \end{alphaenumerate}
+
+        These conditions allow us to apply the induction hypothesis on $\alpha'$, producing a temporal formula $\gamma$. Notably, since the pool of atoms has increased, the monads $R_>$, $R_=$, and $R_<$ are transformed into propositional atoms $r_>$, $r_=$, and $r_<$, and are embedded inside $\gamma$.
+
+        Now, observe that the existential quantifier in $\exists y.\, \alpha'(y)$ can be expressed in the temporal language as $\diamond \gamma$, where $\diamond$ is shorthand for \textit{at some point in time}. $\diamond$ can be expressed with $S$ and $U$ as follows:
+        \begin{equation*}
+            \diamond \gamma \equiv \gamma \lor U(\gamma,\top) \lor S(\gamma, \top)
+        \end{equation*}
+
+        We proceed to construct temporal formulas $\gamma_{i, j}$ for each $\alpha_{i, j}$ in \eqref{eq:present-separate-form-fomlo}. This allows us to construct the monolithic formula $\psi$:
+        \begin{equation*}
+            \psi \triangleq \bigvee_i \left( \rho_i \land \bigwedge_j \left( \pm \diamond \gamma_{i, j} \right) \right)
+        \end{equation*}
+        Again, if $r_<$, $r_=$, and $r_>$ are appropriately modelled, $\psi$ is equivalent to $\varphi(t)$.
+
+        Using \cref{theorem:separation-linear-final}, we now \textit{separate} $\psi$ into a boolean combination of pure-past, present, and future formulas. We write the separated formula as follows:
+        \begin{equation*}
+            \psi \equiv \mathbf{B}(\psi_{<, 1}, \ldots, \psi_{<. m_<}, \psi_{=, 1}, \ldots, \psi_{<, m_=}, \psi_{>, 1}, \ldots \psi_{>, m_>})
+        \end{equation*}
+        where $\mathbf{B}$ represents the boolean combination, and each $\psi_{<, i}$, $\psi_{=, i}$, and $\psi_{>, i}$ are pure-past, present, and future formulas.
+
+        We earlier stated that if $R_<$, $R_=$, and $R_>$ are appropriately modelled, $\psi$ is equivalent to $\varphi(t)$. The correct values of $R_<$, $R_=$, and $R_>$ are, quite naturally,
+        \begin{equation*}
+            \begin{aligned}
+                R_< &= \{s \mid s < t\}\\
+                R_= &= \{t\}\\
+                R_> &= \{s \mid t < s\}
+            \end{aligned}
+        \end{equation*}
+        Let the partial assignment of atoms over the flow of time $h$ represent this model.
+
+        Now, consider a partial assignment $h_<$ that agrees with $h$ on all atoms but $r_<$, $r_=$, and $r_>$. $h_<$ models $r_<$ to $\top$ everywhere, and $r_>$ and $r_=$ to $\bot$ everywhere. This assignment, by its definition, agrees with $h$ on the past of $t$, and consequently, for each pure-past $\psi_{<, i}$,
+        \begin{equation*}
+            h \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi_{<, i}
+        \end{equation*}
+        But, the valuation of $h_<$ in $\psi_{<, i}$ is naturally equivalent to the substitution of all instances of $r_<$ in $\psi_{<, i}$ with $\top$ and instances of $r_=$ and $r_>$ to $\bot$. Let this substituted formula be $\psi'_{<, i}$. Hence,
+        \begin{equation*}
+            h \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi'_{<, i}
+        \end{equation*}
+        Observe that $\psi'_{<, i}$ no longer uses the additional atoms! And since $h$ and $h_<$ agree on all other atoms,
+        \begin{equation*}
+            h \vDash \psi_{<, i} \longleftrightarrow h \vDash \psi'_{<, i}
+        \end{equation*}
+        We can similarly substitute the atoms in all other $\psi_{>, i}$ and $\psi_{=, i}$ to get rid of $r_<$, $r_=$, and $r_>$ in $\psi$. Call this new formula $\psi'$.
+        \begin{equation*}
+            \psi' \triangleq \mathbf{B}(\psi'_{<, 1}, \ldots, \psi'_{<. m_<}, \psi'_{=, 1}, \ldots, \psi'_{<, m_=}, \psi'_{>, 1}, \ldots \psi'_{>, m_>})
+        \end{equation*}
+
+        We claim that $\psi'$ is equivalent to $\varphi(t)$! Why? One can augment any assignment $h'$ of atoms in $\{q_1, \ldots q_n\}$ with the correct assignments for $r_<$, $r_=$, and $r_>$ to get $h''$. From our earlier arguments, $h''$ treats $\psi$ and $\psi'$ the same, and since $\psi'$ doesn't use $r_<$, $r_=$ and $r_>$,
+        \begin{equation*}
+            h'' \vDash \psi' \longleftrightarrow h' \vDash \psi'
+        \end{equation*}
+        Since $h''$ models the newly introduced atoms appropriately, the first-order equivalent of $h''$ models each $\alpha'$. And since that first-order model correctly values $R_<$, $R_=$, and $R_>$, its fragment over the monads $\{Q_1, \ldots Q_m\}$ models each $\alpha$, and subsequently, $\varphi(t)$. This proves the separation theorem.
+    \end{description}
+\end{proof}
 
 \section{Ordered Trees}
+\label{sec:ordered-trees}
 
 % TODO: Think up a better introduction of ordered trees.
 
-Flows of time are often more complicated than the linear structures we've seen so far. A simple extension is the idea of \textit{branching time}, wherein the flow resembles a tree. While temporal languages over unordered trees have been studied quite extensively (see \cite{RabinovichUnordered00}), in this work we look at ordered trees.
+Flows of time can be more complicated than the linear structures we've seen so far. The notion of branching time, where the flow resembles a tree, is a well known example. While temporal languages over unordered trees have been studied quite extensively (see \cite{RabinovichUnordered00}), in this work we look at ordered trees.
 
-In addition to the descendent ordering in unordered trees (which corresponds to the natural forward flow of time), ordered trees include a \textit{sibling} order. Correspondingly, the first-order vocabulary includes two binary relations: $<$ and $\prec$, where $x < y$ indicates $y$ is a descendant of $x$ and $x \prec y$ indicates $y$ comes after $x$ in the sibling order. All immediate children of a node are totally ordered by $\prec$. %TODO: Consider adding an axiom that describes the limits of $\prec$ and $<$.
+In addition to the descendent order (which corresponds to the natural forward flow of time), ordered trees use a \textit{sibling} order. Correspondingly, the first-order vocabulary includes two binary relations: $<$ and $\prec$, where $x < y$ indicates $y$ is a descendant of $x$ and $x \prec y$ indicates $y$ comes after $x$ in the sibling order. All immediate children of a node are totally ordered by $\prec$. %TODO: Consider adding an axiom that describes the limits of $\prec$ and $<$.
 
-In \cite{xpathComplete}, Marx introduced the temporal language $\mathcal{X}_{until}$ over ordered trees. This language has the same expressive power as \textit{Conditional XPath}, which Marx proved to be expressively complete in \cite{marx2005conditional}. This language introduces four connectives that are similar to the strict $U$ and $S$ Gabbay defines for linear time. These are $\Leftarrow$, $\Rightarrow$, $\Uparrow$, and $\Downarrow$, defined by the following monadic first-order formulas.
+In \cite{xpathComplete}, Marx introduced the temporal language $\mathcal{X}_{until}$ over ordered trees. This language has the same expressive power as \textit{Conditional XPath}, which Marx proved to be expressively complete in \cite{marx2005conditional}. It defines four connectives that are similar to the strict $U$ and $S$ Gabbay defines for linear time. These are $\Leftarrow$, $\Rightarrow$, $\Uparrow$, and $\Downarrow$, defined by the following monadic first-order formulas.
 \begin{equation*}
     \begin{aligned}
         \varphi_\Downarrow(t, X_1, X_2) &\triangleq \exists x.\, \left[ \left( t < x \right) \land X_1(x) \land \forall y \left( \left( t < y < x \right) \to X_2(y) \right) \right]\\
@@ -436,16 +569,15 @@ In \cite{xpathComplete}, Marx introduced the temporal language $\mathcal{X}_{unt
         \varphi_\Leftarrow(t, X_1, X_2) &\triangleq \exists x.\, \left[ \left( x \prec t \right) \land X_1(x) \land \forall y \left( \left( x \prec y \prec t \right) \to X_2(y) \right) \right]
     \end{aligned}
 \end{equation*}
-Marx suggested a separation result for this temporal language over ordered trees. The regions he proposed, with respect to an arbitrary point $t$ in the flow, were
+Marx suggested a separation property for this temporal language over ordered trees. The regions he proposed, with respect to an arbitrary point $t$ in the flow, were
 \begin{itemize} %TODO: Describe Marx's regions here.
     \item The \textit{present} point, which we call $t$.
     \item The \textit{future}, defined as $\{x \mid t < x \}$.
     \item The \textit{left} of $t$, defined as $\{x \mid x \prec t \lor \exists y.\, y \prec t \land y < x \}$.
     \item The \textit{right} of $t$, defined analogously as $\{x \mid t \prec x \lor \exists y.\, t \prec y \land y < x \}$.
-    \item The \textit{past}, which was all points not in any of the other regions.
+    \item The \textit{past}, which consists of all points not claimed by other regions.
 \end{itemize}
-Figure \ref{fig:marx-regions} shows how these regions partition the tree.
-
+\cref{fig:marx-regions} shows how these regions partition the tree.
 \begin{figure}
     \centering
     \tikzfig{separation-tree-marx}
@@ -453,11 +585,17 @@ Figure \ref{fig:marx-regions} shows how these regions partition the tree.
     \label{fig:marx-regions}
 \end{figure}
 
-Interestingly, Marx's proof of the Separation theorem in \cite{xpathComplete} is incorrect. He fails to take into consideration that the $\Downarrow$ connective is non-deterministic, and hence, one cannot extend equation \eqref{eq:or-and-S-U} to $\Downarrow$, as
+Unfortunately, Marx's proof of the Separation theorem in \cite{xpathComplete} is incorrect. He fails to take into consideration that the $\Downarrow$ modality is non-deterministic. This indicates that one cannot extend equation \eqref{eq:or-and-S-U} to $\Downarrow$, as
 \begin{equation*}
-    \Downarrow(a, b \land c) \not\equiv \Downarrow(a, b) \land \Downarrow(a, c)
+    \Downarrow(a, b \land c) \not\equiv\; \Downarrow(a, b)\; \land \Downarrow(a, c)
 \end{equation*}
-In the next few sections, we show interesting results regarding Marx's regions.
+
+% \subsection{More granular regions}
+%
+%% Note: I hoped to show that Marx's regions couldn't be made more granular as suggested by Gabbay in \cite{gabbay1994}. Unfortunately, the paper Gabbay based his proof on, \cite{Amir85}, uses a different approach to generalization. Amir's conditions are met by Marx's regions, diluting the importance of my findings somewhat.
+
+
+
 
 %%
 %% Bibliography
