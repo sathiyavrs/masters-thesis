@@ -108,9 +108,11 @@ Temporal formulas are evaluated at points in time. In a temporal structure $\mat
 \begin{equation*}
     \mathcal{M}, t \vDash p \Longleftrightarrow (T, <, h[x \mapsto t]) \vDash p(x) \Longleftrightarrow t \in h(p)\\
 \end{equation*}
-As per the standard notation, the assignment $h[x \mapsto t]$ assigns the time point $t$ to the first-order variable $x$. For a generic connective $\sharp$ of arity $n$, let $\varphi_\sharp(t, X_1, \cdots X_n)$ be the monadic first-order formula defining it. Here, $t$ is the point in time that the connective is evaluated at, and the $X_i$ are monadic (second-order) variables. These variables expect a single-variable first-order formula, as shown below
+As per the standard notation, the assignment $h[x \mapsto t]$ assigns the time point $t$ to the first-order variable $x$. To simplify the presentation, we use $\mathcal{M}, t \vDash \varphi(t)$ to mean $(T, <, h[x \mapsto t]) \vDash \varphi(x)$.
+
+For a generic connective $\sharp$ of arity $n$, let $\varphi_\sharp(t, X_1, \cdots X_n)$ be the monadic first-order formula defining it. Here, $t$ is the point in time that the connective is evaluated at, and the $X_i$ are monadic (second-order) variables. These variables expect a single-variable first-order formula, as shown below
 \begin{equation*}
-    \mathcal{M}, t \vDash \sharp(A_1, \cdots A_n) \Longleftrightarrow (T, <, h[x \mapsto t]) \vDash \varphi_\sharp(x, \alpha_{A_1}, \cdots \alpha_{A_n})
+    \mathcal{M}, t \vDash \sharp(A_1, \cdots A_n) \Longleftrightarrow \mathcal{M}, t \vDash \varphi_\sharp(t, \alpha_{A_1}, \cdots \alpha_{A_n})
 \end{equation*}
 Here, $A_i$ are temporal formulas and $\alpha_{A_i}$ are their first-order translations. Notably, $\varphi_\sharp$ can only quantify over elements in the domain $T$; it cannot use second order quantifiers.
 
@@ -120,7 +122,7 @@ We illustrate this behaviour with an example. The connective $F$ is defined by t
 \end{equation*}
 Hence, we have
 \begin{equation*}
-    \mathcal{M}, t \vDash F p \Longleftrightarrow (T, <, h[x \mapsto t]) \vDash \exists y.\, (x < y) \land p(y)
+    \mathcal{M}, t \vDash F p \Longleftrightarrow \mathcal{M}, t \vDash \exists y.\, (t < y) \land p(y)
 \end{equation*}
 We similarly define the other main connectives
 \begin{equation*}
@@ -488,23 +490,25 @@ Finally, we consider the separation theorem.
                 t < x  &\longmapsto R_>(x)
             \end{aligned}
         \end{equation*}
-        By \cref{corollary:separate-present-form-fomlo}, these are the only instances of $t$ in $\alpha$.
-
-        This produces a new formula $\alpha'$ that
+        By \cref{corollary:separate-present-form-fomlo}, these are the only instances of $t$ in $\alpha$. Call the resulting formula $\alpha'$. Transforming each $\alpha$ in $\varphi$ in this way produces the formula $\varphi'$, defined below
+        \begin{equation}
+            \label{eq:present-separate-form-fomlo-without-t}
+            \varphi'(t) \triangleq \bigvee_i \left( \beta_i(t) \land \bigwedge_j \left( \pm \exists y.\, \alpha'_{i, j}\left(y\right) \right) \right)
+        \end{equation}
+        Observe that each $\alpha'$ in $\varphi'$ satisfies the following properties.
         \begin{alphaenumerate}
-            \item Has a quantifier depth of at-most $n - 1$.
-            \item Has a single free variable.
-            \item Is equivalent to $\alpha$ \textit{if} $R_<$, $R_=$, and $R_>$ are modelled appropriately.
+            \item Their quantifier depth is at-most $n - 1$.
+            \item They have a single free-variable ($y$).
+            \item They are equivalent to $\alpha$ \textit{if} $R_<$, $R_=$, and $R_>$ are modelled appropriately (which we'll discuss in a later part of the proof).
         \end{alphaenumerate}
-
-        These conditions allow us to apply the induction hypothesis on $\alpha'$, producing a temporal formula $\gamma$. Notably, since the pool of atoms has increased, the monads $R_>$, $R_=$, and $R_<$ are transformed into propositional atoms $r_>$, $r_=$, and $r_<$, and are embedded inside $\gamma$.
+        These conditions allow us to use the induction hypothesis on $\alpha'$ to produce a temporal formula $\gamma$. Notably, since the increased pool of monads has created the new propositional atoms $r_>$, $r_=$, and $r_<$. $\gamma$ may contain these atoms.
 
         Now, observe that the existential quantifier in $\exists y.\, \alpha'(y)$ can be expressed in the temporal language as $\diamond \gamma$, where $\diamond$ is shorthand for \textit{at some point in time}. $\diamond$ can be expressed with $S$ and $U$ as follows:
         \begin{equation*}
             \diamond \gamma \equiv \gamma \lor U(\gamma,\top) \lor S(\gamma, \top)
         \end{equation*}
 
-        We proceed to construct temporal formulas $\gamma_{i, j}$ for each $\alpha_{i, j}$ in \eqref{eq:present-separate-form-fomlo}. This allows us to construct the monolithic formula $\psi$:
+        We proceed to construct temporal formulas $\gamma_{i, j}$ for each $\alpha'_{i, j}$ in \eqref{eq:present-separate-form-fomlo-without-t}. This allows us to construct the monolithic temporal formula $\psi$:
         \begin{equation*}
             \psi \triangleq \bigvee_i \left( \rho_i \land \bigwedge_j \left( \pm \diamond \gamma_{i, j} \right) \right)
         \end{equation*}
@@ -514,7 +518,7 @@ Finally, we consider the separation theorem.
         \begin{equation*}
             \psi \equiv \mathbf{B}(\psi_{<, 1}, \ldots, \psi_{<. m_<}, \psi_{=, 1}, \ldots, \psi_{<, m_=}, \psi_{>, 1}, \ldots \psi_{>, m_>})
         \end{equation*}
-        where $\mathbf{B}$ represents the boolean combination, and each $\psi_{<, i}$, $\psi_{=, i}$, and $\psi_{>, i}$ are pure-past, present, and future formulas.
+        where $\mathbf{B}$ abstracts the boolean combinations and the $\psi_{<, i}$, $\psi_{=, i}$, and $\psi_{>, i}$ are pure-past, present, and future formulas.
 
         We earlier stated that if $R_<$, $R_=$, and $R_>$ are appropriately modelled, $\psi$ is equivalent to $\varphi(t)$. The correct values of $R_<$, $R_=$, and $R_>$ are, quite naturally,
         \begin{equation*}
@@ -530,7 +534,19 @@ Finally, we consider the separation theorem.
         \begin{equation*}
             h \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi_{<, i}
         \end{equation*}
-        But, the valuation of $h_<$ in $\psi_{<, i}$ is naturally equivalent to the substitution of all instances of $r_<$ in $\psi_{<, i}$ with $\top$ and instances of $r_=$ and $r_>$ to $\bot$. Let this substituted formula be $\psi'_{<, i}$. Hence,
+        Construct the formula $\psi'_{<, i}$ by substituting all instances of $r_<$ in $\psi_{<, i}$ by $\top$ and all instances of $r_=$ and $r_>$ by $\top$, i.e.,
+        \begin{equation*}
+            \psi'_{<, i} \triangleq \psi_{<, i} \left[ \begin{smallmatrix}
+                r_< \mapsto \top\\
+                r_= \mapsto \bot\\
+                r_> \mapsto \bot
+            \end{smallmatrix} \right]
+        \end{equation*}
+        It's easy to see that
+        \begin{equation*}
+            h_< \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi'_{<, i}
+        \end{equation*}
+        Hence,
         \begin{equation*}
             h \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi'_{<, i}
         \end{equation*}
@@ -538,16 +554,19 @@ Finally, we consider the separation theorem.
         \begin{equation*}
             h \vDash \psi_{<, i} \longleftrightarrow h \vDash \psi'_{<, i}
         \end{equation*}
-        We can similarly substitute the atoms in all other $\psi_{>, i}$ and $\psi_{=, i}$ to get rid of $r_<$, $r_=$, and $r_>$ in $\psi$. Call this new formula $\psi'$.
+        We can similarly substitute the atoms in the $\psi_{>, i}$ and $\psi_{=, i}$ to get rid of $r_<$, $r_=$, and $r_>$ in $\psi$. Call this new formula $\psi'$.
         \begin{equation*}
             \psi' \triangleq \mathbf{B}(\psi'_{<, 1}, \ldots, \psi'_{<. m_<}, \psi'_{=, 1}, \ldots, \psi'_{<, m_=}, \psi'_{>, 1}, \ldots \psi'_{>, m_>})
         \end{equation*}
-
-        We claim that $\psi'$ is equivalent to $\varphi(t)$! Why? One can augment any assignment $h'$ of atoms in $\{q_1, \ldots q_n\}$ with the correct assignments for $r_<$, $r_=$, and $r_>$ to get $h''$. From our earlier arguments, $h''$ treats $\psi$ and $\psi'$ the same, and since $\psi'$ doesn't use $r_<$, $r_=$ and $r_>$,
+        We claim that $\psi'$ is equivalent to $\varphi(t)$. To see why, take any linear temporal structure $\mathcal{M} = (T, <, h)$ and a point $t \in T$ in the flow. Let $h'$ be the extension of $h$ with the appropriate valuations of $R_<$, $R_=$ and $R_>$ and $\mathcal{M}'$ be $(T, <, h')$. It's easy to see that the following double-implications immediately hold:
         \begin{equation*}
-            h'' \vDash \psi' \longleftrightarrow h' \vDash \psi'
+            \begin{aligned}
+                \mathcal{M}, t \vDash \varphi(t) \;\Longleftrightarrow\; \mathcal{M}', t \vDash \varphi'(t)
+                \;\Longleftrightarrow\; \mathcal{M}', t \vDash \psi
+                \;\Longleftrightarrow\; \mathcal{M}, t \vDash \psi'
+            \end{aligned}
         \end{equation*}
-        Since $h''$ models the newly introduced atoms appropriately, the first-order equivalent of $h''$ models each $\alpha'$. And since that first-order model correctly values $R_<$, $R_=$, and $R_>$, its fragment over the monads $\{Q_1, \ldots Q_m\}$ models each $\alpha$, and subsequently, $\varphi(t)$. This proves the separation theorem.
+        This proves the separation theorem.
     \end{description}
 \end{proof}
 
