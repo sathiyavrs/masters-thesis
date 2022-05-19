@@ -33,4 +33,7 @@
 ## lipics OG files (used for backup, not to be tracked/uploaded)
 LIPICS-src/*
 
+# To store a temporary commit message
+.commit_msg
+
 # TODO: Determine if the vtc file has to be tracked
