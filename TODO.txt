@@ -2,3 +2,12 @@ x Add paragraph indent to descriptions
 Convert all \ref to \cref
 Fix formula in the eliminations section
 Use thm-restate for the separation property in sec 2 and 3
+x Change "separation theorem" to "separation property" in Theorem 3.1
+Add the rest of the eliminations in linear time
+x Fix the weird spacing around \Leftarrow et. al.
+Take a look at the "subformula" bit in the final step of linear separation.
+Diagram for $\Downarrow(a, b \land c)$.
+Come up with a better description than an "extended set of atoms" in Lemmas 4.6 - 4.8.
+Mention definition of syntactically separated formula.
+Better definition of standard-form $\Uarrow$-formulas.
+Consider getting rid of the normal form bit
