@@ -625,6 +625,13 @@ Unfortunately, Marx's proof of separation in \cite{xpathComplete} is incorrect. 
 \begin{equation*}
     \Darrow(a, b \land c) \not\equiv \Darrow(a, b) \land \Darrow(a, c)
 \end{equation*}
+This is made explicit in \cref{fig:darrow-a-b-and-c}.
+\begin{figure}[h]
+    \centering
+    \tikzfig{darrow-a-b-and-c}
+    \caption[]{This is an example that satisfies $\Darrow(a, b)$ and $\Darrow(a, c)$, but not $\Darrow(a, b \land c)$.}
+    \label{fig:darrow-a-b-and-c}
+\end{figure}
 
 In the next few sections, we show that a certain class of formulas in $\mathcal{X}_{until}$ can be separated. We also show a few results that show that certain formulas can never be separated into these regions.
 
@@ -741,6 +748,7 @@ Before we proceed with the next result, note that Lemmas \ref{lemma:partial-sepa
 \end{proof}
 We can now state an interesting corollary.
 \begin{corollary}
+    \label{corollary:partial-separation-without-down}
     Let $\gamma$ be a formula in $\mathcal{X}_{until}$ that doesn't use the $\Darrow$ connective. Then, $\gamma$ can be separated.
 \end{corollary}
 \begin{proof}
@@ -759,10 +767,10 @@ At this stage, we begin considering pure-future $\Darrow$-formulas. It's simple 
     Observe that $\gamma'$ only uses the $\Larrow$ and $\Rarrow$ connectives. This allows us to use \cref{lemma:partial-separation-trees-step1} separate $\gamma'$. In the separated formula, substitute all instances of $r_i$ with $\Downarrow_i(\varphi_i, \psi_i)$. It's easy to see that, after substitution, we get a syntactically separated formula.
 \end{proof}
 We can extend this reasoning further by reusing the method used to prove \cref{lemma:partial-separation-trees-step6}.
-\begin{lemma}
+\begin{corollary}
     \label{lemma:partial-separation-trees-step8}
     Let $\gamma$ be a $\mathcal{X}_{until}$ formula such that all $\Darrow$ subformulas are syntactically pure-future and all $\Uarrow$-subformulas are syntactically pure-past. Then, $\gamma$ can be separated.
-\end{lemma}
+\end{corollary}
 \begin{proof}
     Let $\Darrow(\varphi_1, \psi_1), \ldots, \Darrow(\varphi_n, \psi_n)$ be all subformulas of $\gamma$ that (1) don't appear under a $\Darrow$ and (2) don't appear under a $\Uarrow$. Note that, as all $\Uarrow$-subformulas are syntactically pure-past, any $\Darrow$-subformula that appears under a $\Uarrow$ must have an $\Larrow$ or $\Rarrow$ between it and the $\Uarrow$. Also, note that each $\Darrow(\varphi_i, \psi_i)$ are syntactically pure-future. %TODO: Possible diagram here.
 
@@ -771,53 +779,54 @@ We can extend this reasoning further by reusing the method used to prove \cref{l
     Hence, all $r_i$ must occur as a pure-present atom or inside a pure-$\Larrow$ formula or a pure-$\Rarrow$ formula in $\gamma''$. Substituting $\Darrow(\varphi_i, \psi_i)$ for each $r_i$ keeps the formula separated, proving the lemma.
 \end{proof}
 
-\subsubsection{Normal Form} % Consider deleting
-We've reached another checkpoint in our proof of \cref{theorem:partial-separation-trees}. At this stage, it's clear that only the case where the pure-future $\Darrow$-formula is inside an $\Uarrow$-formula remains. To facilitate progress, we consider a \textit{standard form} for pure-past $\Uarrow$-formulas.
-\begin{definition}
-    Let $\gamma = \Uarrow(\varphi, \psi)$ be a formula in $\mathcal{X}_{until}$ such that $\varphi$ and $\psi$ are of the form
-    \begin{equation*}
-        \begin{aligned}
-            \varphi \triangleq \bigwedge_i \pm \varphi_i && \psi \triangleq \bigvee_j \pm \psi_j
-        \end{aligned}
-    \end{equation*}
-    where $\varphi_i$ and $\psi_j$ are either atoms, pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, or smaller $\Uarrow$-formulas in standard form. Then, $\gamma$ is a $\Uarrow$-formula in standard form.
-\end{definition}
-It's easy to see that all standard-form $\Uarrow$-formulas are syntactically pure-past. However, the next result makes these more useful.
-\begin{lemma}
-    \label{lemma:partial-separation-trees-step9}
-    Let $\gamma$ be a syntactically pure-past formula in $\mathcal{X}_{until}$. Then, $\gamma$ can be written as a boolean combination of $\Uarrow$formulas in standard form.
-\end{lemma}
-\begin{proof}
-    Since $\gamma$ is a boolean combination of syntactically pure-past $\Uarrow$-formulas, we limit our discussion to the case where $\gamma$ is a $\Uarrow$ formula. Hence,
-    \begin{equation*}
-        \gamma \triangleq \Uarrow(\varphi, \psi)
-    \end{equation*}
-    We begin by inducting on the $\Uarrow$-depth of $\gamma$.
-    \begin{description}
-        \item[Base case.] The $\Uarrow$-depth of $\gamma$ is 1. This means $\varphi$ and $\psi$ only use the $\Larrow$, $\Rarrow$, and $\Darrow$ connectives. We hence use \cref{lemma:partial-separation-trees-step7} to separate them to $\varphi'$ and $\psi'$. Since $\gamma$ is a syntactically pure-past formula, $\varphi'$ and $\psi'$ will be boolean combinations of atoms, pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas. Writing $\varphi'$ and $\psi'$ in DNF and CNF form gives us
-        \begin{equation*}
-            \begin{aligned}
-                \varphi' &\equiv \bigvee_i \bigwedge_j \pm \varphi'_{i, j}\\
-                \psi' &\equiv \bigwedge_i \bigvee_j \pm \psi'_{i, j}
-            \end{aligned}
-        \end{equation*}
-        where each $\varphi'_{i, j}$ and $\psi'_{i, j}$ are pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, or atoms. Hence, by token of the procedure used in \eqref{eq:dnf-form-S-alpha-beta}, we have
-        \begin{equation*}
-            \begin{aligned}
-                \Uarrow(\varphi, \psi) \equiv \bigvee_i \bigwedge_j \Uarrow(\pm \varphi'_{i, 1} \land \cdots \land \pm \varphi'_{i, n_i} , \pm \psi'_{j, 1} \lor \cdots \lor \pm \psi'_{j, m_j})
-            \end{aligned}
-        \end{equation*}
-        This final form is clearly in standard form.
-
-        \item[Induction step.] Let $\Uarrow(\alpha, \beta), \ldots, \Uarrow(\alpha, \beta)$ be all of $\varphi$'s and $\psi$'s $\Uarrow$-subformulas that aren't under the scope of a $\Uarrow$. Since these subformulas have a strictly lower $\Uarrow$-depth than $\gamma$, we can apply the induction hypothesis to produce equivalent boolean combinations of $\Uarrow$-formulas in standard form for each $\Uarrow(\alpha_i, \beta_i)$. Simply substitute these formulas for $\Uarrow(\alpha_i, \beta_i)$ in $\varphi$ and $\psi$ to produce formulas $\varphi'$ and $\psi'$ in which each $\Uarrow$-subformula is in standard form. This gives us the new formula $\gamma'$ equivalent to $\gamma$:
-        \begin{equation*}
-            \gamma' \triangleq \Uarrow(\varphi', \psi')
-        \end{equation*}
-        Notice that the separation procedure described in the proof of \cref{lemma:partial-separation-trees-step8} maintains the structure of the pure-past $\Uarrow$-subformulas in the separated form. Directly applying that lemma on $\varphi'$ and $\psi'$ produces the separated formulas $\varphi''$ and $\psi''$. As in the base case, we can write $\varphi''$ in DNF and $\psi''$ in CNF to complete the proof.
-    \end{description}
-\end{proof}
+%\subsubsection{Normal Form} % Consider deleting
+%We've reached another checkpoint in our proof of \cref{theorem:partial-separation-trees}. At this stage, it's clear that only the case where the pure-future $\Darrow$-formula is inside an $\Uarrow$-formula remains. To facilitate progress, we consider a \textit{standard form} for pure-past $\Uarrow$-formulas.
+%\begin{definition}
+%    Let $\gamma = \Uarrow(\varphi, \psi)$ be a formula in $\mathcal{X}_{until}$ such that $\varphi$ and $\psi$ are of the form
+%    \begin{equation*}
+%        \begin{aligned}
+%            \varphi \triangleq \bigwedge_i \pm \varphi_i && \psi \triangleq \bigvee_j \pm \psi_j
+%        \end{aligned}
+%    \end{equation*}
+%    where $\varphi_i$ and $\psi_j$ are either atoms, pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, or smaller $\Uarrow$-formulas in standard form. Then, $\gamma$ is a $\Uarrow$-formula in standard form.
+%\end{definition}
+%It's easy to see that all standard-form $\Uarrow$-formulas are syntactically pure-past. However, the next result makes these more useful.
+%\begin{lemma}
+%    \label{lemma:partial-separation-trees-step9}
+%    Let $\gamma$ be a syntactically pure-past formula in $\mathcal{X}_{until}$. Then, $\gamma$ can be written as a boolean combination of $\Uarrow$-formulas in standard form.
+%\end{lemma}
+%\begin{proof}
+%    Since $\gamma$ is a boolean combination of syntactically pure-past $\Uarrow$-formulas, we limit our discussion to the case where $\gamma$ is a $\Uarrow$ formula. Hence,
+%    \begin{equation*}
+%        \gamma \triangleq \Uarrow(\varphi, \psi)
+%    \end{equation*}
+%    We begin by inducting on the $\Uarrow$-depth of $\gamma$.
+%    \begin{description}
+%        \item[Base case.] The $\Uarrow$-depth of $\gamma$ is 1. This means $\varphi$ and $\psi$ only use the $\Larrow$, $\Rarrow$, and $\Darrow$ connectives. We hence use \cref{lemma:partial-separation-trees-step7} to separate them to $\varphi'$ and $\psi'$. Since $\gamma$ is a syntactically pure-past formula, $\varphi'$ and $\psi'$ will be boolean combinations of atoms, pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas. Writing $\varphi'$ and $\psi'$ in DNF and CNF form gives us
+%        \begin{equation*}
+%            \begin{aligned}
+%                \varphi' &\equiv \bigvee_i \bigwedge_j \pm \varphi'_{i, j}\\
+%                \psi' &\equiv \bigwedge_i \bigvee_j \pm \psi'_{i, j}
+%            \end{aligned}
+%        \end{equation*}
+%        where each $\varphi'_{i, j}$ and $\psi'_{i, j}$ are pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, or atoms. Hence, by token of the procedure used in \eqref{eq:dnf-form-S-alpha-beta}, we have
+%        \begin{equation*}
+%            \begin{aligned}
+%                \Uarrow(\varphi, \psi) \equiv \bigvee_i \bigwedge_j \Uarrow(\pm \varphi'_{i, 1} \land \cdots \land \pm \varphi'_{i, n_i} , \pm \psi'_{j, 1} \lor \cdots \lor \pm \psi'_{j, m_j})
+%            \end{aligned}
+%        \end{equation*}
+%        This final form is clearly in standard form.
+%
+%        \item[Induction step.] Let $\Uarrow(\alpha, \beta), \ldots, \Uarrow(\alpha, \beta)$ be all of $\varphi$'s and $\psi$'s $\Uarrow$-subformulas that aren't under the scope of a $\Uarrow$. Since these subformulas have a strictly lower $\Uarrow$-depth than $\gamma$, we can apply the induction hypothesis to produce equivalent boolean combinations of $\Uarrow$-formulas in standard form for each $\Uarrow(\alpha_i, \beta_i)$. Simply substitute these formulas for $\Uarrow(\alpha_i, \beta_i)$ in $\varphi$ and $\psi$ to produce formulas $\varphi'$ and $\psi'$ in which each $\Uarrow$-subformula is in standard form. This gives us the new formula $\gamma'$ equivalent to $\gamma$:
+%        \begin{equation*}
+%            \gamma' \triangleq \Uarrow(\varphi', \psi')
+%        \end{equation*}
+%        Notice that the separation procedure described in the proof of \cref{lemma:partial-separation-trees-step8} maintains the structure of the pure-past $\Uarrow$-subformulas in the separated form. Directly applying that lemma on $\varphi'$ and $\psi'$ produces the separated formulas $\varphi''$ and $\psi''$. As in the base case, we can write $\varphi''$ in DNF and $\psi''$ in CNF to complete the proof.
+%    \end{description}
+%\end{proof}
 
 \subsubsection{Pulling out $\Darrow$ from $\Uarrow$}
+\label{sec:eliminations-trees}
 
 We now restate some of the eliminations justified in the appendix of \cite{xpathComplete}. These eliminations make vital use of the formula $\theta$, defined as
 \begin{equation}
@@ -876,12 +885,14 @@ Unfortunately, unlike the eliminations in \cref{lemma:partial-separation-trees-s
 
 \subsubsection{Final steps}
 
+In the following discussion, we consider $\Uarrow$-formulas that are \textit{almost} pure-past. These are $\Uarrow$-formulas wherein the arguments of every $\Uarrow$-subformula \textit{(including the full formula)} consist of boolean combinations of pure-left $\Larrow$ formulas, pure-right $\Rarrow$ formulas, $\Uarrow$ formulas, and $\Darrow$ formulas. We will later show how to write every $\Uarrow$ formula in this way. In our proof, the $\Darrow$ formulas increase in complexity until we reach our target.
+
 We begin with the following lemma.
 \begin{lemma}
     \label{lemma:partial-separation-trees-step10}
-    Let $\varphi$ and $\psi$ be boolean combinations of atoms, pure-$\Larrow$, and pure-$\Rarrow$ formulas. Take the expanded set of atoms $\mathcal{P}' = \mathcal{P} \cup \{\Darrow(\varphi, \psi)\}$. Let $\alpha$ and $\beta$ be boolean combinations of atoms from $\mathcal{P}'$, pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, and pure-past $\Uarrow$-formulas. Then, $\gamma \triangleq \Uarrow(\alpha, \beta)$ can be separated.
+    Let $\varphi$ and $\psi$ be boolean combinations of atoms, pure-$\Larrow$, and pure-$\Rarrow$ formulas. Let $\alpha$ and $\beta$ be boolean combinations of atoms, pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, pure-past $\Uarrow$-formulas, and the formula $\Darrow(\varphi, \psi)$. Then, $\gamma \triangleq \Uarrow(\alpha, \beta)$ is equivalent to a separated formula where the only pure-future formula is $\Darrow(\varphi, \psi)$.
     \begin{note*}
-        Replacing $\Darrow(\varphi, \psi)$ by a new atom $r$ in $\gamma$ produces a pure-past $\Uarrow$-formula.
+        $\varphi$ and $\psi$ could be any formula in $\mathcal{X}_{until}$ that doesn't use the $\Uarrow$ and $\Darrow$ connectives. Simply  \cref{lemma:partial-separation-trees-step1} produces the formulas specified in the statement.
     \end{note*}
 \end{lemma}
 \begin{proof}
@@ -889,54 +900,125 @@ We begin with the following lemma.
     \begin{equation*}
         \gamma \equiv \bigvee_i \bigwedge_j \Uarrow( \pm \alpha_{i, 1} \land \cdots \land \pm \alpha_{i, n_i}, \pm \beta_{j, 1} \lor \cdots \lor \pm \beta_{j, n_j})
     \end{equation*}
-    where the $\alpha_{i, k_i}$ and $\beta_{j, k_j}$ are atoms, instances of $\Darrow(\varphi, \psi)$, and semantically pure $\pi$-formulas for $\pi \in \{\Larrow, \Rarrow, \Uarrow\}$. For each $\{i, j\}$, we can write the corresponding $\Uarrow$-formula in $\gamma$ as
+    where the $\alpha_{i, k_i}$ and $\beta_{j, k_j}$ can be atoms, instances of $\Darrow(\varphi, \psi)$, and semantically pure $\pi$-formulas for $\pi \in \{\Larrow, \Rarrow, \Uarrow\}$. For each $\{i, j\}$, we can write the corresponding $\Uarrow$-formula in $\gamma$ as
     \begin{equation*}
         \gamma_{i, j} \triangleq \Uarrow(\alpha' \land \pm \Darrow(\varphi, \psi), \beta' \lor \pm \Darrow(\varphi, \psi))
     \end{equation*}
-    where $\alpha'$ and $\beta'$ are conjunctions and disjunctions of semantically pure past, left, present, and right formulas. As we've done many times before, we employ the eliminations detailed earlier for each $\{i, j\}$ to produce the formula $\gamma_{i, j}$.
+    where \textit{(naturally)} $\alpha'$ and $\beta'$ are conjunctions and disjunctions of semantically pure past, left, present, and right formulas. As we've done many times before, we employ the eliminations detailed in \cref{sec:eliminations-trees} at each $\gamma_{i, j}$.
 
-    Let $A = \{\alpha', \beta', \varphi, \psi\}$ and $B = A \cup \{\theta\}$. $\theta$ here is defined by \cref{eq:theta-defn}. From our discussion on pulling out the $\Darrow$ from $\Uarrow$, we know that the eliminations produce syntactically separated formulas in which the pure-past and pure-present subformulas connect the formulas in $B$ using boolean combinations and the $\Uarrow$ connective.
+    Let $A = \{\alpha', \beta', \varphi, \psi\}$ and let $B = A \cup \{\theta\}$ for $\theta$ defined in \cref{eq:theta-defn}. From our discussion in \cref{sec:eliminations-trees}, we know that the eliminations produce syntactically-separated formulas that connect the items in $B$ using the boolean operators, the $\Uarrow$ connective, and the $\Darrow$ connective.
 
-    By the nature of the formulas in $A$, any formula that connects them using boolean operations and the $\Uarrow$ connective is syntactically separated. Unfortunately, the formula $\theta$ doesn't share these properties, as it isn't necessarily a separated formula.
+    By the nature of the formulas in $A$, any formula rooted by a $\Uarrow$ that takes atoms from $A$ and only uses the $\Uarrow$ connective is syntactically pure-past. Unfortunately, the addition of the formula $\theta$ doesn't maintain this property; it isn't separated, and its separated equivalent may contain a pure-future formula.
 
-    As $\theta$ only uses the $\Larrow$, $\Rarrow$ and $\Darrow$ connectives, we can produce a separated equivalent $\theta'$ using \cref{lemma:partial-separation-trees-step7}. We must now argue that $\theta'$ contains no pure-future segment. We do so using the following claim.
+    Remember, $\theta$ only uses the $\Larrow$, $\Rarrow$ and $\Darrow$ connectives. We can produce a separated equivalent $\theta'$ using \cref{lemma:partial-separation-trees-step7}. To safely use the eliminations, we must argue that $\theta'$ contains no pure-future segment. We do so through the following claim.
     \begin{claim*}
-        Take two temporal structures $\mathcal{M} = (T, <, \prec, h)$ and $\mathcal{M}' = (T, <, \prec, h')$ and points $t \in T$ such that $h$ and $h'$ agree on $t$, the left of $t$, and the right of $t$, but disagree on the future of $t$. We claim that
+        Take any two temporal structures $\mathcal{M} = (T, <, \prec, h)$ and $\mathcal{M}' = (T, <, \prec, h')$ and a point $t \in T$ such that $h$ and $h'$ agree on $t$, the left of $t$, and the right of $t$, but disagree on the future of $t$. We claim that
         \begin{equation*}
-            \mathcal{M}, t \vDash \theta \longleftrightarrow \mathcal{M}', t' \vDash \theta
+            \mathcal{M}, t \vDash \theta \longleftrightarrow \mathcal{M}', t \vDash \theta
         \end{equation*}
+        \begin{note*}
+            This claim implies that $\theta$ simply doesn't care about the future of $t$.
+        \end{note*}
     \end{claim*}
     \begin{claimproof}
-        We prove this by contradiction. Suppose, without loss of generality, that $\mathcal{M}, t \vDash \theta$ and $\mathcal{M}', t' \nvDash \theta$. Further suppose that
+        We prove this by contradiction. Suppose, without loss of generality, that $\mathcal{M}, t \vDash \theta$ and $\mathcal{M}', t \nvDash \theta$. Further suppose that
         \begin{equation*}
             \begin{aligned}
                 \mathcal{M}, t &\vDash \Larrow(\varphi \lor (\psi \land \Darrow(\varphi, \psi)), \top)\\
                 \mathcal{M}', t &\nvDash \Larrow(\varphi \lor (\psi \land \Darrow(\varphi, \psi)), \top)
             \end{aligned}
         \end{equation*}
-        We choose this possibility because the argument for the alternative is similar.
+        The argument for the alternative is similar to this one.
 
-        Suppose $\mathcal{M}, t \vDash \Larrow(\varphi, \top)$. Since $\varphi$ only uses the $\Larrow$ and $\Rarrow$ connectives, the truth of $\varphi$ at $t$ only depends on the assignments of atoms at the siblings of $t$. Similarly, the truth of $\Larrow(\varphi, \top)$ at $t$ only depends on the its siblings. Since $\mathcal{M}$ and $\mathcal{M}'$ agree on the siblings of $t$, we must have $\mathcal{M}', t \vDash \Larrow(\varphi, \top)$.
+        Suppose $\mathcal{M}, t \vDash \Larrow(\varphi, \top)$. Since $\varphi$ only uses the $\Larrow$ and $\Rarrow$ connectives, the truth of $\varphi$ at $t$ only depends on the assignments of atoms at $t$ and its siblings. Similarly, the truth of $\Larrow(\varphi, \top)$ at $t$ only depends on $t$ and its siblings. Since $\mathcal{M}$ and $\mathcal{M}'$ agree on these nodes, we have $\mathcal{M}', t \vDash \Larrow(\varphi, \top)$.
 
-        Hence, we must have $\mathcal{M}, t \vDash \Larrow(\psi \land \Darrow(\varphi, \psi), \top)$. Take the left sibling $s \in T$ such that $\mathcal{M}, s \vDash \psi \land \Darrow(\varphi, \psi)$. It's easy to see that $\mathcal{M}$ and $\mathcal{M}'$ agree on the siblings of $s$ and the future of $s$. Hence, since $\psi$ is only concerned with siblings and $\Darrow(\varphi, \psi)$ is pure-future, we must have that $\mathcal{M}', s \vDash \psi \land \Darrow(\varphi, \psi)$. Hence, $\mathcal{M}', t \nvDash \Larrow(\varphi \lor (\psi \land \Darrow(\varphi, \psi)), \top)$, forming a contradiction.
+        Hence, we must have that $\mathcal{M}, t \vDash \Larrow(\psi \land \Darrow(\varphi, \psi), \top)$. Take the left sibling $s \in T$ such that $\mathcal{M}, s \vDash \psi \land \Darrow(\varphi, \psi)$. It's easy to see that $\mathcal{M}$ and $\mathcal{M}'$ agree on $s$, the siblings of $s$, and the future of $s$. Hence, since $\psi$ is only concerned with siblings and $\Darrow(\varphi, \psi)$ is pure-future, we must have $\mathcal{M}', s \vDash \psi \land \Darrow(\varphi, \psi)$. Hence, $\mathcal{M}', t \nvDash \Larrow(\varphi \lor (\psi \land \Darrow(\varphi, \psi)), \top)$, forming a contradiction.
     \end{claimproof}
 
-    We now confidently replace all top-level \textit{(i.e., not under a connective)} pure-future $\Darrow$-formulas (if any exist) in $\theta'$ with $\bot$. This produces $\theta''$, a boolean combination of pure left, present, and right formulas. We further replace $\theta$ with $\theta''$ in each $\gamma_{i, j}$ to produce $\gamma'_{i, j}$.
+    We now confidently replace all top-level \textit{(i.e., not under a connective)} pure-future $\Darrow$-formulas (if any exist) in $\theta'$ with $\bot$. This produces $\theta''$, a boolean combination of pure left, present, and right formulas. Let $A' = A \cup \{\theta''\}$. Observe that the desired property is now maintained, i.e., any pure $\Uarrow$ formula taking atoms from $A'$ is syntactically pure-past.
 
-    Let $B' = A \cup \{\theta''\}$. Observe that the past and present segments of $\gamma'_{i, j}$ are now formulas that connect the formulas in $B'$ with boolean combinations and the $\Uarrow$ formula. Since all formulas in $B'$ are boolean combinations syntactically pure-past, pure-present, pure-left and pure-right formulas, $\gamma'_{i, j}$ is separated. Hence, the formula $\gamma'$
+    Call the result of the eliminations $\gamma'_{i, j}$ for each $\{i, j\}$. Replace $\theta$ in $\gamma'_{i, j}$ with $\theta''$ to produce $\gamma''_{i, j}$. Observe now that $\gamma''_{i, j}$ is syntactically separated, and that its pure future segment consists of instances of $\Darrow(\varphi, \psi)$. Hence, the formula
     \begin{equation*}
-        \gamma' \triangleq \bigwedge_i \bigvee_j \gamma'_{i, j}
+        \gamma'' \triangleq \bigwedge_i \bigvee_j \gamma''_{i, j}
     \end{equation*}
-    and is equivalent to $\gamma$, proving the lemma.
+    is separated and is equivalent to $\gamma$, proving the lemma.
 \end{proof}
-We take this one step further.
+For the next step, we consider the possible nesting of $\Darrow(\varphi, \psi)$ inside multiple instances of the $\Uarrow$ connective.
 \begin{lemma}
     \label{lemma:partial-separation-trees-step11}
-    Let $\varphi$ and $\psi$ be boolean combinations of atoms, pure-$\Larrow$, and pure-$\Rarrow$ formulas. Take the expanded set of atoms $\mathcal{P}' = \mathcal{P} \cup \{\Darrow(\varphi, \psi)\}$. Let $\alpha$ and $\beta$ be boolean combinations of atoms from $\mathcal{P}'$, pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, and pure-past $\Uarrow$-formulas. Then, $\gamma \triangleq \Uarrow(\alpha, \beta)$ can be separated.
-    \begin{note*}
-        Replacing $\Darrow(\varphi, \psi)$ by a new atom $r$ in $\gamma$ produces a pure-past $\Uarrow$-formula.
-    \end{note*}
+    Let $\varphi$ and $\psi$ be boolean combinations of atoms, pure-$\Larrow$ formulas and pure-$\Rarrow$ formulas. Let $\gamma$ be a $\Uarrow$ formula such that the arguments of all $\Uarrow$ subformulas in $\gamma$ are boolean combinations of propositional atoms, pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, and the formula $\Darrow(\varphi, \psi)$. Then, $\gamma$ is equivalent to a separated formula where the only pure-future formula is $\Darrow(\varphi, \psi)$.
 \end{lemma}
+\begin{proof}
+    In this proof, we induct on the maximum $\Uarrow$-depth of a $\Darrow(\varphi, \psi)$ in $\gamma$ that isn't under a $\Larrow$ or a $\Rarrow$.
+
+    \begin{description}
+        \item[Base case.] The maximum depth is 1. This is equivalent to \cref{lemma:partial-separation-trees-step10}.
+        \item[Induction case.] Let the maximum depth be $n$, and $\Uarrow(\alpha_1, \beta_1), \ldots, \Uarrow(\alpha_m, \beta_m)$ be subformulas of $\gamma$ at $\Uarrow$-depth $n-1$ that contain $\Darrow(\varphi, \psi)$ as a subformula. The maximum depth of $n$ ensures that $\Darrow(\varphi, \psi)$ isn't further nested under a $\Uarrow$ in each $\Uarrow(\alpha_i, \beta_i)$.
+
+        We now apply \cref{lemma:partial-separation-trees-step10} to each $\Uarrow(\alpha_i, \beta_i)$ to produce the separated equivalent $\gamma_i$, with the pure-future segment being $\Darrow(\varphi, \psi)$. Hence, replacing $\Uarrow(\alpha_i, \beta_i)$ with $\gamma_i$ produces a similar formula with a maximum depth of strictly less than $n$. Applying the induction hypothesis to this formula proves the lemma.
+    \end{description}
+\end{proof}
+Note how the structure of the $\Uarrow$ subformulas are maintained in \cref{lemma:partial-separation-trees-step11}. The application of the elimination in \cref{lemma:partial-separation-trees-step10} produces $\Uarrow$-formulas over boolean combinations of pure-left, pure-right and similar $\Uarrow$ formulas. \cref{lemma:partial-separation-trees-step11} does't affect this.
+
+We now consider the case of multiple $\Darrow$ formulas with the same restrictions on the arguments.
+\begin{lemma}
+    \label{lemma:partial-separation-trees-step12}
+    Let $\varphi_1, \ldots, \varphi_n$ and $\psi_1, \ldots, \psi_n$ be any two sequences of $n$ $\mathcal{X}_{until}$ formulas that are boolean combinations of atoms, pure-$\Larrow$ formulas, and pure-$\Rarrow$ formulas. Let $\gamma$ be a $\Uarrow$-formula such that the arguments of every $\Uarrow$-subformula in $\gamma$ are boolean combinations of atoms, pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, pure-past $\Uarrow$-formulas, and formulas from $\{\Darrow(\varphi_i, \psi_i) \mid i \in \{1, \ldots, n\} \}$. Then, $\gamma$ is equivalent to a separated formula where the pure-future formulas are instances of $\{\Darrow(\varphi_1, \psi_1), \ldots, \Darrow(\varphi_n, \psi_n)\}$.
+\end{lemma}
+\begin{proof}
+    Predictably, we induct on $n$.
+    \begin{description}
+        \item[Base case.] $n = 1$. This case is identical to \cref{lemma:partial-separation-trees-step11}.
+        \item[Induction case.] Introduce atoms $r_1, \ldots r_{n-1}$. In $\gamma$, replace all occurrences of $\Darrow(\varphi_i, \psi_i)$ by $r_i$ to produce $\gamma'$. Separate $\gamma'$ according to \cref{lemma:partial-separation-trees-step11} to produce $\gamma''$. Replace the $r_i$ in $\gamma'$ with $\Darrow(\varphi_i, \psi_i)$ to produce $\gamma''$.
+
+        Now, the $r_i$ can appear anywhere in $\gamma'$. If it only appears in pure-left, pure-present, and pure-right segments, replacing it with $\Darrow(\varphi_i, \psi_i)$ maintains the separated nature of the formula. Hence, we focus on the $\Uarrow$ formulas that contain the new atoms.
+
+        Since \cref{lemma:partial-separation-trees-step11} doesn't affect the structure of the $\Uarrow$ formulas, their arguments must be boolean combinations of atoms, pure-left formulas, pure-right formulas, and smaller $\Uarrow$ formulas. If $r_i$ only appears inside these pure-left and pure-right subformula, the $\Uarrow$ formula remains pure-past. The only complex case is if the $r_i$ appears as in the pure-present segment as an atom.
+
+        It's easy to see that we can apply the induction hypothesis on these $\Uarrow$ formulas, as they only contain $n-1$ different $\Uarrow$ formulas embedded in them. Applying them to each top-level $\Uarrow$ formula in $\gamma''$ proves this lemma.
+    \end{description}
+\end{proof}
+
+We finally consider the case of the $\Darrow$ formula that contains $\Darrow$ subformulas. This lemma is \textit{slightly} more involved than the previous two.
+\begin{lemma}
+    \label{lemma:partial-separation-trees-step13}
+    Let $\gamma_1, \ldots \gamma_n$ be any sequence of $n$ syntactically pure-future $\Darrow$ formulas, and let $\gamma$ be a $\Uarrow$ formula such that the arguments of every $\Uarrow$ subformula in $\gamma$ are boolean combinations of atoms, pure-left formulas, pure-right formulas, pur-past formulas, and formulas from $\{\gamma_1, \ldots, \gamma_n\}$. Then, $\gamma$ can be separated.
+\end{lemma}
+\begin{proof}
+    We begin by defining a measure $\lambda$ on pure-future $\Darrow$ formulas.
+    \begin{equation*}
+        \lambda(\varphi) = \begin{cases}
+            0, & \text{$\varphi$ has no proper $\Darrow$ subformulas}\\
+            1 + \max_{\psi \in S(\varphi)} \left\{\lambda\left(\psi\right)\right\} & \text{$S(\varphi)$ contains all proper $\Darrow$ subformulas in $\varphi$}
+        \end{cases}
+    \end{equation*}
+    We induct on the $(m, n)$, where $n$ is the length of the sequence and $m$ is the maximum $\lambda$-score of the formulas in $\{\gamma_1, \ldots, \gamma_n\}$.
+
+    \begin{description}
+        \item[Base case.] $m = 0$. All cases of $(0, n)$, for any $n$, is equivalent to \cref{lemma:partial-separation-trees-step12}.
+        \item[Induction step.] For each $i$, denote the set of all proper $\Darrow$ subformulas of $\gamma_i$ as $A_i$.
+        \begin{equation*}
+            A_i = \{ \gamma_{i, 1}, \ldots, \gamma_{i, k_i} \}
+        \end{equation*}
+        where $k_i$ is the number of such subformulas. Introduce $k_i$ new atoms $\{r_{i, 1}, \ldots r_{i, k_i}\}$ and replace $\gamma_{i, j}$ in each instance of $\gamma_i$ in $\gamma$ with $r_{i, j}$. Call the resulting formula $\gamma'$.
+
+        Observe that $\gamma'$ has introduces $\sum_{j = 1}^{n} k_j$ many new atoms, and that its $\lambda$ score is now 0. We can apply \cref{lemma:partial-separation-trees-step12} to $\gamma'$, producing $\gamma''$. At this stage, we replace all instances of $r_{i, j}$ with $\gamma_{i, j}$, producing $\gamma'''$.
+
+        Again, if $r_{i, j}$ only appears in the pure-left, pure-right, and pure-present segments, $\gamma'''$ remains separated. Again, since \cref{lemma:partial-separation-trees-step12} doesn't change the structure of the $\Uarrow$ subformulas, their arguments in $\gamma''$ remain as boolean combinations of atoms, pure-left, pure-right, and similar $\Uarrow$ subformulas. If $r_{i, j}$ only appears in these pure-left or pure-right subformulas, $\gamma'''$ remains separated.
+
+        Hence, the complex case involves $r_{i, j}$ appearing in a $\Uarrow$ formula without appearing under a $\Larrow$ or a $\Rarrow$. In the worst case, this will involve $\sum_{j=1}^{n} k_j$ new pure-future $\Darrow$ formulas. However, since $\lambda(\gamma_{i, j}) < \lambda(\gamma_i)$, we can apply the induction hypothesis on $\gamma'''$. This completes the proof.
+    \end{description}
+\end{proof}
+At this point, our main result becomes a corollary.
+\begin{corollary}[Partial Separation of $\mathcal{X}_{until}$]
+    \label{corollary:partial-separation-final}
+    Let $\gamma$ be a formula in $\mathcal{X}_{until}$ such that all $\Darrow$ subformulas of $\gamma$ are syntactically pure-future. Then, $\gamma$ can be separated.
+\end{corollary}
+\begin{proof}
+    Let $\{\gamma_1, \ldots, \gamma_n\}$ be the set containing all pure-future $\Darrow$ subformulas in $\gamma$. Introduce $n$ new atoms $r_1, \ldots, r_n$ and replace each instance of $\gamma_i$ in $\gamma$ with $r_i$. Call the resulting formula $\gamma'$.
+
+    Separate $\gamma'$ according to \cref{corollary:partial-separation-without-down}, producing $\gamma''$. In a similar way, separate the arguments of all $\Uarrow$ subformulas in $\gamma'$. Now, replace all $r_i$ in $\gamma''$ with $\gamma_i$ to produce $\gamma'''$. Each top-level $\Larrow$, $\Rarrow$, and $\Darrow$ formulas remain pure after the substitution. Simply apply \cref{lemma:partial-separation-trees-step13} to the top-level $\Uarrow$ formulas to complete the proof.
+\end{proof}
 
 % \subsection{More granular regions}
 %

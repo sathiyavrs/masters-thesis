@@ -6,8 +6,9 @@ x Change "separation theorem" to "separation property" in Theorem 3.1
 Add the rest of the eliminations in linear time
 x Fix the weird spacing around \Leftarrow et. al.
 Take a look at the "subformula" bit in the final step of linear separation.
-Diagram for $\Downarrow(a, b \land c)$.
-Come up with a better description than an "extended set of atoms" in Lemmas 4.6 - 4.8.
+x Diagram for $\Downarrow(a, b \land c)$.
+Use the better description for an "extended set of atoms" in Lemmas 4.6 - 4.8.
 Mention definition of syntactically separated formula.
-Better definition of standard-form $\Uarrow$-formulas.
-Consider getting rid of the normal form bit
+x Better definition of standard-form $\Uarrow$-formulas.
+x Consider getting rid of the normal form bit
+Diagram for neutrality of \theta in step10
