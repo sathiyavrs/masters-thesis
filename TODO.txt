@@ -12,3 +12,6 @@ Mention definition of syntactically separated formula.
 x Better definition of standard-form $\Uarrow$-formulas.
 x Consider getting rid of the normal form bit
 Diagram for neutrality of \theta in step10
+Replace pure-fragment with pure-component in all instances
+Fix Fraïssé in refs
+Copyright

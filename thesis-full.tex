@@ -25,7 +25,7 @@
 
 \bibliographystyle{plainurl}% the mandatory bibstyle
 
-\title{Master's Thesis} %TODO: Please add
+\title{Results on the Separation of Conditional XPath} %TODO: Please add
 
 %\titlerunning{Dummy short title} %TODO: optional, please use if title is longer than one line
 
@@ -63,7 +63,7 @@
 
 %\funding{(Optional) general funding statement \dots}%optional, to capture a funding statement, which applies to all authors. Please enter author specific funding statements as fifth argument of the \author macro.
 
-\acknowledgements{I want to thank my advisors Dr. Paul Gastin and Dr. Aiswarya Cyriac for helping me through this project}%optional
+\acknowledgements{I want to thank my advisors \href{https://www.cmi.ac.in/~aiswarya/}{Prof. C. Aiswarya} and \href{http://www.lsv.fr/~gastin/}{Prof. Paul Gastin} for the incredible amount of advice, encouragement, and direction they provided during the difficult parts of this endeavour.}%optional
 
 \nolinenumbers %uncomment to disable line numbering
 
@@ -93,16 +93,34 @@
 
 %TODO mandatory: add short abstract of the document
 \begin{abstract}
-My master's thesis!
+    Separation was introduced by Dov Gabbay for the $S, U$ temporal language over linear time and was shown to imply its expressive equivalence with the first-order monadic logic of order. The flexibility of Gabbay's arguments inspired the popular technique of proving the expressive completeness of a temporal language by showing how it can be separated.
+
+    Attempts have been made to prove separation results for temporal logics that model time differently. Marx proposed a separation for Conditional XPath, the core of which is a natural and expressively-complete temporal language over ordered trees. Sadly, he made a mistake in his proof. In this thesis, we prove some implications of Marx's work, and show a result that discourages the accuracy of his proposed separation.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
 
-The separation property, invented by Dov Gabbay, is a strangely influential consequence of the design of popular temporal languages. Simply put, it requires all formulas in the language to be equivalent to a variant made up of formulas purely concerned with one \textit{region} of the flow of time. Surprisingly, this property is linked to expressive completeness: a sufficiently expressive temporal language with the separation property can express any first-order property. In the next few sections, we will detail the separation property over linear time, its consequences on functional completeness, and discuss the generalization described in \cite{gabbay1994}.
+Temporal logics are excellent languages for making statements about systems that change over time. A variety of these logics have been studied; some differ in the way they model time, some in the way they interpret systems that change with time, and some in the mechanisms they provide to reason through time. A popular example is the Linear Temporal Logic, where time is modelled as a linear order with a clear beginning, and systems that change with time are tracked using classical propositional logic. Other logics have modelled branching time, concurrent systems, and other complex graph structures.
 
-%\paragraph*{Mandatory metadata macros}
+These logics have found applications in many domains, from the formal verification of the behaviour of computer programs to database management systems and even to planning problems in Artificial Intelligence. A part of the reason for the ubiquity of temporal logics is the combination of their attractive expressiveness and complexity properties. The satisfiability of linear-temporal logic, for example, is PSPACE-complete (see \cite{vardiLTL}), which is a significant improvement from the non-elementary complexity of the same problem in the similarly expressive first-order monadic logic of order.
+
+The separation property, invented by Dov Gabbay in \cite{Gabbay1981}, is a strangely influential consequence of the design of popular temporal languages. Simply put, it requires all formulas in the language to be equivalent to a variant made up of formulas purely concerned with certain \textit{regions} of time. Surprisingly, this property is linked to expressive completeness: a sufficiently expressive temporal logic with the separation property can express any first-order specification. In \cref{sec:linear-time}, we will detail the separation property over linear time and how it implies functional completeness.
+
+% Separation has many interesting applications beyond expressive completeness. Gabbay describes one fascinating use-case in \cite{DecPastImpFuture89}. Here, he notes that while general formulas in the temporal logic of $U$ and $S$ (which we describe in \cref{sec:preliminaries}) are \textit{declarative} (i.e., they \textit{declare} correct behaviour), formulas purely concerned with the future can be viewed as instructions (to produce correct behaviour) in an imperative programming language. This, in addition to the separation property, allows us to write every statement in the logic as a conjunction of requirements that (1) inspect the past to see if it satisfies a declarative property, and if the past is correct (2) require future behaviour to be of a certain form. % NOTE: Unfortunately, I probably shouldn't describe this paper entirely here.
+
+Separation has many interesting applications beyond expressive completeness. A beautiful one can be found in \cite{DecPastImpFuture89}, which describes how a temporal language can simultaneously be \textit{declarative} (i.e., specifies correct behaviour) and \textit{imperative} (i.e., provides instructions to achieve correct behaviour). Another use-case, described in \cite{Lichtenstein1985TheGO}, allows formulas to be written as a boolean combination of safety and liveness properties. A more thorough exposition of the applications of separation can be found in \cite{GabbayBirthday05}.
+
+As we earlier implied, temporal languages have been studied for a variety of models of time. A particularly interesting and useful class of temporal logics model time as \textit{ordered trees}. The usefulness of these languages stems directly from the fact that many natural structures in computer science (such as nested words, see \cite{alur2009}) can be encoded as ordered trees. In \cite{marx2005conditional}, Marx describes \textit{Conditional XPath}, a language capable of expressing any first-order property over finite ordered trees. He simplifies this language to its core in \cite{xpathComplete}, and proposes a separation property for it.
+
+Unfortunately, the proof Marx employs for his separation property is incorrect. The mistake lies in an unnamed lemma, and has been commented on in \cite{BeJe07, nwtl}. Further attempts to prove a separation result have been made in \cite{BeCl16}, with mostly negative results.
+
+In this thesis, we explore results around the separation of Conditional XPath over ordered trees. We note Marx's mistakes, and show that his arguments in \cite{xpathComplete} naturally lead to a \textit{partial} separation property, whereby a subset of formulas can be separated. We also believe that certain simple formulas \textit{cannot} be separated; through the use of EF games adapted from \cite{EtWi00}, we show a result that implies that separation of such a formula is unlikely. Separately, we also justify Marx's choice of regions by showing that a more desirable set of regions cannot yield separation.
+
+The structure of this document is as follows. In \cref{sec:preliminaries}, we discuss basic notions regarding temporal languages. In \cref{sec:linear-time}, we provide a (mostly) self-contained exposition of Gabbay's proof of separation over linear time (see \cite{DecPastImpFuture89, gabbay1994}). We discuss our main results in \cref{sec:ordered-trees}.
+
 \section{Preliminaries}
+\label{sec:preliminaries}
 
 Before discussing separation, we define some standard notions. A flow of time is simply a non-empty set $T$ partially ordered by the binary relation $<$. We symbolically refer to these flows by the pair $(T, <)$. Examples include $(\mathbb{N}, <)$ and $(\mathbb{R}, <)$ with their natural ordering, unordered trees with the descendant relation, and Mazurkiewicz traces. We will consider the truth values of propositions (from a fixed set $\mathcal{P}$) at points on these flows.
 
@@ -153,6 +171,7 @@ Note that, unlike the typical definition of $U$, $\varphi_U$ doesn’t rely on t
 On a related note, a flow of time $(T, <)$ is termed to be expressively complete if there exists an expressively complete temporal language over it.
 
 \section{Linear Flows}
+\label{sec:linear-time}
 
 In \cite{gabbay1994}, Gabbay showed how the temporal language $\mathbf{L}$ with the strict until $U$ and since $S$ connectives satisfies the separation property over the integer time flow $(\mathbb{Z}, <)$.
 
@@ -982,7 +1001,7 @@ We now consider the case of multiple $\Darrow$ formulas with the same restrictio
 We finally consider the case of the $\Darrow$ formula that contains $\Darrow$ subformulas. This lemma is \textit{slightly} more involved than the previous two.
 \begin{lemma}
     \label{lemma:partial-separation-trees-step13}
-    Let $\gamma_1, \ldots \gamma_n$ be any sequence of $n$ syntactically pure-future $\Darrow$ formulas, and let $\gamma$ be a $\Uarrow$ formula such that the arguments of every $\Uarrow$ subformula in $\gamma$ are boolean combinations of atoms, pure-left formulas, pure-right formulas, pur-past formulas, and formulas from $\{\gamma_1, \ldots, \gamma_n\}$. Then, $\gamma$ can be separated.
+    Let $\gamma_1, \ldots \gamma_n$ be any sequence of $n$ syntactically pure-future $\Darrow$ formulas, and let $\gamma$ be a $\Uarrow$ formula such that the arguments of every $\Uarrow$ subformula in $\gamma$ are boolean combinations of atoms, pure-left formulas, pure-right formulas, pure-past formulas, and formulas from $\{\gamma_1, \ldots, \gamma_n\}$. Then, $\gamma$ can be separated.
 \end{lemma}
 \begin{proof}
     We begin by defining a measure $\lambda$ on pure-future $\Darrow$ formulas.
@@ -1015,7 +1034,7 @@ At this point, our main result becomes a corollary.
     Let $\gamma$ be a formula in $\mathcal{X}_{until}$ such that all $\Darrow$ subformulas of $\gamma$ are syntactically pure-future. Then, $\gamma$ can be separated.
 \end{corollary}
 \begin{proof}
-    Let $\{\gamma_1, \ldots, \gamma_n\}$ be the set containing all pure-future $\Darrow$ subformulas in $\gamma$. Introduce $n$ new atoms $r_1, \ldots, r_n$ and replace each instance of $\gamma_i$ in $\gamma$ with $r_i$. Call the resulting formula $\gamma'$.
+    Let $\{\gamma_1, \ldots, \gamma_n\}$ be the set containing all top-level pure-future $\Darrow$ subformulas in $\gamma$. Introduce $n$ new atoms $r_1, \ldots, r_n$ and replace each instance of $\gamma_i$ in $\gamma$ with $r_i$. Call the resulting formula $\gamma'$.
 
     Separate $\gamma'$ according to \cref{corollary:partial-separation-without-down}, producing $\gamma''$. In a similar way, separate the arguments of all $\Uarrow$ subformulas in $\gamma'$. Now, replace all $r_i$ in $\gamma''$ with $\gamma_i$ to produce $\gamma'''$. Each top-level $\Larrow$, $\Rarrow$, and $\Darrow$ formulas remain pure after the substitution. Simply apply \cref{lemma:partial-separation-trees-step13} to the top-level $\Uarrow$ formulas to complete the proof.
 \end{proof}
