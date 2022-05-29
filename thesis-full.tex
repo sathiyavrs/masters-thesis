@@ -87,6 +87,8 @@
 \def\Uarrow{\ensuremath\mathord{\Uparrow}}
 \def\Darrow{\ensuremath\mathord{\Downarrow}}
 
+\newcommand{\myvec}[1]{\overrightarrow{\mathbf{#1}}}
+
 \begin{document}
 
 \maketitle
@@ -109,7 +111,7 @@ The separation property, invented by Dov Gabbay in \cite{Gabbay1981}, is a stran
 
 % Separation has many interesting applications beyond expressive completeness. Gabbay describes one fascinating use-case in \cite{DecPastImpFuture89}. Here, he notes that while general formulas in the temporal logic of $U$ and $S$ (which we describe in \cref{sec:preliminaries}) are \textit{declarative} (i.e., they \textit{declare} correct behaviour), formulas purely concerned with the future can be viewed as instructions (to produce correct behaviour) in an imperative programming language. This, in addition to the separation property, allows us to write every statement in the logic as a conjunction of requirements that (1) inspect the past to see if it satisfies a declarative property, and if the past is correct (2) require future behaviour to be of a certain form. % NOTE: Unfortunately, I probably shouldn't describe this paper entirely here.
 
-Separation has many interesting applications beyond expressive completeness. A beautiful one can be found in \cite{DecPastImpFuture89}, which describes how a temporal language can simultaneously be \textit{declarative} (i.e., specifies correct behaviour) and \textit{imperative} (i.e., provides instructions to achieve correct behaviour). Another use-case, described in \cite{Lichtenstein1985TheGO}, allows formulas to be written as a boolean combination of safety and liveness properties. A more thorough exposition of the applications of separation can be found in \cite{GabbayBirthday05}.
+Separation has many interesting applications beyond expressive completeness. A beautiful one can be found in \cite{DecPastImpFuture89}, which describes how a separable temporal language can simultaneously be \textit{declarative} (i.e., specifies correct behaviour) and \textit{imperative} (i.e., provides instructions to achieve correct behaviour). Another use-case, described in \cite{Lichtenstein1985TheGO}, shows that formulas in a separable logic can be written as a boolean combination of safety and liveness properties. A more thorough exposition of the applications of separation can be found in \cite{GabbayBirthday05}.
 
 As we earlier implied, temporal languages have been studied for a variety of models of time. A particularly interesting and useful class of temporal logics model time as \textit{ordered trees}. The usefulness of these languages stems directly from the fact that many natural structures in computer science (such as nested words, see \cite{alur2009}) can be encoded as ordered trees. In \cite{marx2005conditional}, Marx describes \textit{Conditional XPath}, a language capable of expressing any first-order property over finite ordered trees. He simplifies this language to its core in \cite{xpathComplete}, and proposes a separation property for it.
 
@@ -146,7 +148,7 @@ We illustrate this behaviour with an example. The connective $F$ is defined by t
 \end{equation*}
 Hence, we have
 \begin{equation*}
-    \mathcal{M}, t \vDash F p \Longleftrightarrow \varphi_F(t, p)
+    \mathcal{M}, t \vDash F q_i \Longleftrightarrow \varphi_F(t, Q_i)
 \end{equation*}
 We similarly define the other main connectives
 \begin{equation*}
@@ -186,7 +188,7 @@ Note that these regions are disjoint, and that the union of these regions produc
 \begin{figure}
     \centering
     \tikzfig{separation-linear}
-    \caption[]{Regions for linear separation. The present is black, the past is \textcolor{OliveGreen}{green}, and the future is \textcolor{blue}{blue}.}
+    \caption[]{\emph{Regions for linear separation.} The present is black, the past is \textcolor{OliveGreen}{green}, and the future is \textcolor{blue}{blue}.}
     \label{fig:linear-separation-regions}
 \end{figure}
 
@@ -636,7 +638,7 @@ Marx suggested a separation property for this temporal language over ordered tre
 \begin{figure}[h]
     \centering
     \tikzfig{separation-tree-marx}
-    \caption[]{Marx's regions. The black node is the present, the \textcolor{orange}{orange} nodes belong to the \textit{left} region, the \textcolor{red}{red} nodes to the \textit{right}, the \textcolor{blue}{blue} nodes are the \textit{future}, and the \textcolor{OliveGreen}{green} nodes are the \textit{past}. The descendant relation is given by the black lines and the sibling order is denoted by the \textcolor{red}{red} lines. Dashed lines indicate potential intermediate nodes.}
+    \caption[]{\emph{Marx's regions.} The black node is the present, the \textcolor{orange}{orange} nodes belong to the \textit{left} region, the \textcolor{red}{red} nodes to the \textit{right}, the \textcolor{blue}{blue} nodes are the \textit{future}, and the \textcolor{OliveGreen}{green} nodes are the \textit{past}. The descendant relation is given by the black lines and the sibling order is denoted by the \textcolor{red}{red} lines. Dashed lines indicate potential intermediate nodes.}
     \label{fig:marx-regions}
 \end{figure}
 
@@ -652,9 +654,10 @@ This is made explicit in \cref{fig:darrow-a-b-and-c}.
     \label{fig:darrow-a-b-and-c}
 \end{figure}
 
-In the next few sections, we show that a certain class of formulas in $\mathcal{X}_{until}$ can be separated. We also show a few results that show that certain formulas can never be separated into these regions.
+We present our results in the next few sections. In \cref{sec:partial-separation-start}, we describe how a class of $\mathcal{X}_{until}$ formulas can be separated. In \cref{sec:ef-games-start}, we present the arguments behind our belief that certain formulas can never be separated. %TODO: Add a sentence here about the granular regions argument.
 
 \subsection{Partial Separation of $\mathcal{X}_{until}$}
+\label{sec:partial-separation-start}
 
 As with linear flows, we can define a notion of syntactically pure formulas in $\mathcal{X}_{until}$. Again, to simplify presentation, we refer to formulas rooted by a $\pi$ for $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ as a $\pi$-formula.
 \begin{definition}
@@ -671,10 +674,10 @@ As with linear flows, we can define a notion of syntactically pure formulas in $
 It's simple enough to observe that all syntactically pure formulas are semantically pure. To simplify our arguments, we also introduce the notion of the \textit{pure $\pi$ formula} for $\pi \in \{ \Larrow, \Rarrow, \Darrow, \Uarrow \}$. Simply put, a formula is pure $\pi$ \textit{iff} the only connective it uses is $\pi$.
 
 In this subsection, we aim to show the following theorem.
-\begin{theorem}[Partial Separation of $\mathcal{X}_{until}$]
+\begin{claim*}[Partial Separation of $\mathcal{X}_{until}$]
     \label{theorem:partial-separation-trees}
     Let $\varphi$ be a formula in $\mathcal{X}_{until}$ such that all $\Darrow$-subformulas of $\varphi$ are syntactically pure-future. Then, $\varphi$ can be separated.
-\end{theorem}
+\end{claim*}
 This theorem can be seen as a consequence of two facts. First, \eqref{eq:or-and-S-U} is valid for the modalities $\pi \in \{\Uarrow, \Larrow, \Rarrow\}$. Second, the eliminations presented in \cite{xpathComplete} prove that formulas of the form $\Uarrow(a \land \pm \Darrow(p, q), b \lor \pm \Darrow(p, q))$ can be separated.
 
 \subsubsection{Separating $\Larrow$, $\Rarrow$ and $\Uarrow$}
@@ -1037,6 +1040,112 @@ At this point, our main result becomes a corollary.
     Let $\{\gamma_1, \ldots, \gamma_n\}$ be the set containing all top-level pure-future $\Darrow$ subformulas in $\gamma$. Introduce $n$ new atoms $r_1, \ldots, r_n$ and replace each instance of $\gamma_i$ in $\gamma$ with $r_i$. Call the resulting formula $\gamma'$.
 
     Separate $\gamma'$ according to \cref{corollary:partial-separation-without-down}, producing $\gamma''$. In a similar way, separate the arguments of all $\Uarrow$ subformulas in $\gamma'$. Now, replace all $r_i$ in $\gamma''$ with $\gamma_i$ to produce $\gamma'''$. Each top-level $\Larrow$, $\Rarrow$, and $\Darrow$ formulas remain pure after the substitution. Simply apply \cref{lemma:partial-separation-trees-step13} to the top-level $\Uarrow$ formulas to complete the proof.
+\end{proof}
+
+\subsection{Why some formulas can't be separated}
+\label{sec:ef-games-start}
+
+The reason we cannot continue the arguments we presented in the previous section and separate mixed $\Darrow$ formulas is the same reason behind Marx's mistake; the fact that the $\Darrow$ connective isn't deterministic in its choice of the downward path. The argument we earlier presented in \cref{fig:darrow-a-b-and-c} implies that one cannot write each $\Darrow$ formula in the form
+\begin{equation*}
+    \Darrow(\alpha, \beta) \not\equiv \bigvee_i \bigwedge_j \Darrow( \pm \alpha_{i, 1} \land \cdots \land \pm \alpha_{i, n_i}, \pm \beta_{j, 1} \lor \cdots \lor \pm \beta_{j, n_j})
+\end{equation*}
+There are bigger consequences of this non-determinism. $\Darrow$ formulas that appear in the path condition of other $\Darrow$ formulas don't necessarily traverse the same path as their parent, as made evident in \cref{darrow-unreliable}.
+\begin{figure}[h]
+    \centering
+    \tikzfig{darrow-unreliable}
+    \caption[]{\emph{The unreliability of $\Darrow$.} The present point must satisfy $\Darrow(a, b \lor \Darrow(c, d))$. No point along the path to $a$ is a $c$.}
+    \label{fig:linear-separation-regions}
+\end{figure}
+This is a problem because many eliminations in \cref{sec:eliminations-trees} require the ability to look for unfulfilled and dangerous points a little further down the main path. It is this \textit{unreliability} that we capitalize on in our arguments.
+
+\textit{We must admit that this is a work in progress.} In this section, we will show a mixed $\Darrow$ formula that only uses the $\Darrow$ and $\Uarrow$ connectives that cannot be separated into a formula that only uses $\Darrow$ and $\Uarrow$. We believe it is perfectly possible to extend our argument to show that no separated formula that uses all the tools provided by $\mathcal{X}_{until}$ is equivalent to our mixed $\Darrow$ formula, but we don't present a proof for it here.
+
+In the next few sections, we describe an EF game for Conditional XPath. We will use these games in our arguments.
+
+\subsubsection{EF Games for $\mathcal{X}_{until}$}
+In \cite{EtWi00}, Etessami and Wilke define a modified version of the EF-games designed for LTL formulas. With these games, they show a strict hierarchy of expressive power of LTL formulas that classifies formulas based on their \textsf{Until} ($U$) depth. In this subsection, we define EF-games similar in spirit to their games.
+
+As with all EF games, ours are played on two structures $\mathcal{M}$ and $\mathcal{M}'$ by two players called the spoiler and the duplicator. In our games, these structures are ordered trees. To simplify our analysis, we assume that each node in these trees is labelled by an alphabet from $\Sigma$, a finite set of alphabets. At the beginning of the game, a pebble is placed on some node in each structure. We refer to these nodes as the ``current'' nodes.
+
+At the start of each round, the spoiler begins by picking a type of move. Each connective $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ corresponds to a type of move in this game. These moves have two stages. In the first stage, the spoiler picks one of the two structures, say $\mathcal{M}$, and places a second pebble at a node that can be reached from the current node in $\mathcal{M}$ by moving a few steps in the direction of $\pi$. For instance, if $\pi = \Larrow$, then the spoiler places a second pebble that's a left-sibling to the first node in $\mathcal{M}$. Importantly, if $\pi = \Darrow$, then the spoiler can pick any descendant of the current node. The duplicator responds by placing a second pebble in the other structure (which is $\mathcal{M}'$) that can be reached from its current node by moving in the same direction.
+
+At this point, the spoiler can choose to end the move by removing the older pebbles from both structures. He can also choose to continue onto the second stage, which requires the spoiler to pick a node \emph{on the path connecting the two pebbles in the \emph{other structure}}, which is $\mathcal{M}'$. He places a third pebble at his selected node. The duplicator does the same in $\mathcal{M}$. The game proceeds by removing the older pebbles in both structures.
+
+In our EF games, we limit the number of moves of a single type the spoiler can make. The sum of these limits forms the number of rounds of the game. Call an EF game a $(k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ game if the spoiler is allowed to make $k_\pi$ moves for each $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$. For convenience, we often refer to the tuple using a vector notation, as in $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ and denote its sum $\sum k_\pi$ as $n$. Note that $n$ is the total number of rounds in the game.
+
+The spoiler wins the $n$ round game if, after $n$ rounds, the current nodes at both structures are labelled differently. The duplicator wins otherwise. Note that, in all moves, the spoiler automatically wins if the duplicator is unable to find a node to place a pebble.
+
+We now begin to prove the usefulness of these games. We first provide the following definition.
+\begin{definition}
+    Let $\varphi$ be a $\mathcal{X}_{until}$ formula. For $\pi \in \{\Darrow, \Uarrow, \Larrow, \Rarrow\}$, the $\pi$ depth of $\varphi$ is simply the maximum number of $\pi$ connectives in a path from the root to a leaf in the formula tree of $\varphi$.
+\end{definition}
+The following lemma simplifies our arguments greatly. Note that the set of atomic propositions $\mathcal{P}$ is now $\Sigma$, with the usual caveat of only allowing one alphabet at a time.
+\begin{lemma}
+    \label{lemma:count-limiter-efgames}
+    Suppose the set of all atomic propositions $\mathcal{P}$ was finite. Then, up-to expressive equivalence, there are finitely many $\mathcal{X}_{until}$ formulas of $\pi$ depth $\leq k_\pi$ for each $\pi \in \{\Darrow, \Uarrow, \Larrow, \Rarrow\}$ and for any tuple $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$.
+    \begin{remark*}
+        For simplicity, we say that these formulas are \emph{depth-bound} by $\myvec{k}$.
+    \end{remark*}
+\end{lemma}
+\begin{proof}
+    We show this by inducting on $n = \sum k_\pi$.
+    \begin{description}
+        \item[Base case.] $n = 0$. This is equivalent to showing that boolean operators can combine formulas from a finite set (in this case, $\mathcal{P}$) in finitely many unique ways. This can be observed by drawing a truth table.
+        \item[Induction case.] Let $A$ be the set of all (up-to expressive equivalence) formulas with the sum of their $\pi$ depths less than $n$. Augment $A$ with formulas of the form $\pi(\varphi, \psi)$ for any combination of $\varphi \in A$ and $\psi \in A$ to produce the set $B$. Observe that $B$ is a finite set that contains all ``atomic'' formulas with the sum of $\pi$ depths being $n$. The fact that boolean operators can only combine formulas in $B$ in finitely many ways completes the proof.
+    \end{description}
+\end{proof}
+Now for the main result of this subsection.
+\begin{theorem}
+    Let $\mathcal{M}$ and $\mathcal{M}'$ be two ordered trees with nodes labelled by alphabets from $\Sigma$, and let $t$ and $t'$ be two points on these trees. Suppose a spoiler and a duplicator play a $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ round EF game on $\mathcal{M}$ and $\mathcal{M}'$ with the starting pebbles at $t$ and $t'$. Then,
+
+    \begin{bracketenumerate}
+        \item If all $\mathcal{X}_{until}$ formulas $\varphi$ depth-bound by $\myvec{k}$ cannot differentiate $\mathcal{M}, t$ from $\mathcal{M}', t'$, i.e.,
+            \begin{equation*}
+                \mathcal{M}, t \vDash \varphi \longleftrightarrow \mathcal{M}', t' \vDash \varphi
+            \end{equation*}
+            then, the duplicator has a winning strategy.
+
+        \item If there exists some $\mathcal{X}_{until}$ formula $\varphi$ that is depth-bound by $\myvec{k}$ and
+            \begin{equation*}
+                \mathcal{M}, t \vDash \varphi \longleftrightarrow \mathcal{M}', t' \nvDash \varphi
+            \end{equation*}
+            then, the spoiler has a winning strategy.
+    \end{bracketenumerate}
+
+\end{theorem}
+\begin{proof}
+    We first show (1), and then (2).
+
+    \proofsubparagraph{Case 1: No candidate formula differentiates the two structures.} In this case, we build the duplicator's winning strategy, by inducting on the number of rounds $n$.
+
+    \begin{description}
+        \item[Base case.] $n = 0$. Our assumptions ensure that the label of $t$ and $t'$ are identical, completing this case.
+        \item[Induction step.]
+            Suppose the spoiler plays a $\sigma$ move, and places a second pebble in $\mathcal{M}$ at a node $s$. Derive the tuple $\myvec{k'}$ from $\myvec{k}$ such that $k'_{\sigma} = k_{\sigma} - 1$ and $k'_\pi = k_\pi$ for all $\pi \neq \sigma$. Build the set $A$ of all (up-to equivalence) $\mathcal{X}_{until}$ formulas depth bound by $\myvec{k'}$ using \cref{lemma:count-limiter-efgames}.
+
+            We now build the $\sigma$-formula that the spoiler has in mind. Let $\alpha$ be the conjunction of all formulas $\varphi \in A$ such that $\mathcal{M}, s \vDash \varphi$. This formula $\alpha$ becomes our target condition.
+
+            For the path condition, we need to produce one that talks about all nodes on the path. Let $B$ be the set of all nodes in $\mathcal{M}$ on the path from $t$ to $s$. $B$ is necessarily finite. For each node $b \in B$, let $\psi_b$ be the conjunction of all formulas $\gamma \in A$ such that $\mathcal{M}, b \vDash \gamma$. Finally, let $\beta$ be the disjunction of all $\psi_b$. This produces our path condition.
+
+            It's easy to see that $\alpha$ and $\beta$ are well-defined formulas depth bound by $\myvec{k'}$. Hence, the formula $\sigma(\alpha, \beta)$ is depth bound by $\myvec{k}$. This means that $\mathcal{M}', t' \vDash \sigma(\alpha, \beta)$. Thus, we are guaranteed a point $s' \in \mathcal{M}'$ with $\mathcal{M}', s' \vDash \alpha$ such that, for all nodes $b' \in \mathcal{M}'$ on the path from $t'$ to $s'$, $\mathcal{M}', b' \vDash \beta$.
+
+            The duplicator picks this point $s' \in \mathcal{M}'$ and places his pebble there. If the spoiler continues the game from $s$ and $s'$, we employ the induction hypothesis to construct the duplicator's strategy. If the spoiler picks a point $b' \in \mathcal{M}'$ on the path from $t'$ to $s'$, the duplicator is aware that $\mathcal{M}', b' \vDash \beta$. Since $\beta$ is a disjunction of the $\psi_b$ formulas, $b'$ must satisfy one of them. Let $c \in \mathcal{M}$ be that node on the path from $t$ to $s$. Hence, $\mathcal{M}', b' \vDash \psi_c$ and $\mathcal{M}, c \vDash \psi_c$. The duplicator places his pebble at $c$, completing the round.
+
+            At this stage, the game must proceed from $c$ and $b'$. Applying the induction hypothesis to this case finishes the proof.
+    \end{description}
+
+    \proofsubparagraph{Case 2: The formula $\varphi$ differentiates the two structures.} We similarly induct on $n$.
+    \begin{description}
+        \item[Base case.] $n = 0$. The assumptions force different labels on $t$ and $t'$, forcing a spoiler victory.
+        \item[Induction step.]
+            Let $A$ be the set of all top-level $\{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ subformulas in $\varphi$. Clearly, if $\mathcal{M}, t \vDash \psi$ and $\mathcal{M}', t' \vDash \psi$ for every $\psi \in B$, both structures model $\varphi$. Hence, there must be one subformula $\sigma(\alpha, \beta)$ for $\sigma \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ such that, without loss of generality,
+            \begin{equation*}
+                \mathcal{M}, t \vDash \sigma(\alpha, \beta) \land \mathcal{M}', t' \nvDash \sigma(\alpha, \beta)
+            \end{equation*}
+            This means that there is a point $s \in \mathcal{M}$ that can be reached by moving in the direction of $\sigma$ such that $\mathcal{M}, s \vDash \alpha$ and for all points $r$ in the path from $t$ to $s$, $\mathcal{M}, r \vDash \beta$. The spoiler places his pebble on this point $s$.
+
+            If the duplicator picks a point $s' \in \mathcal{M}'$ such that $\mathcal{M}', s' \nvDash \alpha$, the spoiler continues the game from $s$ and $s'$. At this stage, we can apply the induction hypothesis to produce the spoiler's strategy. Otherwise, by construction, there must be some point $r' \in \mathcal{M}'$ on the path from $t'$ to $s'$ such that $\mathcal{M}', r' \nvDash \beta$. The spoiler picks this point $r' \in \mathcal{M}'$. No matter which point $r$ the duplicator picks, we will have that $\mathcal{M}, r \vDash \beta$. This allows us to use the induction hypothesis at the game starting from $r$ and $r'$, completing the proof.
+    \end{description}
 \end{proof}
 
 % \subsection{More granular regions}
