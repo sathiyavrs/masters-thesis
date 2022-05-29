@@ -126,7 +126,7 @@ Before discussing separation, we define some standard notions. A flow of time is
 
 The first-order vocabulary over these structures contains the ordering relation $<$ and a collection of \textit{monadic} relations $Q_1, Q_2, \cdots$ that match the propositions $q_1, q_2, \cdots$ in $\mathcal{P}$. An assignment $h$ of atoms in a time flow $(T, <)$ assigns to each $Q_i$ a subset of $T$ where the atom $q_i$ is true. Augmented with the assignment, the triplet $(T, <, h)$ is called a \textit{temporal structure}. First-order formulas are evaluated over these structures in the usual way. In this discussion, we pay special attention to first-order formulas with a single free-variable; they quite naturally mirror temporal formulas.
 
-Instead of free variables and quantification, temporal languages employ \textit{connectives} to reason through time. Popular connectives include $F$, $P$, $G$, $H$, $U$, and $S$, known as \textit{future}, \textit{past}, \textit{globally}, \textit{history}, \textit{until} and \textit{since} respectively. In this paper, we will limit our discussion to connectives that are definable by monadic first-order formulas.
+Instead of free variables and quantification, temporal languages employ \textit{connectives} to reason through time. Popular connectives used in temporal languages over linear time include $F$, $P$, $G$, $H$, $U$, and $S$, each called \textit{future}, \textit{past}, \textit{globally}, \textit{history}, \textit{until} and \textit{since} respectively. In this paper, we will limit our discussion to connectives that are definable by monadic first-order formulas.
 
 Temporal formulas are evaluated at points in time. In a temporal structure $\mathcal{M} = (T, <, h)$, atoms are evaluated as
 \begin{equation*}
@@ -146,7 +146,7 @@ We illustrate this behaviour with an example. The connective $F$ is defined by t
 \end{equation*}
 Hence, we have
 \begin{equation*}
-    \mathcal{M}, t \vDash F p \Longleftrightarrow \mathcal{M}, t \vDash \exists y.\, (t < y) \land p(y)
+    \mathcal{M}, t \vDash F p \Longleftrightarrow \varphi_F(t, p)
 \end{equation*}
 We similarly define the other main connectives
 \begin{equation*}
@@ -162,7 +162,7 @@ Note that, unlike the typical definition of $U$, $\varphi_U$ doesn’t rely on t
 
 \begin{definition}[Expressive Completeness]
     \label{expressive-completeness-definition}
-    A temporal language is \textbf{first-order expressively complete} over a class of time flows \textit{iff} there exists a temporal formula $A$ for any first-order formula with one free variable $\varphi(t)$ such that
+    A temporal language is \textbf{first-order expressively complete} over a class of time flows if there exists a temporal formula $A$ for any first-order formula with one free variable $\varphi(t)$ such that
 \begin{equation*}
     \mathcal{M}, t \vDash A \Longleftrightarrow \mathcal{M}[x \mapsto t] \vDash \varphi(x)
 \end{equation*}
@@ -173,9 +173,9 @@ On a related note, a flow of time $(T, <)$ is termed to be expressively complete
 \section{Linear Flows}
 \label{sec:linear-time}
 
-In \cite{gabbay1994}, Gabbay showed how the temporal language $\mathbf{L}$ with the strict until $U$ and since $S$ connectives satisfies the separation property over the integer time flow $(\mathbb{Z}, <)$.
+In \cite{gabbay1994}, Gabbay showed how the temporal language $\mathbf{L}$ with the \textsf{strict until} $U$ and \textsf{strict since} $S$ connectives satisfies the separation property over the integer time flow $(\mathbb{Z}, <)$.
 
-To discuss this further, we need the notion of \textit{regions} and \textit{pure formulas}. Informally, the flow of time $(T, <)$ is partitioned into a set of regions. The positions of these regions depends on the position of the time point $t$ where the temporal formula is being evaluated. For linear flows, Gabbay selected three regions:
+To discuss this further, we need the notion of \textit{regions} and \textit{pure formulas}. Informally, the flow of time $(T, <)$ is partitioned into a set of regions. The positions of these regions depends on the position of the time point $t$ where the temporal formula is being evaluated. For the flow $(\mathbb{Z}, <)$, Gabbay selected three regions:
 \begin{itemize}
     \item The \textit{past} of $t$, formally defined as $\{ x \mid x \in \mathbb{Z} \land x < t\}$.
     \item The \textit{present}, which is simply $\{ t \}$.
@@ -195,7 +195,7 @@ Now, we define \textit{pure formulas}. For any flow $(T, <)$, we denote two assi
 \begin{equation*}
     s \in h(q) \Longleftrightarrow s \in h'(q)
 \end{equation*}
-Now, call a temporal formula $A$ \textit{pure} with respect to a region $R$ \textit{iff} for any two assignments $h$ and $h'$ that agree on $R$,
+Now, call a temporal formula $A$ \textit{pure} with respect to a region $R$ if, for any two assignments $h$ and $h'$ that agree on $R$,
 \begin{equation*}
     (T, <, h), t \vDash A \Longleftrightarrow (T, <, h'), t \vDash A
 \end{equation*}
@@ -211,13 +211,13 @@ It's easy to see that formulas that don't use the $S$ and $U$ connectives are pu
     \end{enumerate}
 \end{definition}
 
-Finally, call a formula $A$ \textbf{separated} if it is a boolean combination of pure formulas. Now, we can state the separation property
+Finally, call a formula $A$ \textbf{syntactically separated} if it is a boolean combination of pure formulas. Now, we can state the separation property
 \begin{theorem}[Separation Property for linear flows]
     \label{theorem:separation-property-linear-time}
     Every temporal formula $A$ in the language of $S$ and $U$ over linear time can be equivalently represented by a separated formula.
 \end{theorem}
 
-The proof of this theorem is quite involved, and is presented in full detail in \cite{gabbay1994}. In the next few sections, I'll give a high-level overview of Gabbay et. al.'s scheme. To mirror their notation, I'll write $U$ formulas as $U(p, q)$ instead of $q \,\mathcal{U}\, p$.
+The proof of this theorem is quite involved, and is presented in full detail in \cite{gabbay1994}. In the next few sections, we'll give a high-level overview of Gabbay et. al.'s scheme. To mirror their notation, we'll write $U$ formulas as $U(p, q)$ instead of $q \,\mathcal{U}\, p$.
 
 \subsection{Separating $S$ and $U$ over linear time}
 
@@ -228,7 +228,7 @@ As a reminder, we restate the definitions of $U$ and $S$
         \mathcal{M}, t \vDash S(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (x < t) \land p(x) \land \forall y \left( x < y < t \to q\left( y \right) \right)
     \end{aligned}
 \end{equation*}
-For convenience, we refer to the left condition ($p$) in $U(p, q)$ as the \textit{target} condition and the right condition ($q$) as the \textit{path} condition. Observe that, over linear time, a formula composed only of $U$s is a pure future formula, a formula composed of $S$s is a pure past formula. The task, therefore, is to transform formulas with both $U$s and $S$es.
+For convenience, we refer to the left condition ($p$) in $U(p, q)$ as the \textit{target} condition and the right condition ($q$) as the \textit{path} condition. Observe that, over linear time, a formula composed only of $U$s is a pure future formula, a formula composed of $S$s is a pure past formula. The task, therefore, is to transform formulas with both $U$s and $S$s.
 
 Over the integer time flow $(\mathbb{Z}, <)$, these connectives naturally possess the following properties
 \begin{equation}
@@ -317,7 +317,7 @@ This case is very similar to the previous case. The points we search for must be
 \end{equation*}
 
 \paragraph*{$S(\alpha \land U(\varphi,\psi), \beta \lor U(\varphi, \psi))$}
-This is a neat combination of $S(\alpha \land U(\varphi, \psi), \beta)$ and $S(\alpha, \beta \lor U(\varphi, \psi))$. The translation is simple. \textit{I believe Gabbay made a typo in this particular example. \cite{xpathComplete} mentions this.}
+This is a neat combination of $S(\alpha \land U(\varphi, \psi), \beta)$ and $S(\alpha, \beta \lor U(\varphi, \psi))$. The translation is simple. \footnote{\textit{I believe Gabbay made a typo in this particular example. \cite{xpathComplete} mentions this.}}
 \begin{equation*}
     \begin{aligned}
         \quad S(\alpha, \psi) \land (\varphi \lor (\psi \land U(\varphi, \psi))) \\
