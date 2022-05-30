@@ -214,12 +214,11 @@ It's easy to see that formulas that don't use the $S$ and $U$ connectives are pu
 \end{definition}
 
 Finally, call a formula $A$ \textbf{syntactically separated} if it is a boolean combination of pure formulas. Now, we can state the separation property
-\begin{theorem}[Separation Property for linear flows]
-    \label{theorem:separation-property-linear-time}
+\begin{claim*}[Separation Property for linear flows]
+    \label{claim:separation-property-linear-time}
     Every temporal formula $A$ in the language of $S$ and $U$ over linear time can be equivalently represented by a separated formula.
-\end{theorem}
-
-The proof of this theorem is quite involved, and is presented in full detail in \cite{gabbay1994}. In the next few sections, we'll give a high-level overview of Gabbay et. al.'s scheme. To mirror their notation, we'll write $U$ formulas as $U(p, q)$ instead of $q \,\mathcal{U}\, p$.
+\end{claim*}
+The proof of this claim is quite involved, and is presented in full detail in \cite{gabbay1994}. In the next few sections, we'll provide most of Gabbay et. al.'s proof, parts of which we use in later sections. To mirror their notation, we'll write $U$ formulas as $U(p, q)$ instead of $q \,\mathcal{U}\, p$.
 
 \subsection{Separating $S$ and $U$ over linear time}
 
@@ -675,14 +674,14 @@ It's simple enough to observe that all syntactically pure formulas are semantica
 
 In this subsection, we aim to show the following theorem.
 \begin{claim*}[Partial Separation of $\mathcal{X}_{until}$]
-    \label{theorem:partial-separation-trees}
+    \label{claim:partial-separation-trees}
     Let $\varphi$ be a formula in $\mathcal{X}_{until}$ such that all $\Darrow$-subformulas of $\varphi$ are syntactically pure-future. Then, $\varphi$ can be separated.
 \end{claim*}
-This theorem can be seen as a consequence of two facts. First, \eqref{eq:or-and-S-U} is valid for the modalities $\pi \in \{\Uarrow, \Larrow, \Rarrow\}$. Second, the eliminations presented in \cite{xpathComplete} prove that formulas of the form $\Uarrow(a \land \pm \Darrow(p, q), b \lor \pm \Darrow(p, q))$ can be separated.
+This claim can be seen as a consequence of two facts. First, \eqref{eq:or-and-S-U} is valid for the modalities $\pi \in \{\Uarrow, \Larrow, \Rarrow\}$. Second, the eliminations presented in \cite{xpathComplete} prove that formulas of the form $\Uarrow(a \land \pm \Darrow(p, q), b \lor \pm \Darrow(p, q))$ can be separated.
 
 \subsubsection{Separating $\Larrow$, $\Rarrow$ and $\Uarrow$}
 
-Before we prove \cref{theorem:partial-separation-trees}, we prove a few lemmas.
+Before we prove our claim, we prove a few lemmas.
 \begin{lemma}
     \label{lemma:partial-separation-trees-step1}
     Let $\varphi$ be a formula in $\mathcal{X}_{until}$ that doesn't use the $\Uarrow$ and $\Darrow$ connectives. Then, $\varphi$ can be separated.
@@ -802,7 +801,7 @@ We can extend this reasoning further by reusing the method used to prove \cref{l
 \end{proof}
 
 %\subsubsection{Normal Form} % Consider deleting
-%We've reached another checkpoint in our proof of \cref{theorem:partial-separation-trees}. At this stage, it's clear that only the case where the pure-future $\Darrow$-formula is inside an $\Uarrow$-formula remains. To facilitate progress, we consider a \textit{standard form} for pure-past $\Uarrow$-formulas.
+%We've reached another checkpoint in our proof of \cref{claim:partial-separation-trees}. At this stage, it's clear that only the case where the pure-future $\Darrow$-formula is inside an $\Uarrow$-formula remains. To facilitate progress, we consider a \textit{standard form} for pure-past $\Uarrow$-formulas.
 %\begin{definition}
 %    Let $\gamma = \Uarrow(\varphi, \psi)$ be a formula in $\mathcal{X}_{until}$ such that $\varphi$ and $\psi$ are of the form
 %    \begin{equation*}
@@ -1045,58 +1044,101 @@ At this point, our main result becomes a corollary.
 \subsection{Why some formulas can't be separated}
 \label{sec:ef-games-start}
 
-The reason we cannot continue the arguments we presented in the previous section and separate mixed $\Darrow$ formulas is the same reason behind Marx's mistake; the fact that the $\Darrow$ connective isn't deterministic in its choice of the downward path. The argument we earlier presented in \cref{fig:darrow-a-b-and-c} implies that one cannot write each $\Darrow$ formula in the form
+The reason we cannot extend the arguments in the previous section to separate mixed $\Darrow$ formulas is the cause of Marx's mistake: that the $\Darrow$ connective isn't deterministic. Unlike the leftward or ancestral paths, there are many downward paths starting from a node, and the $\Darrow$ can proceed down any of them.
+
+Marx's proof in \cite{xpathComplete} fails because he expects to easily pull out $\Uarrow$ formulas from inside the scope of a $\Darrow$. This requires writing all $\Darrow$ formulas in the following form:
 \begin{equation*}
     \Darrow(\alpha, \beta) \not\equiv \bigvee_i \bigwedge_j \Darrow( \pm \alpha_{i, 1} \land \cdots \land \pm \alpha_{i, n_i}, \pm \beta_{j, 1} \lor \cdots \lor \pm \beta_{j, n_j})
 \end{equation*}
-There are bigger consequences of this non-determinism. $\Darrow$ formulas that appear in the path condition of other $\Darrow$ formulas don't necessarily traverse the same path as their parent, as made evident in \cref{darrow-unreliable}.
+The argument we presented in \cref{fig:darrow-a-b-and-c} shows why this isn't possible.
+
+There are bigger consequences of this non-determinism. $\Darrow$ formulas that appear in the path condition of other $\Darrow$ formulas don't necessarily traverse the same path as their parent, as made evident in \cref{fnreliable}.
+
 \begin{figure}[h]
     \centering
     \tikzfig{darrow-unreliable}
-    \caption[]{\emph{The unreliability of $\Darrow$.} The present point must satisfy $\Darrow(a, b \lor \Darrow(c, d))$. No point along the path to $a$ is a $c$.}
-    \label{fig:linear-separation-regions}
+    \caption{\emph{The unreliability of $\Darrow$.} The present point satisfies $\Darrow(a, b \lor \Darrow(c, d))$. No point along the path to $a$ is a $c$.}
+    \label{fnreliable}
 \end{figure}
+
 This is a problem because many eliminations in \cref{sec:eliminations-trees} require the ability to look for unfulfilled and dangerous points a little further down the main path. It is this \textit{unreliability} that we capitalize on in our arguments.
+
+% WARNING: There's a super weird pdflatex bug here, where if I add a comment, or change the label of fnreliable, I risk pdflatex being unable to reference the figure properly. DO NOT SCREW WITH THIS HOUSE OF CARDS.
 
 \textit{We must admit that this is a work in progress.} In this section, we will show a mixed $\Darrow$ formula that only uses the $\Darrow$ and $\Uarrow$ connectives that cannot be separated into a formula that only uses $\Darrow$ and $\Uarrow$. We believe it is perfectly possible to extend our argument to show that no separated formula that uses all the tools provided by $\mathcal{X}_{until}$ is equivalent to our mixed $\Darrow$ formula, but we don't present a proof for it here.
 
 In the next few sections, we describe an EF game for Conditional XPath. We will use these games in our arguments.
 
 \subsubsection{EF Games for $\mathcal{X}_{until}$}
-In \cite{EtWi00}, Etessami and Wilke define a modified version of the EF-games designed for LTL formulas. With these games, they show a strict hierarchy of expressive power of LTL formulas that classifies formulas based on their \textsf{Until} ($U$) depth. In this subsection, we define EF-games similar in spirit to their games.
+In \cite{EtWi00}, Etessami and Wilke define EF-games for LTL formulas. Using these games, they show a strict hierarchy of expressive power that classifies formulas based on their \textsf{Until} ($U$) depths. In this subsection, we use their ideas to design EF-games for $\mathcal{X}_{until}$.
 
-As with all EF games, ours are played on two structures $\mathcal{M}$ and $\mathcal{M}'$ by two players called the spoiler and the duplicator. In our games, these structures are ordered trees. To simplify our analysis, we assume that each node in these trees is labelled by an alphabet from $\Sigma$, a finite set of alphabets. At the beginning of the game, a pebble is placed on some node in each structure. We refer to these nodes as the ``current'' nodes.
+Naturally, our EF games are played on two structures $\mathcal{M}$ and $\mathcal{M}'$ by two players. We term the first player the spoiler and the second the duplicator. In our games, $\mathcal{M}$ and $\mathcal{M}'$ are labelled ordered trees where every node is labelled by a letter from a finite set $\Sigma$. This set is akin to the set $\mathcal{P}$ of all propositional atoms. At the beginning of the game, pebbles are placed at one chosen node in each structure. We refer to these nodes as the ``current'' nodes of the game. Typically, the chosen nodes are the roots of $\mathcal{M}$ and $\mathcal{M}'$.
 
-At the start of each round, the spoiler begins by picking a type of move. Each connective $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ corresponds to a type of move in this game. These moves have two stages. In the first stage, the spoiler picks one of the two structures, say $\mathcal{M}$, and places a second pebble at a node that can be reached from the current node in $\mathcal{M}$ by moving a few steps in the direction of $\pi$. For instance, if $\pi = \Larrow$, then the spoiler places a second pebble that's a left-sibling to the first node in $\mathcal{M}$. Importantly, if $\pi = \Darrow$, then the spoiler can pick any descendant of the current node. The duplicator responds by placing a second pebble in the other structure (which is $\mathcal{M}'$) that can be reached from its current node by moving in the same direction.
+At the start of each round, the spoiler begins by selecting a move type $\pi$ from the set of connectives $\{\Larrow, \Rarrow, \Uarrow, \Darrow\}$. The mechanism of each type is derived from the operation of its connective. All moves involve two stages of play. In the first stage, the spoiler picks one of the two structures, say $\mathcal{M}$, and places a second pebble at a node that can be reached from $\mathcal{M}$'s current node by moving in the direction of $\pi$. For instance, if $\pi$ is $\Larrow$, then the spoiler places a second pebble on a left-sibling of the current node. Importantly, if $\pi$ is $\Darrow$, then the spoiler can pick any descendant of the current node.
 
-At this point, the spoiler can choose to end the move by removing the older pebbles from both structures. He can also choose to continue onto the second stage, which requires the spoiler to pick a node \emph{on the path connecting the two pebbles in the \emph{other structure}}, which is $\mathcal{M}'$. He places a third pebble at his selected node. The duplicator does the same in $\mathcal{M}$. The game proceeds by removing the older pebbles in both structures.
+The duplicator responds by placing a second pebble in the other structure (which is $\mathcal{M}'$) that can be reached from its current node by moving in the same direction.
 
-In our EF games, we limit the number of moves of a single type the spoiler can make. The sum of these limits forms the number of rounds of the game. Call an EF game a $(k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ game if the spoiler is allowed to make $k_\pi$ moves for each $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$. For convenience, we often refer to the tuple using a vector notation, as in $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ and denote its sum $\sum k_\pi$ as $n$. Note that $n$ is the total number of rounds in the game.
+At this point, the spoiler can choose to end the round by removing the older pebbles from both structures. He can also choose to activate the second stage, which requires him to pick a node \emph{on the path connecting the two pebbles in the other structure} $\mathcal{M}'$. Note that the spoiler cannot pick the nodes that already have pebbles on them. He places a third pebble at his selected node. \cref{efgame-intro-fig} captures this possible play for $\pi = \Darrow$.
+
+\begin{figure}[h]
+    \centering
+    \tikzfig{EF-game-intro}
+    \caption{\emph{A $\Darrow$ move.} The spoiler started by picking the \textcolor{OliveGreen}{green} node in $\mathcal{M}$. The duplicator responded with the \textcolor{red}{red} node in $\mathcal{M}'$. The spoiler then picked the \textcolor{orange}{orange} node on the otherwise \textcolor{blue}{blue} path in $\mathcal{M}'$. The duplicator must respond by marking one of the \textcolor{violet}{violet} nodes.}
+    \label{efgame-intro-fig}
+\end{figure}
+
+The duplicator responds by picking a node on the path connecting the two pebbles in $\mathcal{M}$, after which the older pebbles are removed and the round is complete.
+
+The intuition behind the game is as follows. The spoiler hopes to use a $\pi$ formula that distinguishes the two structures. In the first stage, he picks a target point. If the duplicator fails to pick a similar target point, the spoiler doesn't need the second stage to win. However, if the duplicator succeeds, the spoiler must activate the second stage. The $\pi$ formula in his possession suggests that the duplicator's path differs from the spoiler's path in a detectable way. Accordingly, he picks a point on the duplicator's path that he believes to be different from every point on the spoilers path. The duplicator, naturally, attempts to refute the spoilers claim.
+
+In our EF games, we limit the number of moves of a particular type. The sum of these limits forms the number of rounds of the game. Call an EF game a $(k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ game if the spoiler is allowed to make $k_\pi$ moves for each $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$. For convenience, we refer to the tuple as a vector $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ and denote its sum $\sum k_\pi$ as $n$. Note that $n$ is the total number of rounds in the game.
 
 The spoiler wins the $n$ round game if, after $n$ rounds, the current nodes at both structures are labelled differently. The duplicator wins otherwise. Note that, in all moves, the spoiler automatically wins if the duplicator is unable to find a node to place a pebble.
 
-We now begin to prove the usefulness of these games. We first provide the following definition.
+We now prove the usefulness of these games. We begin with the following definition.
 \begin{definition}
-    Let $\varphi$ be a $\mathcal{X}_{until}$ formula. For $\pi \in \{\Darrow, \Uarrow, \Larrow, \Rarrow\}$, the $\pi$ depth of $\varphi$ is simply the maximum number of $\pi$ connectives in a path from the root to a leaf in the formula tree of $\varphi$.
+    Let $\varphi$ be a $\mathcal{X}_{until}$ formula. For $\pi \in \{\Darrow, \Uarrow, \Larrow, \Rarrow\}$, the $\pi$ depth of $\varphi$ is simply the maximum number of $\pi$ connectives in a path from the root to a leaf in the formula tree of $\varphi$. Additionally, the connective depth of $\varphi$ is the maximum number of connectives in a path from the root to a leaf.
 \end{definition}
-The following lemma simplifies our arguments greatly. Note that the set of atomic propositions $\mathcal{P}$ is now $\Sigma$, with the usual caveat of only allowing one alphabet at a time.
+Observe that if the $\pi$-depth of a formula $\varphi$ is $0$ \textit{iff} $\varphi$ doesn't use the connective $\pi$.
+
+We now present the following essential lemma. Note that the set of atomic propositions $\mathcal{P}$ is now $\Sigma$, with the usual implications.
 \begin{lemma}
     \label{lemma:count-limiter-efgames}
-    Suppose the set of all atomic propositions $\mathcal{P}$ was finite. Then, up-to expressive equivalence, there are finitely many $\mathcal{X}_{until}$ formulas of $\pi$ depth $\leq k_\pi$ for each $\pi \in \{\Darrow, \Uarrow, \Larrow, \Rarrow\}$ and for any tuple $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$.
+    Suppose the set of all atomic propositions $\mathcal{P}$ was finite. Then, up-to expressive equivalence, there are finitely many $\mathcal{X}_{until}$ formulas of $\pi$ depth $\leq k_\pi$ for each $\pi \in \{\Darrow, \Uarrow, \Larrow, \Rarrow\}$ and any tuple $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$.
     \begin{remark*}
-        For simplicity, we say that these formulas are \emph{depth-bound} by $\myvec{k}$.
+        For convenience, we say that these formulas are \emph{depth-bound} by $\myvec{k}$.
     \end{remark*}
 \end{lemma}
 \begin{proof}
     We show this by inducting on $n = \sum k_\pi$.
     \begin{description}
         \item[Base case.] $n = 0$. This is equivalent to showing that boolean operators can combine formulas from a finite set (in this case, $\mathcal{P}$) in finitely many unique ways. This can be observed by drawing a truth table.
-        \item[Induction case.] Let $A$ be the set of all (up-to expressive equivalence) formulas with the sum of their $\pi$ depths less than $n$. Augment $A$ with formulas of the form $\pi(\varphi, \psi)$ for any combination of $\varphi \in A$ and $\psi \in A$ to produce the set $B$. Observe that $B$ is a finite set that contains all ``atomic'' formulas with the sum of $\pi$ depths being $n$. The fact that boolean operators can only combine formulas in $B$ in finitely many ways completes the proof.
+        \item[Induction case.]
+            For each $\sigma \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ such that $k_\sigma > 0$, let $\myvec{m_\sigma}$ be the vector defined as
+            \begin{equation}
+                \label{eq:m-sigma-defn}
+                {(m_\sigma)}_\pi = \begin{cases}
+                    k_\pi & \pi \neq \sigma \\
+                    k_\pi - 1 & \pi = \sigma
+                \end{cases}
+            \end{equation}
+            By the induction hypothesis, we can consider finite sets $A_\sigma$ of all formulas depth-bound by $\myvec{m_\sigma}$. For every pair of formulas $(\alpha, \beta)$ in $A_\sigma^2$, we can consider the formula $\sigma(\alpha, \beta)$. It's easy to see that each such $\sigma$ formula is depth-bound by $\myvec{k}$. Hence, take the set
+            \begin{equation*}
+                B_\sigma = \{\sigma(\alpha, \beta) \mid \alpha \in A_\sigma \land \beta \in A_\sigma \}
+            \end{equation*}
+            and define $C_\sigma \triangleq A_\sigma \cup B_\sigma$ for each $\sigma$. Similarly, define
+            \begin{equation*}
+                C \triangleq \bigcup_\sigma C_\sigma
+            \end{equation*}
+            for each $\sigma \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ such that $k_\sigma > 0$.
+
+            Observe that $C$ is finite and contains all ``atomic'' formulas depth-bound by $\myvec{k}$. The fact that boolean operators can only combine formulas in $C$ in finitely many ways completes the proof.
     \end{description}
 \end{proof}
 Now for the main result of this subsection.
-\begin{theorem}
-    Let $\mathcal{M}$ and $\mathcal{M}'$ be two ordered trees with nodes labelled by alphabets from $\Sigma$, and let $t$ and $t'$ be two points on these trees. Suppose a spoiler and a duplicator play a $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ round EF game on $\mathcal{M}$ and $\mathcal{M}'$ with the starting pebbles at $t$ and $t'$. Then,
+\begin{theorem}[Working principle of the EF games]
+    \label{theorem:ef-games-working-principle}
+    Let $\mathcal{M}$ and $\mathcal{M}'$ be two ordered trees with nodes labelled by alphabets from $\Sigma$, and let $t \in \mathcal{M}$ and $t' \in \mathcal{M}'$ be two points on these trees. Suppose a spoiler and a duplicator play a $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ round EF game on $\mathcal{M}$ and $\mathcal{M}'$ with the starting pebbles at $t$ and $t'$. Then,
 
     \begin{bracketenumerate}
         \item If all $\mathcal{X}_{until}$ formulas $\varphi$ depth-bound by $\myvec{k}$ cannot differentiate $\mathcal{M}, t$ from $\mathcal{M}', t'$, i.e.,
@@ -1111,42 +1153,72 @@ Now for the main result of this subsection.
             \end{equation*}
             then, the spoiler has a winning strategy.
     \end{bracketenumerate}
-
 \end{theorem}
 \begin{proof}
     We first show (1), and then (2).
 
-    \proofsubparagraph{Case 1: No candidate formula differentiates the two structures.} In this case, we build the duplicator's winning strategy, by inducting on the number of rounds $n$.
+    \proofsubparagraph{(1) No candidate formula differentiates the two structures.} In this case, we build the duplicator's winning strategy, by inducting on the number of rounds $n$.
 
     \begin{description}
         \item[Base case.] $n = 0$. Our assumptions ensure that the label of $t$ and $t'$ are identical, completing this case.
         \item[Induction step.]
-            Suppose the spoiler plays a $\sigma$ move, and places a second pebble in $\mathcal{M}$ at a node $s$. Derive the tuple $\myvec{k'}$ from $\myvec{k}$ such that $k'_{\sigma} = k_{\sigma} - 1$ and $k'_\pi = k_\pi$ for all $\pi \neq \sigma$. Build the set $A$ of all (up-to equivalence) $\mathcal{X}_{until}$ formulas depth bound by $\myvec{k'}$ using \cref{lemma:count-limiter-efgames}.
+            Without loss of generality, suppose the spoiler plays a $\sigma$ move and places a second pebble at the node $s$ in $\mathcal{M}$. Observe that this means $k_\sigma > 0$. Derive the tuple $\myvec{m_\sigma}$ from $\myvec{k}$ using \eqref{eq:m-sigma-defn}. Build the set $A$ containing all (up-to equivalence) $\mathcal{X}_{until}$ formulas depth bound by $\myvec{m_\sigma}$ using \cref{lemma:count-limiter-efgames}.
 
-            We now build the $\sigma$-formula that the spoiler has in mind. Let $\alpha$ be the conjunction of all formulas $\varphi \in A$ such that $\mathcal{M}, s \vDash \varphi$. This formula $\alpha$ becomes our target condition.
+            We now build the $\sigma$-formula that the spoiler hopes to use. Let $\alpha$ be the conjunction of all formulas $\varphi$ in $A$ such that $\mathcal{M}, s \vDash \varphi$. In a sense, $\alpha$ is the most \textit{specific} formula depth bound by $\myvec{m_\sigma}$ that the node $s$ can model. Hence, $\alpha$ must be the target condition.
 
-            For the path condition, we need to produce one that talks about all nodes on the path. Let $B$ be the set of all nodes in $\mathcal{M}$ on the path from $t$ to $s$. $B$ is necessarily finite. For each node $b \in B$, let $\psi_b$ be the conjunction of all formulas $\gamma \in A$ such that $\mathcal{M}, b \vDash \gamma$. Finally, let $\beta$ be the disjunction of all $\psi_b$. This produces our path condition.
+            For the path condition, we need to produce the most specific formula that is true at all nodes on the path from $t$ to $s$. Let $R$ be the set of all nodes in $\mathcal{M}$ on this path. Naturally, $R$ is necessarily finite. For each node $r \in R$, let $\psi_r$ be the conjunction of all formulas $\gamma \in A$ such that $\mathcal{M}, r \vDash \gamma$. Clearly, $\psi_r$ is the most specific formula true at $r$. Finally, let $\beta$ be the disjunction of all $\psi_r$. This produces our path condition.
 
-            It's easy to see that $\alpha$ and $\beta$ are well-defined formulas depth bound by $\myvec{k'}$. Hence, the formula $\sigma(\alpha, \beta)$ is depth bound by $\myvec{k}$. This means that $\mathcal{M}', t' \vDash \sigma(\alpha, \beta)$. Thus, we are guaranteed a point $s' \in \mathcal{M}'$ with $\mathcal{M}', s' \vDash \alpha$ such that, for all nodes $b' \in \mathcal{M}'$ on the path from $t'$ to $s'$, $\mathcal{M}', b' \vDash \beta$.
+            It's easy to see that $\alpha$ and $\beta$ are well-defined formulas depth bound by $\myvec{m_\sigma}$. Hence, the formula $\sigma(\alpha, \beta)$ is well-defined and depth bound by $\myvec{k}$. Now note that, by construction,
+            \begin{equation*}
+                \mathcal{M}, t \vDash \sigma(\alpha, \beta)
+            \end{equation*}
+            This means that $\mathcal{M}', t' \vDash \sigma(\alpha, \beta)$. Thus, we are guaranteed a point $s' \in \mathcal{M}'$ with $\mathcal{M}', s' \vDash \alpha$ such that all nodes $r' \in \mathcal{M}'$ on the path from $t'$ to $s'$ must yield $\mathcal{M}', r' \vDash \beta$.
 
-            The duplicator picks this point $s' \in \mathcal{M}'$ and places his pebble there. If the spoiler continues the game from $s$ and $s'$, we employ the induction hypothesis to construct the duplicator's strategy. If the spoiler picks a point $b' \in \mathcal{M}'$ on the path from $t'$ to $s'$, the duplicator is aware that $\mathcal{M}', b' \vDash \beta$. Since $\beta$ is a disjunction of the $\psi_b$ formulas, $b'$ must satisfy one of them. Let $c \in \mathcal{M}$ be that node on the path from $t$ to $s$. Hence, $\mathcal{M}', b' \vDash \psi_c$ and $\mathcal{M}, c \vDash \psi_c$. The duplicator places his pebble at $c$, completing the round.
+            The duplicator picks this point $s' \in \mathcal{M}'$ and places his pebble there. Suppose the spoiler decides to continue the game from $s$ and $s'$. Observe that the current game has $\myvec{m_\sigma}$ many moves left and that $\mathcal{M}, s$ and $\mathcal{M}', s'$ satisfy the same set of formulas depth-bound by $\myvec{m_\sigma}$. This allows us to employ the induction hypothesis to construct the remainder of the duplicator's strategy.
 
-            At this stage, the game must proceed from $c$ and $b'$. Applying the induction hypothesis to this case finishes the proof.
+            Hence, suppose the spoiler picks a point $r' \in \mathcal{M}'$ on the path from $t'$ to $s'$. The duplicator is aware that $\mathcal{M}', r' \vDash \beta$. Since $\beta$ is a disjunction of $\psi_r$ formulas, $r'$ must model one of them. Let that formula be $\psi_u$ and its associated point be $u \in \mathcal{M}$. In other words, we will have a point $u$ on the path from $t$ to $s$ such that $\mathcal{M}', r' \vDash \psi_u$ and $\mathcal{M}, u \vDash \psi_u$.
+
+            The duplicator places his pebble at $u$, completing the round. At this stage, we can similarly argue the validity of applying the induction hypothesis. This completes the proof of this case.
     \end{description}
 
-    \proofsubparagraph{Case 2: The formula $\varphi$ differentiates the two structures.} We similarly induct on $n$.
+    \proofsubparagraph{(2) A formula $\varphi$ differentiates the two structures.} Clearly, $\varphi$ is depth-bound by $\myvec{k}$. We similarly induct on $n$.
+
     \begin{description}
         \item[Base case.] $n = 0$. The assumptions force different labels on $t$ and $t'$, forcing a spoiler victory.
         \item[Induction step.]
-            Let $A$ be the set of all top-level $\{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ subformulas in $\varphi$. Clearly, if $\mathcal{M}, t \vDash \psi$ and $\mathcal{M}', t' \vDash \psi$ for every $\psi \in B$, both structures model $\varphi$. Hence, there must be one subformula $\sigma(\alpha, \beta)$ for $\sigma \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ such that, without loss of generality,
+            Let $A$ be the set of all $\{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ subformulas that don't appear under a connective in $\varphi$. Clearly, if $\mathcal{M}, t \vDash \psi$ and $\mathcal{M}', t' \vDash \psi$ for every $\psi \in A$, both structures model $\varphi$. This means that there must be one subformula $\sigma(\alpha, \beta)$ for $\sigma \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ such that
             \begin{equation*}
-                \mathcal{M}, t \vDash \sigma(\alpha, \beta) \land \mathcal{M}', t' \nvDash \sigma(\alpha, \beta)
+                \mathcal{M}, t \vDash \sigma(\alpha, \beta) \qquad \text{and} \qquad \mathcal{M}', t' \nvDash \sigma(\alpha, \beta)
             \end{equation*}
-            This means that there is a point $s \in \mathcal{M}$ that can be reached by moving in the direction of $\sigma$ such that $\mathcal{M}, s \vDash \alpha$ and for all points $r$ in the path from $t$ to $s$, $\mathcal{M}, r \vDash \beta$. The spoiler places his pebble on this point $s$.
+            Since $\varphi$ is depth-bound by $\myvec{k}$, it follows that $\sigma(\alpha, \beta)$ is also depth-bound by $\myvec{k}$. Observe that this means $k_\sigma > 0$. Additionally, $\alpha$ and $\beta$ are depth bound by $\myvec{m_\sigma}$ (defined in \eqref{eq:m-sigma-defn}), the sum of which is $< n$.
 
-            If the duplicator picks a point $s' \in \mathcal{M}'$ such that $\mathcal{M}', s' \nvDash \alpha$, the spoiler continues the game from $s$ and $s'$. At this stage, we can apply the induction hypothesis to produce the spoiler's strategy. Otherwise, by construction, there must be some point $r' \in \mathcal{M}'$ on the path from $t'$ to $s'$ such that $\mathcal{M}', r' \nvDash \beta$. The spoiler picks this point $r' \in \mathcal{M}'$. No matter which point $r$ the duplicator picks, we will have that $\mathcal{M}, r \vDash \beta$. This allows us to use the induction hypothesis at the game starting from $r$ and $r'$, completing the proof.
+            Now, there is a point $s \in \mathcal{M}$ that can be reached by moving in the direction of $\sigma$ such that $\mathcal{M}, s \vDash \alpha$ and all points $r$ on the path from $t$ to $s$ yield $\mathcal{M}, r \vDash \beta$.
+
+            The spoiler begins the round by choosing a $\sigma$ move and placing a pebble on $s$. If the duplicator picks a point $s' \in \mathcal{M}'$ such that $\mathcal{M}', s' \nvDash \alpha$, the spoiler continues the game from $s$ and $s'$. At this stage, we have a $\myvec{m_\sigma}$ game with $\alpha$ as the differentiator, letting us apply the induction hypothesis to produce the rest of the spoiler's strategy.
+
+            Otherwise, by construction, there must be some point $r' \in \mathcal{M}'$ on the path from $t'$ to $s'$ such that $\mathcal{M}', r' \nvDash \beta$. The spoiler picks this point $r' \in \mathcal{M}'$. No matter which point $r$ the duplicator picks, we will have that $\mathcal{M}, r \vDash \beta$. We now have a $\myvec{m_\sigma}$ game with $\beta$ as the differentiator, allowing the use of the induction hypothesis at the game starting from $r$ and $r'$ to build the rest of the strategy, completing the proof.
     \end{description}
 \end{proof}
+We now present a neat consequence in a corollary.
+\begin{corollary}
+    Let $\mathcal{M}$ and $\mathcal{M}'$ be two ordered trees with nodes labelled by alphabets from $\Sigma$, and let $t \in \mathcal{M}$ and $t' \in \mathcal{M}'$ be two points on these trees. Suppose a spoiler and a duplicator play a $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ round EF game on $\mathcal{M}$ and $\mathcal{M}'$ with the starting pebbles at $t$ and $t'$. Then,
+
+    \begin{bracketenumerate}
+        \item If the duplicator has a winning strategy, then all $\mathcal{X}_{until}$ formulas $\varphi$ depth-bound by $\myvec{k}$ cannot differentiate $\mathcal{M}, t$ from $\mathcal{M}', t'$, i.e.,
+            \begin{equation*}
+                \mathcal{M}, t \vDash \varphi \longleftrightarrow \mathcal{M}', t' \vDash \varphi
+            \end{equation*}
+
+        \item If the spoiler has a winning strategy, then there exists some $\mathcal{X}_{until}$ formula $\varphi$ that is depth-bound by $\myvec{k}$ and
+            \begin{equation*}
+                \mathcal{M}, t \vDash \varphi \longleftrightarrow \mathcal{M}', t' \nvDash \varphi
+            \end{equation*}
+    \end{bracketenumerate}
+\end{corollary}
+\begin{proof}
+    Both (1) and (2) can easily be proved by contradiction using \Cref{theorem:ef-games-working-principle}. How? For (1), note that if there was a candidate formula $\varphi$, the spoiler would have a winning strategy, contradicting the fact that the duplicator has a winning strategy. % Make the Cref capital to make it work.
+\end{proof}
+This section shows how the EF games work. Notably, \Cref{theorem:ef-games-working-principle} still holds when $k_\sigma = 0$ for some $\sigma$. We use this fact in the next section.
 
 % \subsection{More granular regions}
 %

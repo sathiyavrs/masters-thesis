@@ -15,3 +15,4 @@ Diagram for neutrality of \theta in step10
 Replace pure-fragment with pure-component in all instances
 Fix Fraïssé in refs
 Copyright
+The pdflatex warnings
