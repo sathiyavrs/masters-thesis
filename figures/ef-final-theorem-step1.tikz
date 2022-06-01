@@ -1,0 +1,63 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (15) at (0, 2) {\underline{\underline{\Large{$T'_n$}}}};
+		\node [style=whitenode] (22) at (0, -2) {$b$};
+		\node [style=whitenode] (23) at (-1.75, -3.25) {$b$};
+		\node [style=whitenode] (24) at (0, -4.5) {\textcolor{OliveGreen}{$c$}};
+		\node [style=whitenode] (25) at (2, -3.25) {$b$};
+		\node [style=whitenode, label={center:$T_{n-1}$}] (26) at (0, -6.75) {};
+		\node [style=whitenode] (27) at (0, 0) {\textcolor{blue}{$c$}};
+		\node [style=whitenode] (28) at (-2, -5.5) {$b$};
+		\node [style=whitenode] (29) at (-3.5, -4.75) {\textcolor{red}{$c$}};
+		\node [style=whitenode] (30) at (-3.75, -3) {$b$};
+		\node [style=whitenode, label={center:$T_{n-2}$}] (31) at (-5, -6) {};
+		\node [style=whitenode] (32) at (3.75, -4.25) {\textcolor{red}{$c$}};
+		\node [style=whitenode] (33) at (2.25, -5.25) {$b$};
+		\node [style=whitenode] (34) at (4.25, -2.75) {$b$};
+		\node [style=whitenode, label={center:$\quad S_{n-2}$}] (35) at (5.75, -5.25) {};
+		\node [style=whitenode] (36) at (-4.75, -1.25) {$b$};
+		\node [style=whitenode] (37) at (-5.5, -2.5) {\textcolor{red}{$c$}};
+		\node [style=whitenode] (38) at (-5.25, -4) {$b$};
+		\node [style=none] (39) at (-6, 0.25) {};
+		\node [style=none] (40) at (-6.75, -4.75) {};
+		\node [style=whitenode] (41) at (-7.75, -1.75) {};
+		\node [style=whitenode] (42) at (-7.75, -1.75) {$T_{n - 3}$};
+		\node [style=none] (43) at (-2.25, -7.75) {};
+		\node [style=none] (44) at (2.5, -7.75) {};
+		\node [style=whitenode] (45) at (6.5, -2.25) {\textcolor{red}{$c$}};
+		\node [style=whitenode] (46) at (5.75, -1.25) {$b$};
+		\node [style=whitenode] (47) at (6.25, -3.5) {$b$};
+		\node [style=whitenode] (48) at (8.75, -1.5) {$S_{n-3}$};
+		\node [style=none] (49) at (7.25, 0.25) {};
+		\node [style=none] (50) at (8.5, -4.25) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=normal] (22) to (23);
+		\draw [style=normal] (22) to (24);
+		\draw [style=normal] (22) to (25);
+		\draw [style=normal] (24) to (26);
+		\draw [style=normal] (27) to (22);
+		\draw [style=normal] (23) to (29);
+		\draw [style=normal] (23) to (30);
+		\draw [style=normal] (23) to (28);
+		\draw [style=normal] (29) to (31);
+		\draw [style=normal] (25) to (32);
+		\draw [style=normal] (25) to (34);
+		\draw [style=normal] (25) to (33);
+		\draw [style=normal] (32) to (35);
+		\draw [style=normal] (30) to (36);
+		\draw [style=normal] (30) to (38);
+		\draw [style=normal] (30) to (37);
+		\draw [style=ndashed] (36) to (39.center);
+		\draw [style=ndashed] (38) to (40.center);
+		\draw [style=normal] (37) to (42);
+		\draw [style=ndashed] (28) to (43.center);
+		\draw [style=ndashed] (33) to (44.center);
+		\draw [style=normal] (34) to (46);
+		\draw [style=normal] (34) to (45);
+		\draw [style=normal] (34) to (47);
+		\draw [style=normal] (45) to (48);
+		\draw [style=ndashed] (46) to (49.center);
+		\draw [style=ndashed] (47) to (50.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

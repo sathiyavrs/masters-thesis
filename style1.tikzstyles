@@ -10,6 +10,11 @@
 \tikzstyle{lnode}=[fill={rgb,255: red,255; green,128; blue,0}, draw=black, shape=circle]
 \tikzstyle{rnode}=[fill=red, draw=black, shape=circle]
 \tikzstyle{purplenode}=[fill={rgb,255: red,128; green,0; blue,128}, draw=black, shape=circle]
+\tikzstyle{whitenode}=[fill=none, draw=none, shape=circle, minimum size=6mm, inner sep=0pt]
+\tikzstyle{whitenodeblue}=[fill=none, draw=black, shape=circle, minimum size=6mm, inner sep=0pt]
+\tikzstyle{whitenodered}=[fill={rgb,255: red,191; green,139; blue,157}, draw=none, shape=circle, minimum size=6mm, inner sep=0pt]
+\tikzstyle{whitenodegreen}=[fill={rgb,255: red,98; green,128; blue,106}, draw=none, shape=circle, minimum size=6mm, inner sep=0pt]
+\tikzstyle{whiteNodeBlackBorder}=[fill=white, draw=black, shape=circle]
 
 % Edge styles
 \tikzstyle{normal}=[->]

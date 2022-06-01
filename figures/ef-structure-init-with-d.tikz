@@ -1,0 +1,61 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (-8, 0) {};
+		\node [style=whitenode] (1) at (-8, -2) {$c$};
+		\node [style=whitenode] (2) at (-8, -4) {$b$};
+		\node [style=whitenode] (3) at (-8, -6) {$a$};
+		\node [style=whitenode] (4) at (-4.5, 0) {$d$};
+		\node [style=whitenode] (5) at (-4.5, -2) {$b$};
+		\node [style=whitenode] (6) at (-4.5, -4) {$a$};
+		\node [style=whitenode] (7) at (-8, 0) {$d$};
+		\node [style=none] (8) at (-8, 1.5) {\underline{\underline{\Large{$T_{d, 0}$}}}};
+		\node [style=none] (9) at (-4.5, 1.5) {{\underline{\underline{\Large{$S_{d, 0}$}}}}};
+		\node [style=whitenode] (10) at (1, 0) {$b$};
+		\node [style=whitenode, label={center:$T_{d, i-1}$}] (11) at (-0.75, -1.25) {};
+		\node [style=whitenode] (12) at (1, -2) {$c$};
+		\node [style=whitenode, label={center:$\quad\; S_{d, i-1}$}] (13) at (3, -1.25) {};
+		\node [style=whitenode, label={center:$T_{d, i-1}$}] (14) at (1, -4) {};
+		\node [style=none] (15) at (1, 1.5) {\underline{\underline{\Large{$T_{b, i}$}}}};
+		\node [style=whitenode] (16) at (9, 0) {$b$};
+		\node [style=whitenode, label={center:$T_{d, i-1}$}] (17) at (7.25, -1.25) {};
+		\node [style=whitenode] (18) at (9, -2) {$c$};
+		\node [style=whitenode, label={center:$\quad\; S_{d, i-1}$}] (19) at (11, -1.25) {};
+		\node [style=whitenode, label={center:$S_{d, i-1}$}] (20) at (9, -4) {};
+		\node [style=none] (21) at (9, 1.5) {\underline{\underline{\Large{$S_{b, i}$}}}};
+		\node [style=whitenode] (22) at (-2.5, -8.5) {$d$};
+		\node [style=whitenode, label={center:$T_{b, i}$}] (23) at (-4.25, -9.75) {};
+		\node [style=whitenode] (24) at (-2.5, -10.5) {$c$};
+		\node [style=whitenode, label={center:$\; S_{b, i}$}] (25) at (-0.5, -9.75) {};
+		\node [style=whitenode, label={center:$T_{b, i}$}] (26) at (-2.5, -12.5) {};
+		\node [style=none] (27) at (-2.5, -7) {\underline{\underline{\Large{$T_{d, i}$}}}};
+		\node [style=whitenode] (28) at (4.75, -8.5) {$d$};
+		\node [style=whitenode, label={center:$T_{b, i}$}] (29) at (3, -9.75) {};
+		\node [style=whitenode] (30) at (4.75, -10.5) {$c$};
+		\node [style=whitenode, label={center:$\; S_{b, i}$}] (31) at (6.75, -9.75) {};
+		\node [style=whitenode, label={center:$S_{b, i}$}] (32) at (4.75, -12.5) {};
+		\node [style=none] (33) at (4.75, -7) {\underline{\underline{\Large{$S_{d, i}$}}}};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=normal] (7) to (1);
+		\draw [style=normal] (1) to (2);
+		\draw [style=normal] (2) to (3);
+		\draw [style=normal] (4) to (5);
+		\draw [style=normal] (5) to (6);
+		\draw [style=normal] (10) to (11);
+		\draw [style=normal] (10) to (12);
+		\draw [style=normal] (10) to (13);
+		\draw [style=normal] (12) to (14);
+		\draw [style=normal] (16) to (17);
+		\draw [style=normal] (16) to (18);
+		\draw [style=normal] (16) to (19);
+		\draw [style=normal] (18) to (20);
+		\draw [style=normal] (22) to (23);
+		\draw [style=normal] (22) to (24);
+		\draw [style=normal] (22) to (25);
+		\draw [style=normal] (24) to (26);
+		\draw [style=normal] (28) to (29);
+		\draw [style=normal] (28) to (30);
+		\draw [style=normal] (28) to (31);
+		\draw [style=normal] (30) to (32);
+	\end{pgfonlayer}
+\end{tikzpicture}

@@ -1091,20 +1091,20 @@ The duplicator responds by picking a node on the path connecting the two pebbles
 
 The intuition behind the game is as follows. The spoiler hopes to use a $\pi$ formula that distinguishes the two structures. In the first stage, he picks a target point. If the duplicator fails to pick a similar target point, the spoiler doesn't need the second stage to win. However, if the duplicator succeeds, the spoiler must activate the second stage. The $\pi$ formula in his possession suggests that the duplicator's path differs from the spoiler's path in a detectable way. Accordingly, he picks a point on the duplicator's path that he believes to be different from every point on the spoilers path. The duplicator, naturally, attempts to refute the spoilers claim.
 
-In our EF games, we limit the number of moves of a particular type. The sum of these limits forms the number of rounds of the game. Call an EF game a $(k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ game if the spoiler is allowed to make $k_\pi$ moves for each $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$. For convenience, we refer to the tuple as a vector $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ and denote its sum $\sum k_\pi$ as $n$. Note that $n$ is the total number of rounds in the game.
+In our EF games, we limit the number of moves of a particular type. The sum of these limits forms the number of rounds of the game. Call an EF game a $(k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ game if the spoiler is allowed to make $k_\pi$ moves for each $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$. For convenience, we refer to the tuple as a vector $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ (the order is important) and denote its sum $\sum k_\pi$ as $n$. Note that $n$ is the total number of rounds in the game.
 
 The spoiler wins the $n$ round game if, after $n$ rounds, the current nodes at both structures are labelled differently. The duplicator wins otherwise. Note that, in all moves, the spoiler automatically wins if the duplicator is unable to find a node to place a pebble.
 
 We now prove the usefulness of these games. We begin with the following definition.
 \begin{definition}
-    Let $\varphi$ be a $\mathcal{X}_{until}$ formula. For $\pi \in \{\Darrow, \Uarrow, \Larrow, \Rarrow\}$, the $\pi$ depth of $\varphi$ is simply the maximum number of $\pi$ connectives in a path from the root to a leaf in the formula tree of $\varphi$. Additionally, the connective depth of $\varphi$ is the maximum number of connectives in a path from the root to a leaf.
+    Let $\varphi$ be a $\mathcal{X}_{until}$ formula. For $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$, the $\pi$ depth of $\varphi$ is simply the maximum number of $\pi$ connectives in a path from the root to a leaf in the formula tree of $\varphi$. Additionally, the connective depth of $\varphi$ is the maximum number of connectives in a path from the root to a leaf.
 \end{definition}
 Observe that if the $\pi$-depth of a formula $\varphi$ is $0$ \textit{iff} $\varphi$ doesn't use the connective $\pi$.
 
 We now present the following essential lemma. Note that the set of atomic propositions $\mathcal{P}$ is now $\Sigma$, with the usual implications.
 \begin{lemma}
     \label{lemma:count-limiter-efgames}
-    Suppose the set of all atomic propositions $\mathcal{P}$ was finite. Then, up-to expressive equivalence, there are finitely many $\mathcal{X}_{until}$ formulas of $\pi$ depth $\leq k_\pi$ for each $\pi \in \{\Darrow, \Uarrow, \Larrow, \Rarrow\}$ and any tuple $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$.
+    Suppose the set of all atomic propositions $\mathcal{P}$ was finite. Then, up-to expressive equivalence, there are finitely many $\mathcal{X}_{until}$ formulas of $\pi$ depth $\leq k_\pi$ for each $\pi \in \{\Larrow, \Rarrow, \Uarrow, \Darrow\}$ and any tuple $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$.
     \begin{remark*}
         For convenience, we say that these formulas are \emph{depth-bound} by $\myvec{k}$.
     \end{remark*}
@@ -1201,6 +1201,7 @@ Now for the main result of this subsection.
 \end{proof}
 We now present a neat consequence in a corollary.
 \begin{corollary}
+    \label{corollary:ef-games-working-principle}
     Let $\mathcal{M}$ and $\mathcal{M}'$ be two ordered trees with nodes labelled by alphabets from $\Sigma$, and let $t \in \mathcal{M}$ and $t' \in \mathcal{M}'$ be two points on these trees. Suppose a spoiler and a duplicator play a $\myvec{k} = (k_{\Larrow}, k_{\Rarrow}, k_{\Uarrow}, k_{\Darrow})$ round EF game on $\mathcal{M}$ and $\mathcal{M}'$ with the starting pebbles at $t$ and $t'$. Then,
 
     \begin{bracketenumerate}
@@ -1219,6 +1220,195 @@ We now present a neat consequence in a corollary.
     Both (1) and (2) can easily be proved by contradiction using \Cref{theorem:ef-games-working-principle}. How? For (1), note that if there was a candidate formula $\varphi$, the spoiler would have a winning strategy, contradicting the fact that the duplicator has a winning strategy. % Make the Cref capital to make it work.
 \end{proof}
 This section shows how the EF games work. Notably, \Cref{theorem:ef-games-working-principle} still holds when $k_\sigma = 0$ for some $\sigma$. We use this fact in the next section.
+
+\subsubsection{A game for separation}
+
+In this section, we discuss games where the only move type is $\Darrow$.
+
+Let's start by describing the structures that we plan to distinguish. We start by recursively constructing two classes of trees: $\mathcal{T} \triangleq \{T_i \mid i \in \mathbb{N}\}$ and $\mathcal{S} \triangleq \{S_i \mid i \in \mathbb{N} \}$. For the base case, define $T_0$ and $S_0$ to be the words $ba$ and $bba$ respectively. For all $i \geq 1$, the construction of $T_i$ begins with a downward path from its root (labelled $b$) to the root of an instance of $T_{i - 1}$ (which is also labelled $b$). This path has a single node, labelled $c$, between the two $b$s. At this point, copies of $T_{i - 1}$ and $S_{i - 1}$ are introduced as direct children of the root. $T_i$ is now fully formed.
+
+The construction of $S_i$ is similar. We construct a downward path from the root (labelled $b$) to a second node (labelled $c$) and finally to a copy of $S_{i - 1}$, after which we introduce copies of $T_{i - 1}$ and $S_{i - 1}$ as children of the root.
+
+For convenience, we construct two additional classes of trees: $\mathcal{T}' \triangleq \{T'_i \mid i \in \mathbb{N}\}$ and $\mathcal{S}' \triangleq \{S'_i \mid i \in \mathbb{N} \}$. Each $T'_i$ and $S'_i$ consist of a root labelled $c$ connected to copies of $T_i$ and $S_i$ respectively. We aim to play games on $T'_i$ and $S'_i$ for all $i \in \mathbb{N}$.
+
+\begin{figure}[h]
+    \centering
+    \tikzfig{ef-structure-init}
+    \caption{\emph{Recursive definition of $T_i$, $S_i$, $T'_i$, and $S'_i$.} Only the descendant relation is marked by arrows; the \textcolor{red}{red} arrows representing the sibling order are not shown.}
+    \label{structureinit}
+\end{figure}
+
+The full recursive definition is pictorially represented in \Cref{structureinit}. Note that, since we don't need to accommodate $\Larrow$ and $\Rarrow$ moves, the ordering of the children of a node isn't important. We merely orient the children of the root $T_{i - 1}$ and $S_{i - 1}$ to be at either side of the downward path containing a $c$ to simplify our discussion. We will refer to the downward path from the root to a leaf of any tree in $\mathcal{T}' \cup \mathcal{S}'$ that repeatedly takes the middle child at each branching point as the \textit{central path} of the tree.
+
+The intuition behind this construction is as follows. The labelling of the central path of all trees in $\mathcal{T}'$ produces a word in $c (bc)^* ba$. Trees in $\mathcal{S}'$ cannot yield similarly labelled paths. In fact, all paths from the root to an $a$ in each $S' \in \mathcal{S}'$ must contain two consecutive $b$s. This indicates that, for all $i \in \mathbb{N}$,
+\begin{equation}
+    \label{eq:darrow-uarrow-game-eqn}
+    T'_i, t'_i \vDash \Darrow(a, \lnot(b \land \Uarrow(b, \bot))) \quad \text{and} \quad S'_i, s'_i \nvDash \Darrow(a, \lnot(b \land \Uarrow(b, \bot)))
+\end{equation}
+Where $t'_i$ and $s'_i$ are the roots of $T'_i$ and $S'_i$ respectively. This gives us a mixed $\Darrow$ formula that differentiates $\mathcal{T}'$ and $\mathcal{S}'$.
+
+We now claim that there is no pure $\Darrow$ formula that differentiates $\mathcal{T}'$ and $\mathcal{S}'$. Towards this, we present winning strategies for the duplicator in the $\Darrow$-only EF-game played on $T'_i$ and $S'_i$ that only affords the spoiler an insufficient number of $\Darrow$ moves. These strategies capitalize on the duplicator's ability to punish the spoiler for descending too quickly. As a consequence, the spoiler can take at-most two-steps forward in each round. We will elaborate on this in \cref{lemma:speedbreaker}. Notably, if the EF-game permitted a single additional $\Uarrow$ move, the application of \cref{theorem:ef-games-working-principle} to \cref{eq:darrow-uarrow-game-eqn} yields a winning strategy for the spoiler.
+
+%We begin by formally proving the principle behind \cref{eq:darrow-uarrow-game-eqn}.
+%\begin{lemma}
+%    The following statements are true.
+%    \begin{bracketenumerate}
+%        \item All $T \in \mathcal{T}$ include a path from the root to a leaf of the form $(bc)^* ba$.
+%        \item In all $S \in \mathcal{S}$, all paths from the root to a leaf must include two consecutive $b$s.
+%    \end{bracketenumerate}
+%\end{lemma}
+%\begin{proof}
+%    (1) requires simple induction. $T_0$ is simply the path $ba$, and all $T_i$ include a path labelled $bc$ to the root of $T_{i - 1}$, which by the induction hypothesis, contains a path labelled $(bc)^* ba$ from the root to a leaf.
+%
+%    Again, we show (2) by induction. $S_0$ has one candidate path to an $a$ labelled $bba$. The roots of all $S_i$ have three children: $S_{i - 1}$, $T_{i - 1}$, and a node labelled $c$. Paths to an $a$ that take either of the first two children will include two consecutive $b$s at the beginning. All remaining paths prepend a path to an $a$ from the root of a copy of $S_{i - 1}$ by a $bc$. The induction hypothesis implies the rest.
+%\end{proof}
+\begin{lemma}
+    \label{lemma:speedbreaker}
+    Suppose a spoiler and a duplicator play a $\Darrow$-only EF-game over $T'_n$ and $S'_n$ for some $n \geq 1$ where the starting pebbles are placed at the roots of $T'_n$ and $S'_n$. Then, a rational spoiler will not begin by placing a pebble inside any copy of $T_{n - 1}$ or $S_{n - 1}$ in either structure.
+    \begin{remark*}
+        This effectively limits the rate at which the spoiler descends the tree.
+    \end{remark*}
+\end{lemma}
+\begin{figure}
+    \centering
+    \tikzfig{main-proof-start}
+    \caption{\emph{The start of the game.} The starting positions are highlighted in \textcolor{blue}{blue}. The copies of $T_{n-1}$ and $S_{n-1}$ are marked in \textcolor{red}{red}.}
+    \label{SpeedbreakerProofStartFig}
+\end{figure}
+\begin{proof}
+    The starting configuration of the game is laid out in \Cref{SpeedbreakerProofStartFig}. Two different arguments are needed based on whether the connection point for the $T_{n - 1}$ or $S_{n - 1}$ to the trees is a $b$ or a $c$.
+
+    \proofsubparagraph*{Case 1.}
+    Without loss of generality, suppose the spoiler picks a node inside a copy of $T_{n - 1}$ that's connected to $T'_n$ at a $b$. The duplicator can respond with the corresponding node in the copy of $T_{n - 1}$ connected to $S'_n$ at a $b$. This response forces the equivalence of the futures of the newly marked nodes at $T'_n$ and $S'_n$.
+
+    Hence, the spoiler must proceed onto the second stage of the move. He must now pick a node in $S'_n$ between the two pebbles. If he picks a node inside $T_{n - 1}$, the duplicator can respond with the corresponding node inside $T_{n-1}$ at $T'_n$. Again, this forces the equivalence of the future of the marked nodes, guaranteeing a duplicator victory.
+    \begin{figure}[h]
+        \centering
+        \tikzfig{main-proof-step1}
+        \caption{\emph{Case 1.} The spoiler picks the node shaded \textcolor{blue}{blue} inside $T_{n - 1}$. The duplicator responds by shading the corresponding node \textcolor{red}{red} in $S'_n$. The spoiler then shades a node \textcolor{violet}{violet} in $S'_n$, and the duplicator responds by shading the corresponding node \textcolor{orange}{orange} in $T'_n$. The optimal response of the spoiler in the second stage is to place a pebble at one of the \textcolor{OliveGreen}{green} $b$s.}
+        \label{proofstep1fig}
+    \end{figure}
+
+    This means that, to avoid immediate defeat, the spoiler must pick a node that isn't inside $T_{n-1}$. The only possibility is the node $b$ that's next in the central path of $S'_n$. The duplicator mirrors his choice. \cref{proofstep1fig} describes this argument pictorially.
+
+    Note that one can reach similar conclusions if the spoiler had picked a node inside the $T_{n - 1}$ attached to $S'_n$ at a $b$, or if he went for $S_{n - 1}$ instead of $T_{n - 1}$. We will not present the arguments for these possibilities here.
+
+    \proofsubparagraph*{Case 2.}
+    This case considers a spoiler in a hurry. Suppose, without loss of generality, he picks a node inside the copy of $T_{n - 1}$ attached to $T'_n$ at a $c$. If the duplicator were to pick the corresponding node inside the copy of $T_{n - 1}$ attached to $S'_n$ at a $c$, the spoiler would've succeeded. Unfortunately for him, the duplicator can choose the copy of $T_{n - 1}$ attached to a $b$ instead.
+
+    Again, the duplicator's choice forces the spoiler onto the second stage of the move. He can only pick a node on the path between the pebbles in $S'_n$. Again, if he picks a node inside $T_{n - 1}$, the duplicator can mirror his choice in $T'_n$, guaranteeing his victory. The only node on the path outside $T_{n - 1}$ is, again, the $b$ that the duplicator's copy of $T_{n - 1}$ is connected to. Once the spoiler picks this node, the duplicator picks the corresponding $b$ in $T'_n$, completing the move, and slowing down the spoiler. \Cref{proofstep2fig} captures this case.
+
+    Notice how the duplicator takes advantage of the structure of the game here. The path implied by the duplicators choice is ``smaller'' than the spoiler's choice. Accordingly, the $\Darrow$-path condition he satisfies is more exacting. This can be observed in the proof of \Cref{theorem:ef-games-working-principle} as fewer $\psi_b$ conditions; adding more $\psi_b$ formulas to the disjunction only makes the path more accommodating.
+    \begin{figure}[h]
+        \centering
+        \tikzfig{main-proof-step2}
+        \caption{\emph{Case 2.} The spoiler shades a node \textcolor{blue}{blue} inside $T_{n - 1}$ connected to $T'_n$ at a $c$. The duplicator responds by shading the corresponding node \textcolor{red}{red} in the copy of $T_{n - 1}$ attached to $S'_n$ at $b$, one level higher than $T'_n$. If the spoiler responds with the \textcolor{violet}{violet} node in $S'_{n}$, the duplicator can respond with the \textcolor{orange}{orange} node in $T'_{n}$. Hence, the spoiler must pick one of the \textcolor{OliveGreen}{green} $b$s.}
+        \label{proofstep2fig}
+    \end{figure}
+
+    Again, note that this argument can be repurposed for the possible spoiler choice of picking a node inside the $S_{n - 1}$ connected to $S'_n$ at a $c$.\lipicsEnd
+
+    These arguments show that any spoiler choice of a node in $T_{n - 1}$ or $S_{n - 1}$ forces him to move backwards to the $b$ directly underneath him at the start of the round. If the spoiler chose that $b$ initially, the duplicator will mirror his actions. Therefore, the choice of a node inside the $T_{n-1}$ and $S_{n - 1}$ is equivalent to the choice of a $b$.
+\end{proof}
+\cref{lemma:speedbreaker} makes it clear that the spoiler has two choices at the start of each round: move one step down to a $b$, or move two steps down to a $c$. Importantly, minor modifications to the proof yield similar results in similar games played between $T_n$ and $S_n$.
+\begin{lemma}
+    Suppose a spoiler and a duplicator play a $\Darrow$-only EF-game over $T_n$ and $S_n$ for some $n \geq 1$ where the starting pebbles are placed at the roots of $T_n$ and $S_n$. Then, a rational spoiler will not begin by placing a pebble inside any copy of $T_{n - 1}$ or $S_{n - 1}$ in either structure.
+\end{lemma}
+\begin{proof}
+    Quite similar to the proof of \cref{lemma:speedbreaker}, and left to the reader. Note that this lemma implies that spoiler can only move the pebbles to the $c$ immediately below the root.
+\end{proof}
+We make use of these lemmas in the following theorem.
+\begin{theorem}
+    \label{theorem:working-of-darrow-game}
+    Suppose a spoiler and a duplicator play a $(0, 0, 0, k)$ move EF game on $T'_n$ and $S'_n$ for any $n \in \mathbb{N}$. Then,
+    \begin{bracketenumerate}
+        \item If $k \leq n + 1$, the duplicator has a winning strategy.
+        \item If $k = n + 2$, the spoiler has a winning strategy.
+    \end{bracketenumerate}
+\end{theorem}
+\begin{proof}
+    We first show (2) before (1).
+    \proofsubparagraph*{(2).} We show this by recursively building a class of formulas $\Phi \triangleq \{ \varphi_i \mid i \in \mathbb{N}\}$ such that $\varphi_n$ has $\Darrow$-depth $n+2$ and can differentiate $T'_n$ and $S'_n$. Take
+    \begin{equation*}
+        \varphi_n \triangleq \begin{cases}
+            \Darrow(b \land \Darrow(a, \bot), \bot) & n = 0\\
+            \Darrow(c \land \varphi_{n - 1}, b) & \text{otherwise}
+        \end{cases}
+    \end{equation*}
+    It's easy to verify the $\Darrow$ depth requirements. We now prove two properties of $\Phi$.
+    \begin{claim*}
+        For each $i \in \mathbb{N}$,
+        \begin{alphaenumerate}
+            \item $T'_i, t'_i \vDash \varphi_i$ and $S'_i, s'_i \nvDash \varphi_i$, where $t'_i$ and $s'_i$ are the roots of $T'_i$ and $S'_i$ respectively.
+            \item For all $j \in \mathbb{N}$ such that $j < i$, we have $T'_j, t'_j \nvDash \varphi_i$ and $S'_j, s'_j \nvDash \varphi_i$.
+        \end{alphaenumerate}
+    \end{claim*}
+    \begin{claimproof}
+        We prove this by induction.
+        \begin{description}
+            \item[Base case.] $i = 0$. It's simple to see that
+                \begin{equation*}
+                    T'_0, t'_0 \vDash \Darrow(b \land \Darrow(a, \bot), \bot) \quad \text{and} \quad S'_0, s'_0 \nvDash \Darrow(b \land \Darrow(a, \bot), \bot)
+                \end{equation*}
+                This satisfies (a). For $i = 0$, it's easy so see that (b) is vacuously satisfied.
+            \item[Induction step.] Suppose both conditions hold for all $i < n$. We will prove (b) before we prove (a).
+
+                Take some $j < n$. In $T'_j$, there are many paths that satisfy $\Darrow(c, b)$. At the end of these paths lie the subtrees (in no order) $T'_{j-1}, T'_{j - 2}, S'_{j - 2}, T'_{j - 3}, \ldots$ and other smaller trees. These paths are shown in \cref{efFinalProofStep1} for $j = n$. By the induction hypothesis, for all $k < j$
+                \begin{equation*}
+                        T'_k, t'_k \nvDash \varphi_{n - 1}
+                \end{equation*}
+                Hence, $T'_j, t'_j \nvDash \Darrow(c \land \varphi_{n - 1}, b)$ which is equivalent to  $T'_j, t'_j \nvDash \varphi_n$. Slight modifications to this argument proves what we need for $S'_j$ as well, proving (b).
+                \begin{figure}[h]
+                    \centering
+                    \tikzfig{ef-final-theorem-step1}
+                    \caption{\emph{Paths satisfying $\Darrow(c, b)$.} The subtree rooted at the \textcolor{OliveGreen}{green} $c$ is $T'_{n - 1}$. The \textcolor{red}{red} $c$'s root the $T'_{n - 2}, S'_{n - 2}, T'_{n-3}, \ldots$.}
+                    \label{efFinalProofStep1}
+                \end{figure}
+
+                Now, to show (a), observe that in $T'_n$, there is a path that satisfies $\Darrow(c, b)$ that ends in $T'_{n - 1}$, which satisfies $\varphi_{n-1}$. Hence,
+                \begin{equation*}
+                    T'_n, t'_n \vDash \varphi_n
+                \end{equation*}
+                And in $S'_n$, all paths that satisfy $\Darrow(c, b)$ end in $S'_{n - 1}, T'_{n -2}, S'_{n - 2}, \ldots$ and other smaller trees. Since none of them satisfy $\varphi_{n-1}$, we have
+                \begin{equation*}
+                    S'_n, s'_n \nvDash \varphi_n
+                \end{equation*}
+                This completes the proof.
+        \end{description}
+    \end{claimproof}
+    Since $\varphi_n$ differentiates $T'_n$ and $S'_n$ and has $\Darrow$-depth $n+2$, \cref{theorem:ef-games-working-principle} allows us to build a winning strategy for the spoiler in the $(0, 0, 0, n+2)$ round game over $T'_n$ and $S'_n$.
+
+    \proofsubparagraph*{(1).} We show this by inducting on $n$. %As we proved in \cref{lemma:speedbreaker}, at each step, if the spoiler
+    \begin{description}
+        \item[Base case.] $n = 0$.
+            Observe, through a simple case analysis, that no $\Darrow$ formula of $\Darrow$ depth 1 can distinguish $T'_0$ and $S'_0$. Applying \cref{theorem:ef-games-working-principle} gives us a winning duplicator strategy.
+        \item[Induction case.]
+            Now we play the game on $T'_n$ and $S'_n$ with the starting pebbles at $t'_n$ and $s'_n$, as shown in \cref{SpeedbreakerProofStartFig}. If the spoiler places a pebble inside $T_{n-1}$ or $S_{n-1}$, we apply the strategy detailed in \cref{lemma:speedbreaker} to ensure victory for the duplicator.
+
+            To account for the other cases, if the spoiler moves down the central path one or two steps, the duplicator mirrors his actions by moving one or two steps down the central path of the other structure. It's easy to observe that he can always do this for $n > 0$.
+
+            At this point, we can merge the strategy for $T'_{n-1}$ and $S'_{n-1}$ to complete the proof.
+    \end{description}
+\end{proof}
+What has all this effort given us? Take the formula $\psi \triangleq \Darrow(a, \lnot(b \land \Uarrow(b, \bot)))$ capable of distinguishing $\mathcal{T}'$ and $\mathcal{S}'$. Suppose this formula is equivalent to a syntactically separated formula $\gamma$, which we can write as
+\begin{equation*}
+    \gamma \equiv \mathbb{B}(\gamma_{\Uarrow, 1}, \ldots, \gamma_{\Uarrow, n_{\Uarrow}}, \gamma_{p, 1}, \ldots, \gamma_{p, n_p} \ldots, \gamma_{\Darrow, 1}, \ldots, \gamma_{\Darrow, n_{\Darrow}}, \gamma_{\Larrow, 1}, \ldots, \gamma_{\Larrow, n_{\Larrow}}, \gamma_{\Rarrow, 1}, \ldots, \gamma_{\Rarrow, n_{\Rarrow}})
+\end{equation*}
+Suppose each pure-future component $\gamma_{\Darrow, i}$ only uses the $\Darrow$ formulas. Evaluating $\gamma$ at the root of some $T \in \mathcal{T}$ will set all pure-past, pure-left, and pure-right components $\gamma_{\Uarrow, i}$, $\gamma_{\Larrow, j}$ and $\gamma_{\Rarrow, k}$ to $\bot$. Replacing them with $\bot$ in $\gamma$, producing $\gamma'$, will not change the result. Hence, for any $n \in \mathbb{N}$,
+\begin{equation*}
+    T_n, t_n \vDash \gamma \Longleftrightarrow T_n, t_n \vDash \gamma'
+\end{equation*}
+Let the $\Darrow$ depth of $\gamma'$ be $k$. By \cref{theorem:working-of-darrow-game}, the duplicator has a winning strategy in the $k$-round $\Darrow$ game played over $T'_{k - 1}$ and $S'_{k - 1}$. This means, by \cref{corollary:ef-games-working-principle},
+\begin{equation*}
+    T_{k-1}, t_{k-1} \vDash \gamma' \Longleftrightarrow S_{k-1}, s_{k-1} \vDash \gamma'
+\end{equation*}
+But, as $\gamma \equiv \psi$,
+\begin{equation*}
+    T_{k-1}, t_{k-1} \vDash \gamma \Longleftrightarrow S_{k-1}, s_{k-1} \nvDash \gamma
+\end{equation*}
+Which is a contradiction!
+
+Our hard work has allowed us to conclude that the $\gamma_{\Darrow, i}$ cannot only use the $\Darrow$ connective. If the mixed $\Darrow$ formula $\psi$ is separable, the pure-future components must contain a $\Rarrow$ or a $\Larrow$. This seems strange, given that $\psi$ only uses the $\Darrow$ and $\Uarrow$ connectives.
 
 % \subsection{More granular regions}
 %
