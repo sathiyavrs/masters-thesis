@@ -653,7 +653,7 @@ This is made explicit in \cref{fig:darrow-a-b-and-c}.
     \label{fig:darrow-a-b-and-c}
 \end{figure}
 
-We present our results in the next few sections. In \cref{sec:partial-separation-start}, we describe how a class of $\mathcal{X}_{until}$ formulas can be separated. In \cref{sec:ef-games-start}, we present the arguments behind our belief that certain formulas can never be separated. %TODO: Add a sentence here about the granular regions argument.
+We present our results in the next few sections. In \cref{sec:partial-separation-start}, we describe how a class of $\mathcal{X}_{until}$ formulas can be separated. In \cref{sec:ef-games-start}, we present the arguments behind our belief that certain formulas can never be separated. Separately, in \cref{sec:finer-partition}, we show that a more desirable partitioning of the tree only leads back to Marx's regions.
 
 \subsection{Partial Separation of $\mathcal{X}_{until}$}
 \label{sec:partial-separation-start}
@@ -672,7 +672,7 @@ As with linear flows, we can define a notion of syntactically pure formulas in $
 
 It's simple enough to observe that all syntactically pure formulas are semantically pure. To simplify our arguments, we also introduce the notion of the \textit{pure $\pi$ formula} for $\pi \in \{ \Larrow, \Rarrow, \Darrow, \Uarrow \}$. Simply put, a formula is pure $\pi$ \textit{iff} the only connective it uses is $\pi$.
 
-In this subsection, we aim to show the following theorem.
+In this subsection, we aim to show the following claim.
 \begin{claim*}[Partial Separation of $\mathcal{X}_{until}$]
     \label{claim:partial-separation-trees}
     Let $\varphi$ be a formula in $\mathcal{X}_{until}$ such that all $\Darrow$-subformulas of $\varphi$ are syntactically pure-future. Then, $\varphi$ can be separated.
@@ -1367,11 +1367,11 @@ We make use of these lemmas in the following theorem.
 
                 Now, to show (a), observe that in $T'_n$, there is a path that satisfies $\Darrow(c, b)$ that ends in $T'_{n - 1}$, which satisfies $\varphi_{n-1}$. Hence,
                 \begin{equation*}
-                    T'_n, t'_n \vDash \varphi_n
+                    T'_n, t'_n \vDash \Darrow(c \land \varphi_{n-1}, b) \implies T'_n, t'_n \vDash \varphi_n
                 \end{equation*}
                 And in $S'_n$, all paths that satisfy $\Darrow(c, b)$ end in $S'_{n - 1}, T'_{n -2}, S'_{n - 2}, \ldots$ and other smaller trees. Since none of them satisfy $\varphi_{n-1}$, we have
                 \begin{equation*}
-                    S'_n, s'_n \nvDash \varphi_n
+                    S'_n, s'_n \nvDash \Darrow(c \land \varphi_{n-1}, b) \implies S'_n, s'_n \nvDash \varphi_n
                 \end{equation*}
                 This completes the proof.
         \end{description}
@@ -1408,11 +1408,110 @@ But, as $\gamma \equiv \psi$,
 \end{equation*}
 Which is a contradiction!
 
-Our hard work has allowed us to conclude that the $\gamma_{\Darrow, i}$ cannot only use the $\Darrow$ connective. If the mixed $\Darrow$ formula $\psi$ is separable, the pure-future components must contain a $\Rarrow$ or a $\Larrow$. This seems strange, given that $\psi$ only uses the $\Darrow$ and $\Uarrow$ connectives.
+Our hard work has allowed us to conclude that the $\gamma_{\Darrow, i}$ cannot only use the $\Darrow$ connective. If the mixed $\Darrow$ formula $\psi$ is separable, the pure-future components must contain a $\Rarrow$ or a $\Larrow$. This seems strange, given that $\psi$ is only concerned with a single downward path.
 
-% \subsection{More granular regions}
-%
-%% Note: I hoped to show that Marx's regions couldn't be made more granular as suggested by Gabbay in \cite{gabbay1994}. Unfortunately, the paper Gabbay based his proof on, \cite{Amir85}, uses a different approach to generalization. Amir's conditions are met by Marx's regions, diluting the importance of my findings somewhat.
+\subsection{A finer partition}
+\label{sec:finer-partition}
+% Note: I hoped to show that Marx's regions couldn't be made more granular as suggested by Gabbay in \cite{gabbay1994}. Unfortunately, the paper Gabbay based his proof on, \cite{Amir85}, uses a different approach to generalization. Amir's conditions are met by Marx's regions, diluting the importance of my findings somewhat.
+
+One can partition the flow of time in many different ways. Certain partitions are more desirable than others. For example, while Gabbay's partitioning of the linear flow of time into past, present, and future yields interesting applications (see \cite{DecPastImpFuture89}), it isn't \textit{necessary} for implying expressive completeness. A more granular partition separating the flow into the present and everything \textit{but} the present yields \cref{theorem:separation-theorem-linear-time} just as well. But, it's difficult to show a separation property over this granular partition without separating the past from the future.
+
+In his generalization of \cref{theorem:separation-theorem-linear-time} in \cite{gabbay1994}, Gabbay was partial to partitions that produced \textit{invertible} regions. These partitions produced regions such that all points $s$ in a region $R$ with respect the present point $t$ viewed $t$ as belonging to the same unique region $R'$. Gabbay's partition of linear time satisfies this property: all points in the past of $t$ view $t$ as a future point, and all points in the future of $t$ view $t$ as a past point.
+
+It's easy to observe that this property doesn't hold for Marx's regions. Points in the left of $t$ can view $t$ either as a right point or a past point.  More egregious is the past of $t$: based on the node, $t$ can be a future point, a left point, a right point, or a past point.
+
+This motivates the following finer partitioning of ordered trees that produces invertible regions.
+\begin{itemize}
+    \item The present region $\{t\}$, where $t$ is the present point.
+    \item The future region $\{s \mid t < s\}$, reachable by $\Darrow$
+    \item The ancestors $\{s \mid s < t\}$, reachable using $\Uarrow$.
+    \item The left-sibling regions $\{s \mid s \prec t\}$, requiring $\Larrow$.
+    \item The right-sibling regions $\{s \mid t \prec s\}$, needing $\Rarrow$.
+    \item The future of the left $\{s \mid \exists r.\, r \prec t \land r < s\}$, reachable through a $\Darrow$ after a $\Larrow$.
+    \item The future of the right $\{s \mid \exists r.\, t \prec r \land r < s\}$, similarly reachable by a $\Darrow$ inside a $\Rarrow$.
+    \item The left siblings of the past $\{s \mid \exists r.\, r < t \land s \prec r\}$, reachable by $\Uarrow(\Larrow(\cdots))$.
+    \item The right siblings of the past $\{s \mid \exists r.\, r < t \land r \prec s\}$, reachable by $\Uarrow(\Rarrow(\cdots))$.
+    \item The future of the left siblings of the past $\{s \mid \exists r.\, (r < t) \land (\exists u.\, u \prec r \land u < s)\}$, requiring $\Uarrow(\Larrow(\Darrow(\cdots)))$.
+    \item The future of the right siblings of the past $\{s \mid \exists r.\, (r < t) \land (\exists u.\, r \prec u \land u < s)\}$, requiring $\Uarrow(\Rarrow(\Darrow(\cdots)))$.
+\end{itemize}
+Here, $<$ is the descendant relation and $\prec$ denotes the sibling order. These eleven regions are pictorially represented in \cref{finerSeparationFig}. It's easy to verify that this partition produces invertible regions. For instance, all points in the future of $t$ view $t$ as an ancestor, all points in the future of the left of $t$ view $t$ as the right of the past, and so on.
+\begin{figure}[h]
+    \centering
+    \tikzfig{separation-tree-finer}
+    \caption{\emph{A finer separation of ordered trees.} The eleven different colours depict the eleven regions.}
+    \label{finerSeparationFig}
+\end{figure}
+
+Unfortunately, it is not possible to separate all $\mathcal{X}_{until}$ formulas into these regions. Intuitively, this is because one may not be able to control the entry to a region using connectives meant for that region alone. For example, the specific point of entry to the future-of-the-left in a formula of the form $\Larrow(\alpha \land \Darrow(\cdots))$ is determined by the points on the left that satisfy $\alpha$. We capitalize on this intuition in the following lemma.
+\begin{lemma}
+    The pure-left formula $\gamma \triangleq \Larrow(a \land \Darrow(a, \bot), \lnot a)$ cannot be separated into a boolean combination of left-sibling formulas and future-of-the-left formulas.
+\end{lemma}
+\begin{proof}
+    We prove this by contradiction. Suppose $\gamma$ can be separated into boolean combinations of left-sibling and future-of-the-left formulas. Let the separated equivalent be $\gamma'$, defined as
+    \begin{equation*}
+        \gamma' \triangleq \mathbb{B}(\alpha_1, \ldots, \alpha_n, \beta_1, \ldots, \beta_m)
+    \end{equation*}
+    Where the $\alpha_i$ are pure left-sibling formulas and the $\beta_j$ are pure future-of-the-left.
+
+    Define a class of trees $\mathcal{T} = \{ T_i \mid i \in \{1, 2, \ldots, 2^n + 1\}\}$ as follows. Each $T \in \mathcal{T}$ a root with $2^{n} + 2$ children. We will evaluate formulas at the rightmost child of each tree.
+
+    Each child of the root is either a leaf which doesn't model the atom $a$, or a node that models $a$ and has a single child that also models $a$. Importantly, for each $T \in \mathcal{T}$, only one child of the root models $a$. The trees in $\mathcal{T}$ differ at the positioning of this unique child.
+
+    For $i \in \{1, 2, \ldots 2^n + 1\}$, the tree $T_i \in \mathcal{T}$ positions the child that models $a$ at $i$ $\Larrow$ steps away from the rightmost child (i.e., the present point). This is demonstrated in \cref{fineRegionsTree}.
+    \begin{figure}[h]
+        \centering
+        \tikzfig{why-finer-regions-wont-work}
+        \caption{\emph{The tree $T_i$.} The present node is shaded black. The \textcolor{violet}{violet} nodes model $a$ and the \textcolor{blue}{blue} ones do not. Note that the \textcolor{violet}{violet} sibling is $i$ steps away from the present.}
+        \label{fineRegionsTree}
+    \end{figure}
+
+    It's easy to see that, for all $T \in \mathcal{T}$, $T, t \vDash \gamma$, where $t$ is the rightmost child of the root of $T$. We will now build a tree $S$ that models $\gamma'$ but not $\gamma$.
+
+    Take the $n$ pure-left components of $\gamma'$. For $i \in \{1, \ldots, n\}$, each $\alpha_i$ is either true or false at each $T \in \mathcal{T}$. For simplicity, denote the operation $[\;]_{T, t}$ as
+    \begin{equation*}
+        [\alpha_i]_{T, t} = \begin{cases}
+            1 & T, t \vDash \alpha_i\\
+            0 & T, t \nvDash \alpha_i
+        \end{cases}
+    \end{equation*}
+    There are $2^n$ possible configurations of $([\alpha_1]_{T, t}, \ldots, [\alpha_n]_{T, t})$, and because there are $2^n+1$ formulas in $\mathcal{T}$, for two trees $T_i, t_i$ and $T_j, t_j$, we have
+    \begin{equation*}
+        ([\alpha_1]_{T_i, t_i}, \ldots, [\alpha_n]_{T_i, t_i}) = ([\alpha_1]_{T_j, t_j}, \ldots, [\alpha_n]_{T_j, t_j})
+    \end{equation*}
+    We build $S$ using $T_i$ and $T_j$. Without loss of generality, let $i < j$. We again begin with a root that has $2^n + 2$ children, and evaluate formulas at the rightmost child. For all $k \in \{1, \ldots, 2^n + 1\}$ with $k \neq i$, the node $k$ left-steps away from the rightmost node doesn't model $a$. The node $i$ steps away \textit{does} model $a$, but has no children. Instead, the node $j$ steps away has a child that models $a$. This tree is depicted in \cref{fineFailureTree}.
+    \begin{figure}[h]
+        \centering
+        \tikzfig{why-finer-part2}
+        \caption{\emph{The tree $S$.} The present node is shaded black. The nodes modelling $\lnot a$ are shaded \textcolor{blue}{blue}, and the node modelling $a$ is shaded \textcolor{violet}{violet}. The present node has $2^n + 1$ left-siblings.}
+        \label{fineFailureTree}
+    \end{figure}
+
+    Notice that $S$ agrees with $T_i$ on the left-sibling region, and agrees with $T_j$ on the future-of-the-left. Hence, for all $k_\alpha \in \{1, \ldots, n\}$ and $k_\beta \in \{1, \ldots, m\}$,
+    \begin{equation*}
+        S, s \vDash \alpha_{k_\alpha} \Longleftrightarrow T_i, t_i \vDash \alpha_{k_\alpha}\\
+    \end{equation*}
+    But, since $[\alpha_k]_{T_i, t_i} = [\alpha_k]_{T_j, t_j}$, we must have
+    \begin{equation*}
+        S, s \vDash \alpha_{k_\alpha} \Longleftrightarrow T_j, t_j \vDash \alpha_{k_\alpha}\\
+    \end{equation*}
+    And since $S$ agrees with $T_j$ on the future-of-the-left,
+    \begin{equation*}
+        S, s \vDash \beta_{k_\beta} \Longleftrightarrow T_j, t_j \vDash \beta_{k_\beta}\\
+    \end{equation*}
+    Giving us
+    \begin{equation*}
+        S, s \vDash \gamma' \Longleftrightarrow T_j, t_j \vDash \gamma'
+    \end{equation*}
+    But, it's easy to see that
+    \begin{equation*}
+        S, s \nvDash \gamma
+    \end{equation*}
+    forcing a contradiction and proving the lemma.
+\end{proof}
+Hence, in order to achieve separation, the left-siblings and the future-of-the-left must be merged. Similar arguments can be used to show that the right-siblings and the future-of-the-right must also be merged. We can continue these arguments and merge the ancestors, their left-siblings, their right-siblings, the future of their left-siblings, and the future of their right siblings, deriving Marx's partitioning scheme.
+
+The author believes that this result provides a small amount of justification for Marx's choices.
+
 
 
 
