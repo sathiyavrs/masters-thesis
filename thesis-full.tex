@@ -119,7 +119,7 @@ Unfortunately, the proof Marx employs for his separation property is incorrect. 
 
 In this thesis, we explore results around the separation of Conditional XPath over ordered trees. We note Marx's mistakes, and show that his arguments in \cite{xpathComplete} naturally lead to a \textit{partial} separation property, whereby a subset of formulas can be separated. We also believe that certain simple formulas \textit{cannot} be separated; through the use of EF games adapted from \cite{EtWi00}, we show a result that implies that separation of such a formula is unlikely. Separately, we also justify Marx's choice of regions by showing that a more desirable set of regions cannot yield separation.
 
-The structure of this document is as follows. In \cref{sec:preliminaries}, we discuss basic notions regarding temporal languages. In \cref{sec:linear-time}, we provide a (mostly) self-contained exposition of Gabbay's proof of separation over linear time (see \cite{DecPastImpFuture89, gabbay1994}). We discuss our main results in \cref{sec:ordered-trees}.
+The structure of this document is as follows. In \cref{sec:preliminaries}, we discuss basic notions regarding temporal languages. In \cref{sec:linear-time}, we provide a (mostly) self-contained exposition of Gabbay's proof of separation over linear time (see \cite{DecPastImpFuture89, gabbay1994}). We discuss our main results in \cref{sec:ordered-trees}, and provide avenues for future work in \cref{sec:conclusions}.
 
 \section{Preliminaries}
 \label{sec:preliminaries}
@@ -1222,6 +1222,7 @@ We now present a neat consequence in a corollary.
 This section shows how the EF games work. Notably, \Cref{theorem:ef-games-working-principle} still holds when $k_\sigma = 0$ for some $\sigma$. We use this fact in the next section.
 
 \subsubsection{A game for separation}
+\label{sec:game-separation}
 
 In this section, we discuss games where the only move type is $\Darrow$.
 
@@ -1512,9 +1513,15 @@ Hence, in order to achieve separation, the left-siblings and the future-of-the-l
 
 The author believes that this result provides a small amount of justification for Marx's choices.
 
+\section{Conclusions and Future Work}
+\label{sec:conclusions}
+In this thesis, we studied Marx's proposed separation of $\mathcal{X}_{until}$, a temporal logic that forms the core of Conditional XPath. We have extended Marx's arguments to their natural conclusion: a partial separation property over a subset of $\mathcal{X}_{until}$ formulas that only contain pure-future $\Darrow$ subformulas. We then showed how certain simple mixed $\Darrow$ formulas cannot be separated using $\Darrow$ and $\Uarrow$ alone. Separately, we also justified Marx's partitioning of ordered, unranked trees by showing how a finer, more desirable partition wouldn't work.
 
+One definite area for future work is to extend the results in \cref{sec:game-separation} to games that allow $\Larrow$ and $\Rarrow$ moves. If such a result can be established (which the author believes is possible), the separation property proposed by Marx in \cite{xpathComplete} will finally be proven wrong. The author was able to procure two very messy ordered \textit{infinite} trees that couldn't be distinguished by $\Darrow$, $\Larrow$ and $\Rarrow$ moves but could easily be distinguished using a constant number of $\Uarrow$ and $\Darrow$ moves, but the author believes a cleaner result is possible.
 
+Regardless of whether we are able to disprove Marx's separation property, we would like to have \textit{some} separation of $\mathcal{X}_{until}$. Experimenting with new connectives and other finer partitions with the goal of finding the right combination of expressiveness and separation is another direction of future work.
 
+Finally, one could also explore applications of separation of ordered, unranked trees. Inspired applications like \cite{DecPastImpFuture89} motivate newer and more interesting ways to use temporal logics, and similar applications over tree structures are naturally desirable.
 
 %%
 %% Bibliography
