@@ -20,22 +20,28 @@
 \usepackage[dvipsnames]{xcolor}
 % Needed for tikz
 \usepackage{tikzit}
+\usepackage{mathtools}
 
 \input{style1.tikzstyles}
 
 \bibliographystyle{plainurl}% the mandatory bibstyle
 
-\title{On the Separation of Conditional XPath} %TODO: Please add
+\title{On the Separation of Conditional XPath \and
+    \Large M.Sc. Thesis}
 
-%\titlerunning{Dummy short title} %TODO: optional, please use if title is longer than one line
+\titlerunning{Master's Thesis}
 
-\author{V.R. Sathiyanarayana}{Chennai Mathematical Institute, India \and \url{http://sathiyavrs.netlify.app}}{sathiyanarayana@cmi.ac.in}{}{}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional. Use additional curly braces to indicate the correct name splitting when the last name consists of multiple name parts.
+\author{V.R. Sathiyanarayana}{
+    Chennai Mathematical Institute
+    \and Roll number: \textsf{MCS202018}
+    \and Advisors: Prof. C. Aiswarya and Prof. Paul Gastin
+    \and \url{http://sathiyavrs.netlify.app}}{sathiyanarayana@cmi.ac.in}{}{}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional. Use additional curly braces to indicate the correct name splitting when the last name consists of multiple name parts.
 
 %\author{Joan R. Public\footnote{Optional footnote, e.g. to mark corresponding author}}{Department of Informatics, Dummy College, [optional: Address], Country}{joanrpublic@dummycollege.org}{[orcid]}{[funding]}
 
 \authorrunning{V.R. Sathiyanarayana} % mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
 
-\Copyright{Jane Open Access and Joan R. Public} %TODO: mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/ % TODO: Fill something here
+\Copyright{V. R. Sathiyanarayana} %TODO: mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/ % TODO: Fill something here
 
 \begin{CCSXML}
 <ccs2012>
@@ -68,17 +74,17 @@
 \nolinenumbers %uncomment to disable line numbering
 
 %Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\EventEditors{John Q. Open and Joan R. Access}
-\EventNoEds{2}
-\EventLongTitle{42nd Conference on Very Important Topics (CVIT 2016)}
-\EventShortTitle{CVIT 2016}
-\EventAcronym{CVIT}
-\EventYear{2016}
-\EventDate{December 24--27, 2016}
-\EventLocation{Little Whinging, United Kingdom}
-\EventLogo{}
-\SeriesVolume{42}
-\ArticleNo{23}
+% \EventEditors{C. Aiswarya}
+% \EventNoEds{2}
+% \EventLongTitle{Master's Thesis}
+% \EventShortTitle{MSc. (CS)}
+% \EventAcronym{MSc.}
+% \EventYear{2022}
+% \EventDate{June 4--7, 2022}
+% \EventLocation{Chennai, India}
+% \EventLogo{}
+% \SeriesVolume{1}
+\ArticleNo{37}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% A few shortcuts for Leftarrow, etc
@@ -95,9 +101,9 @@
 
 %TODO mandatory: add short abstract of the document
 \begin{abstract}
-    Separation was introduced by Dov Gabbay for the $S, U$ temporal language over linear time and was shown to imply its expressive equivalence with the first-order monadic logic of order. The flexibility of Gabbay's arguments inspired the popular technique of proving the expressive completeness of a temporal language by showing how its formulas can be separated.
+    Separation was introduced by Dov Gabbay for the $S, U$ temporal language over linear time and was shown to imply its expressive equivalence with the first-order monadic logic of order. The effectiveness and flexibility of Gabbay's arguments led to the practice of characterizing the expressive power of new temporal logics by attempting to separate them. Accordingly, Maarten Marx proposed a separation property for Conditional XPath, an extension of the XML query language XPath. Conditional XPath can be viewed as a temporal logic over ordered trees, and has been proven to be expressively equivalent to the corresponding first-order language. A mistake in Marx's proof of separation was later discovered, and consequent attempts to fix this mistake have only produced negative results.
 
-    Attempts have been made to prove separation results for temporal logics that model time differently. Marx proposed a separation for Conditional XPath, the core of which is a natural and expressively complete temporal language over finite ordered unranked trees. A mistake in his arguments was later revealed, invalidating in his proof of separation. In this thesis, we prove some implications of Marx's work, and show a result that discourages the accuracy of his proposed separation.
+    In this thesis, we explore some implications of Marx's work. We show that his arguments can be used to separate a subclass of all formulas. We then describe EF games designed for Conditional XPath, and use these games to characterize the difficulty of separating a particular formula outside this class. We conjecture that this formula cannot be separated. Separately, we justify Marx's partitioning of ordered trees by unexpectedly deriving them.
 \end{abstract}
 
 \section{Introduction}
@@ -105,7 +111,7 @@
 
 Temporal logics are excellent languages for making statements about systems that change over time. A variety of these logics have been studied; some differ in the way they model time, some in the way they interpret systems that change with time, and some in the mechanisms they provide to reason through time. A popular example is the Linear Temporal Logic, where time is modelled as a linear order with a clear beginning, and systems that change with time are tracked using classical propositional logic. Other logics have modelled branching time, concurrent systems, and other complex graph structures.
 
-These logics have found applications in many domains, from the formal verification of the behaviour of computer programs to database management systems and even to planning problems in Artificial Intelligence. A part of the reason for the ubiquity of temporal logics is the combination of their attractive expressiveness and complexity properties. The satisfiability of linear-temporal logic, for example, is PSPACE-complete (see \cite{vardiLTL}), which is a significant improvement from the non-elementary complexity of the same problem in the similarly expressive first-order monadic logic of order.
+These logics have found applications in many domains, from the formal verification of the behaviour of computer programs (see \cite{vardiLTL}) to database management systems (see \cite{gabbay1994}) and even to planning problems in Artificial Intelligence (see \cite{planningLTL}). A part of the reason for the ubiquity of temporal logics is the combination of their attractive expressiveness and complexity properties. The satisfiability of linear-temporal logic, for example, is PSPACE-complete (see \cite{vardiLTL}), which is a significant improvement from the non-elementary complexity of the same problem in the similarly expressive first-order monadic logic of order.
 
 The separation property, invented by Dov Gabbay in \cite{Gabbay1981}, is a strangely influential consequence of the design of popular temporal languages. Simply put, it requires all formulas in the language to be equivalent to a variant made up of formulas purely concerned with certain \textit{regions} of time. Surprisingly, this property is linked to expressive completeness: a minimally expressive temporal logic with the separation property can express any first-order specification. In \cref{sec:linear-time}, we will detail the separation property over linear time and how it implies functional completeness.
 
@@ -113,22 +119,25 @@ The separation property, invented by Dov Gabbay in \cite{Gabbay1981}, is a stran
 
 Separation has many interesting applications beyond expressive completeness. A beautiful one can be found in \cite{DecPastImpFuture89}, which describes how a separable temporal language can simultaneously be \textit{declarative} (i.e., specifies correct behaviour) and \textit{imperative} (i.e., provides instructions to achieve correct behaviour). Another use-case, described in \cite{Lichtenstein1985TheGO}, shows that formulas in a separable logic can be written as a boolean combination of safety and liveness properties. A more thorough exposition of the applications of separation can be found in \cite{GabbayBirthday05}.
 
-As we earlier implied, temporal languages have been studied for a variety of models of time. A particularly interesting and useful class of temporal logics model time as \textit{unranked ordered trees}. The usefulness of these languages stems directly from the fact that many natural structures in computer science (such as the nested words of \cite{alur2009}, XML, and other structured texts) can be encoded as ordered trees. In \cite{marx2005conditional}, Marx describes \textit{Conditional XPath}, a language capable of expressing any first-order property over finite ordered trees. He simplifies this language to its core in \cite{xpathComplete}, and proposes a separation property for it.
+As we earlier implied, temporal languages have been studied for a variety of models of time. A particularly interesting and useful class of temporal logics model time as \textit{unranked ordered trees}. The usefulness of these languages stems directly from the fact that many natural structures in computer science (the nested words of \cite{alur2009}, XML, and other structured data) can be encoded as ordered trees. In \cite{marx2005conditional}, Marx describes \textit{Conditional XPath}, a language capable of expressing any first-order property over finite ordered trees. He simplifies this language to its core in \cite{xpathComplete}, and proposes a separation property for it.
 
 Unfortunately, the proof Marx employs for his separation property is incorrect. The mistake lies in an unnamed lemma, and has been commented on in \cite{BeJe07, nwtl}. Further attempts to prove a separation result have been made in \cite{BeCl16}, with mostly negative results.
 
 In this thesis, we explore the separation of Conditional XPath over unranked ordered trees. We note Marx's mistakes, and show that his arguments in \cite{xpathComplete} naturally lead to a \textit{partial} separation property, whereby a subset of formulas can be separated. We also believe that certain simple formulas \textit{cannot} be separated; through the use of EF games adapted from \cite{EtWi00}, we show a result that implies that separation of such a formula is unlikely. Separately, we also justify Marx's choice of regions by showing that a more desirable set of regions cannot yield separation.
 
-The structure of this document is as follows. In \cref{sec:preliminaries}, we discuss basic notions regarding temporal languages. In \cref{sec:linear-time}, we provide a (mostly) self-contained exposition of Gabbay's proof of separation over linear time (see \cite{DecPastImpFuture89, gabbay1994}). We discuss our main results in \cref{sec:ordered-trees}, and provide avenues for future work in \cref{sec:conclusions}.
+The structure of this document is as follows. In \cref{sec:preliminaries}, we discuss basic notions regarding temporal languages. In \cref{sec:linear-time}, we provide a (mostly) self-contained exposition of Gabbay's proof of separation over linear time (see \cite{DecPastImpFuture89, gabbay1994}). We discuss our main results in \cref{sec:ordered-trees}, and present avenues for future work in \cref{sec:conclusions}.
 
 \section{Preliminaries}
 \label{sec:preliminaries}
 
-Before discussing separation, we define some standard notions. A flow of time is simply a non-empty set $T$ partially ordered by the binary relation $<$. We symbolically refer to these flows by the pair $(T, <)$. Examples include $(\mathbb{N}, <)$ and $(\mathbb{R}, <)$ with their natural ordering, unordered trees with the descendant relation, and Mazurkiewicz traces. We will consider the truth values of propositions (from a fixed set $\mathcal{P}$) at points on these flows.
+Before discussing separation, we need to define some standard notions. A \textit{flow of time} is simply a non-empty set $T$ partially ordered by the binary relation $<$. We symbolically refer to these flows by the pair $(T, <)$. Examples include $(\mathbb{N}, <)$ and $(\mathbb{R}, <)$ with their natural ordering, unordered trees with the descendant relation, and Mazurkiewicz traces. We will consider the truth values of propositions (from a fixed set $\mathcal{P}$) at points on these flows.
 
 The first-order vocabulary over these structures contains the ordering relation $<$ and a collection of \textit{monadic} relations $Q_1, Q_2, \cdots$ that match the propositions $q_1, q_2, \cdots$ in $\mathcal{P}$. An assignment $h$ of atoms in a time flow $(T, <)$ assigns to each $Q_i$ a subset of $T$ where the atom $q_i$ is true. Augmented with the assignment, the triplet $(T, <, h)$ is called a \textit{temporal structure}. First-order formulas are evaluated over these structures in the usual way. In this discussion, we pay special attention to first-order formulas with a single free-variable; they quite naturally mirror temporal formulas.
 
-Instead of free variables and quantification, temporal languages employ \textit{connectives} to reason through time. Popular connectives used in temporal languages over linear time include $F$, $P$, $G$, $H$, $U$, and $S$, each called \textit{future}, \textit{past}, \textit{globally}, \textit{history}, \textit{until} and \textit{since} respectively. In this paper, we will limit our discussion to connectives that are definable by monadic first-order formulas.
+Instead of free variables and quantification, temporal languages employ \textit{temporal connectives} to reason through time. Popular connectives used in temporal languages over linear time include $F$, $P$, $G$, $H$, $U$, and $S$, each called \textit{future}, \textit{past}, \textit{globally}, \textit{history}, \textit{until} and \textit{since} respectively. In this paper, we will limit our discussion to connectives that are definable by monadic first-order formulas.
+\begin{note*}
+    Unless otherwise specified, when we refer to \textit{connectives} in this thesis, we refer to \textit{temporal connectives}.
+\end{note*}
 
 Temporal formulas are evaluated at points in time. In a temporal structure $\mathcal{M} = (T, <, h)$, atoms are evaluated as
 \begin{equation*}
@@ -193,7 +202,7 @@ Note that these regions are disjoint, and that the union of these regions produc
 \end{figure}
 
 % TODO: Consider writing these in \begin{definition}
-Now, we define \textit{pure formulas}. For any flow $(T, <)$, we denote two assignments $h$ and $h'$ to be in \textit{agreement} over a region $R \subset T$ \textit{iff} for any atom $q \in \mathcal{P}$ and any point $s \in R$,
+Now, we define \textit{pure formulas}. For any flow $(T, <)$, we denote two assignments $h$ and $h'$ to be in \textit{agreement} over a region $R \subset T$ \textit{iff} for every atom $q \in \mathcal{P}$ and every point $s \in R$,
 \begin{equation*}
     s \in h(q) \Longleftrightarrow s \in h'(q)
 \end{equation*}
@@ -213,12 +222,12 @@ It's easy to see that formulas that don't use the $S$ and $U$ connectives are pu
     \end{enumerate}
 \end{definition}
 
-Finally, call a formula $A$ \textbf{syntactically separated} if it is a boolean combination of pure formulas. Now, we can state the separation property
+Finally, call a formula $A$ \textbf{syntactically separated} if it is a boolean combination of syntactically pure formulas. Now, we can state the separation property
 \begin{claim*}[Separation Property for linear flows]
     \label{claim:separation-property-linear-time}
     Every temporal formula $A$ in the language of $S$ and $U$ over linear time can be equivalently represented by a separated formula.
 \end{claim*}
-The proof of this claim is quite involved, and is presented in full detail in \cite{gabbay1994}. In the next few sections, we'll provide most of Gabbay et. al.'s proof, parts of which we use in later sections. To mirror their notation, we'll write $U$ formulas as $U(p, q)$ instead of $q \,\mathcal{U}\, p$.
+The proof of this claim is quite involved, and is presented in full detail in \cite{gabbay1994, DecPastImpFuture89}. In the next few sections, we'll provide most of Gabbay et. al.'s proof, parts of which we use in later sections. To mirror their notation, we'll write $U$ formulas as $U(p, q)$ instead of $q \,\mathcal{U}\, p$.
 
 \subsection{Separating $S$ and $U$ over linear time}
 
@@ -229,7 +238,7 @@ As a reminder, we restate the definitions of $U$ and $S$
         \mathcal{M}, t \vDash S(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (x < t) \land p(x) \land \forall y \left( x < y < t \to q\left( y \right) \right)
     \end{aligned}
 \end{equation*}
-For convenience, we refer to the left condition ($p$) in $U(p, q)$ as the \textit{target} condition and the right condition ($q$) as the \textit{path} condition. Observe that, over linear time, a formula composed only of $U$s is a pure future formula, a formula composed of $S$s is a pure past formula. The task, therefore, is to transform formulas with both $U$s and $S$s.
+For convenience, we refer to the left condition ($p$) in $U(p, q)$ as the \textit{target} condition and the right condition ($q$) as the \textit{path} condition. Observe that, over linear time, a formula composed only of $U$s is a pure future formula, a formula composed of $S$es is a pure past formula. The task, therefore, is to transform formulas with both $U$s and $S$es.
 
 Over the integer time flow $(\mathbb{Z}, <)$, these connectives naturally possess the following properties
 \begin{equation}
@@ -260,7 +269,7 @@ Our strategy involves \textit{pulling-out} $U$s from inside $S$ and vice versa. 
 \subsubsection{Eliminations}
 \label{sec:eliminations-linear}
 
-Let $\alpha$, $\beta$, $\varphi$ and $\psi$ be boolean combinations of propositional atoms. In the following subsections, we pull out a $U(\varphi, \psi)$ from inside a $S$ under a variety of minimal configurations. In later sections, we show that these configurations suffice.
+Let $\alpha$, $\beta$, $\varphi$ and $\psi$ be boolean combinations of propositional atoms. In the following subsections, we pull out a $U(\varphi, \psi)$ from inside an $S$ under a variety of minimal configurations. In later sections, we show that these configurations suffice.
 
 \paragraph*{$S(\alpha \land U(\varphi, \psi), \beta)$}
 This formula requires $U(\varphi, \psi)$ to be true at a point $t'$ in the past of $t$. This in turn implies $\varphi$ at some point $t''$ ahead of $t'$. This naturally breaks down into three cases: $t'' > t$, $t'' = t$, and $t' < t'' < t$. The translation is
@@ -326,24 +335,25 @@ This is a neat combination of $S(\alpha \land U(\varphi, \psi), \beta)$ and $S(\
         \quad \land \quad S(\lnot \beta, \lnot \varphi) \to (\varphi \lor (\psi \land U(\varphi, \psi)))
     \end{aligned}
 \end{equation*}
+We can similarly write separated equivalents for all possible $S(\alpha \land \pm U(\varphi, \psi), \beta \lor \pm U(\varphi, \psi))$. The details are presented in \cite{gabbay1994, DecPastImpFuture89}.
 
 \subsubsection{Putting it all together}
 
-The eliminations presented in the previous section lend credence to the idea of separation. Amazingly, Gabbay presents a neat induction scheme that builds on these rules to separate \textit{any} temporal formula in the language. In this section, we present an overview of his arguments (presented in more detail in \cite{gabbay1994}).
+The eliminations presented in the previous section lend credence to the idea of separation. Amazingly, Gabbay presents a neat induction scheme that builds on these rules to separate \textit{every} temporal formula in the language. In this section, we present an overview of his arguments (presented in more detail in \cite{gabbay1994}).
 
 \begin{lemma}
 \label{lemma:separation-linear-step1}
-    Let $\varphi$ and $\psi$ be pure-present formulas and $\alpha$ and $\beta$ be formulas such that the only appearance of a $U$ in either of them is $U(\varphi, \psi)$, and that $U$ isn't nested inside a $S$. Then $S(\alpha, \beta)$ can be written as a syntactically separated formula where the only appearance of $U$ is $U(\varphi, \psi)$.
+    Let $\varphi$ and $\psi$ be pure-present formulas and $\alpha$ and $\beta$ be formulas such that the only appearance of a $U$ in either of them is $U(\varphi, \psi)$, and that $U$ isn't nested inside an $S$. Then $S(\alpha, \beta)$ can be written as a syntactically separated formula where the only appearance of $U$ is $U(\varphi, \psi)$.
 \end{lemma}
 \begin{proof}
-    We start by writing $\alpha$ and $\beta$ in their conjunctive and disjunctive normal forms respectively. During this transformation, we treat all top-level instances of $U$ and $S$ in them as atomic propositions. This gives us
+    We start by writing $\alpha$ and $\beta$ in their disjunctive and conjunctive normal forms respectively. During this transformation, we treat all top-level instances of $U$ and $S$ in them as atomic propositions. This gives us
     \begin{equation*}
         \begin{aligned}
             \alpha &\equiv \bigvee_i \left( \alpha_{i, 1} \land \alpha_{i, 2} \land \cdots \land \alpha_{i, m_i} \right)\\
             \beta &\equiv \bigwedge_j \left( \beta_{j, 1} \lor \beta_{j, 2} \lor \cdots \lor \beta_{j, n_j} \right)
         \end{aligned}
     \end{equation*}
-    Here, the literals $\alpha_{i, k}$ and $\beta_{i, k}$ are composed of propositional atoms, $S$ formulas, and $U(\varphi, \psi)$. We use the above and equation \eqref{eq:or-and-S-U} to write $S(\alpha, \beta)$ as
+    Here, the literals $\alpha_{i, k}$ and $\beta_{i, k}$ are composed of propositional atoms, $S$ formulas, and $U(\varphi, \psi)$. We use the above and \cref{eq:or-and-S-U} to write $S(\alpha, \beta)$ as
     \begin{equation}
         \label{eq:dnf-form-S-alpha-beta}
         \begin{aligned}
@@ -371,15 +381,14 @@ The eliminations presented in the previous section lend credence to the idea of 
 The second step of the induction scheme is to consider cases where $U(\varphi, \psi)$ is nested under multiple levels of $S$.
 \begin{lemma}
 \label{lemma:separation-linear-step2}
-    Let $\varphi$ and $\psi$ be pure-present formulas, and let $\gamma$ be a formula such that the only appearance of a $U$ in $\alpha$ is $U(\varphi, \psi)$. Then, $\gamma$ can be written as a syntactically separated formula where the only appearance of a $U$ is $U(\varphi, \psi)$.
+    Let $\varphi$ and $\psi$ be pure-present formulas, and let $\gamma$ be a formula such that the only appearance of a $U$ in $\gamma$ is $U(\varphi, \psi)$. Then, $\gamma$ can be written as a syntactically separated formula where the only appearance of a $U$ is $U(\varphi, \psi)$.
 \end{lemma}
 \begin{proof}
-    We show this lemma by inducting on the pair $(n_1, n_2)$, where $n_1$ is the maximum number of nested $S$es above a $U(\varphi, \psi)$ and $n_2$ is the number of $U(\varphi, \psi)$ nested inside $n_1$ $S$s.
+    We show this lemma by inducting on the pair $(n_1, n_2)$, where $n_1$ is the maximum number of nested $S$es above a $U(\varphi, \psi)$ and $n_2$ is the number of $U(\varphi, \psi)$ nested inside $n_1$ $S$es.
     \begin{description}
         \item[Base case.] Here, $n_1 = 0$, and $\gamma$ is already separated.
-        \item[Induction step.] Pick the most deeply nested subformula $S(\alpha, \beta)$ of $\gamma$ such that all instances of $U(\varphi, \psi)$ in $\alpha$ and $\beta$ are not nested inside a $S$. Applying lemma \ref{lemma:separation-linear-step1} to $S(\alpha, \beta)$ strictly reduces $(n_1, n_2)$, allowing us to use the induction hypothesis. Remember, lemma \ref{lemma:separation-linear-step1} only generates formulas where then only appearance of $U$ is $U(\varphi, \psi)$, which is required to use the induction hypothesis.
+        \item[Induction step.] Pick the most deeply nested subformula $S(\alpha, \beta)$ of $\gamma$ such that all instances of $U(\varphi, \psi)$ in $\alpha$ and $\beta$ are not nested inside an $S$. Applying lemma \ref{lemma:separation-linear-step1} to $S(\alpha, \beta)$ strictly reduces $(n_1, n_2)$, allowing us to use the induction hypothesis. Remember, lemma \ref{lemma:separation-linear-step1} only generates formulas where then only appearance of $U$ is $U(\varphi, \psi)$, which is required to use the induction hypothesis. This completes the proof.
     \end{description}
-    This completes the proof.
 \end{proof}
 The next step generalizes this approach to different (basic) until subformulas.
 \begin{lemma}
@@ -390,9 +399,10 @@ The next step generalizes this approach to different (basic) until subformulas.
     Predictably, we induct on $n$.
     \begin{description}
         \item[Base case.] This is $n = 1$, identical to lemma \ref{lemma:separation-linear-step2}.
-        \item[Induction case.] Introduce new propositional atoms $p_1, p_2, \ldots p_{n-1}$. For each $i \in \{1, \ldots n - 1\}$, replace each occurrence of $U(\varphi_i, \psi_i)$ in $\gamma$ with $p_i$ to produce $\gamma'$. We can apply lemma \ref{lemma:separation-linear-step2} to $\gamma'$ to produce its separated equivalent, $\gamma''$. Replace each instance of $p_i$ in $\gamma''$ with $U(\varphi_i, \psi_i)$ to produce $\gamma'''$. Finally, apply the induction hypothesis on $\gamma'''$ to separate $\gamma$.
+        \item[Induction case.] Introduce new propositional atoms $p_1, p_2, \ldots p_{n-1}$. For each $i \in \{1, \ldots n - 1\}$, replace each occurrence of $U(\varphi_i, \psi_i)$ in $\gamma$ with $p_i$ to produce $\gamma'$. Notice that the only $U$ formula in $\gamma'$ is $U(\varphi_n, \psi_n)$. This allows the application of lemma \ref{lemma:separation-linear-step2} to $\gamma'$ to produce its separated equivalent, $\gamma''$.
+
+        Observe that the only occurrence of $U$ in $\gamma''$ is $U(\varphi, \psi)$. Hence, the $p_i$ appear in the pure-present or the pure-past components of $\gamma''$. Replace each instance of $p_i$ in $\gamma''$ with $U(\varphi_i, \psi_i)$ to produce $\gamma'''$. After replacement, apply the induction hypothesis on each previously pure-past component of $\gamma'''$ to complete the proof.
     \end{description}
-    This proves the lemma.
     \begin{remark*}
         It isn't difficult to see that we cannot use lemma \ref{lemma:separation-linear-step2} if we introduce a single atom $p_n$ to represent $U(\varphi_n, \psi_n)$. Introducing more atoms is essential to the overall induction structure.
     \end{remark*}
@@ -400,19 +410,19 @@ The next step generalizes this approach to different (basic) until subformulas.
 We can now finally consider the case of nested $U$s.
 \begin{lemma}
     \label{lemma:separation-linear-step4}
-    Let $\gamma$ be a formula that doesn't contain $S$s nested inside a $U$. Then, $\gamma$ can be separated.
+    Let $\gamma$ be a formula that doesn't contain $S$es nested inside a $U$. Then, $\gamma$ can be separated.
 \end{lemma}
 \begin{proof}
-    We cleverly induct on the maximum nesting depths of $U$s under a $S$. Let $n$ be the maximum $U$-nesting depth of $\gamma$.
+    We cleverly induct on the maximum nesting depths of $U$s under an $S$. Let $n$ be the maximum $U$-nesting depth of $\gamma$.
     \begin{description}
         \item[Base case.] This is $n = 1$, which is lemma \ref{lemma:separation-linear-step3}.
-        \item[Induction step.] Suppose there are $m$ subformulas rooted at a $U$ that aren't under a $U$ and are under an $S$. Introduce $2m$ atoms $\{p_1, \ldots p_{2m}\}$ and replace the target and path conditions of these $m$ subformulas with these atoms. This produces a new formula $\gamma'$ that is amenable to lemma \ref{lemma:separation-linear-step3}. Applying the lemma produces a separated formula $\gamma''$ that uses the atoms $\{p_1, \ldots p_{2m}\}$. These atoms may appear under a $S$ in the separated formula $\gamma''$. Now, replace each of these atoms by the target/path condition they substituted earlier. This produces $\gamma'''$, a formula with the maximum $U$-nesting depth under a $S$ strictly $< n$. Applying the induction hypothesis on $\gamma'''$ proves this lemma.
+        \item[Induction step.] Suppose there are $m$ subformulas rooted at a $U$ that aren't under a $U$ and are under an $S$. Introduce $2m$ atoms $\{p_1, \ldots p_{2m}\}$ and replace the target and path conditions of these $m$ subformulas with these atoms. This produces a new formula $\gamma'$ that is amenable to lemma \ref{lemma:separation-linear-step3}. Applying the lemma produces a separated formula $\gamma''$ that uses the atoms $\{p_1, \ldots p_{2m}\}$. These atoms may appear under an $S$ in the separated formula $\gamma''$. Now, replace each of these atoms by the target/path condition they substituted earlier. This produces $\gamma'''$, a formula with the maximum $U$-nesting depth under an $S$ strictly $< n$. Applying the induction hypothesis on $\gamma'''$ proves this lemma.
     \end{description}
     \begin{remark*}
         We don't need to consider the value $m$ in our induction hypothesis, as required in the proof of lemma \ref{lemma:separation-linear-step2}.
     \end{remark*}
 \end{proof}
-Before we finally prove the separation theorem, notice that, since $U$ and $S$ are duals of each other, the eliminations in section \ref{sec:eliminations-linear} and lemmas \ref{lemma:separation-linear-step1}, \ref{lemma:separation-linear-step2}, \ref{lemma:separation-linear-step3} and \ref{lemma:separation-linear-step4} hold when the $U$ and $S$ are swapped.
+Before we finally prove the separation theorem, notice that, since $U$ and $S$ are duals of each other, the eliminations in Section \ref{sec:eliminations-linear} and Lemmas \ref{lemma:separation-linear-step1}, \ref{lemma:separation-linear-step2}, \ref{lemma:separation-linear-step3} and \ref{lemma:separation-linear-step4} hold when the $U$ and $S$ are swapped.
 %TODO: Understand and implement Theorem-Restate here
 \begin{theorem}[Separation Property for Linear Time]
     \label{theorem:separation-linear-final}
@@ -423,9 +433,9 @@ Before we finally prove the separation theorem, notice that, since $U$ and $S$ a
     \begin{definition}[Junction Depth]
         The junction depth of a temporal formula $\gamma$ is the length of the longest sequence of subformulas $\alpha_1, \alpha_2, \ldots \alpha_n$ of $\gamma$ such that
         \begin{enumerate}
-            \item The root of all $\alpha_i$ is either a $U$ or a $S$.
+            \item The root of all $\alpha_i$ is either a $U$ or an $S$.
             \item $\alpha_{i+1}$ is a subformula of $\alpha_i$.
-            \item If $\alpha_i$ is rooted by a $U$ (or a $S$), then $\alpha_{i+1}$ is rooted by a $S$ (or a $U$, respectively).
+            \item If $\alpha_i$ is rooted by a $U$ (or an $S$), then $\alpha_{i+1}$ is rooted by an $S$ (or a $U$, respectively).
             \item There is no subformula $\beta$ of $\gamma$ such that \label{item:junction-depth-extra-condition}
                 \begin{enumerate}
                     \item $\beta$ is a strict subformula of $\alpha_i$.
@@ -448,11 +458,10 @@ Before we finally prove the separation theorem, notice that, since $U$ and $S$ a
         \item[Base case 2: $n = 2$.] In this case, apply lemma \ref{lemma:separation-linear-step4} to separate $\gamma$.
         \item[Induction step: $n \geq 3$.] Let there be $m$ sequences of subformulas that witness the junction depth $n$. Form a set $A$ of all subformulas at position 3 of these $m$ sequences; the size of $A$ can be less than $m$. Note that condition \ref{item:junction-depth-extra-condition} makes these subformulas maximal; i.e., no formula in $A$ is a subformula of another. This maximality allows us to substitute each formula in $A$ with a newly introduced atom from the set $\{p_1, \ldots p_{|A|}\}$.
 
-        Call the resulting formula $\gamma'$. It isn't difficult to argue that this formula has a junction depth of strictly $< n$, allowing us to apply the induction hypothesis. This produces a separated formula $\gamma''$ with $|A|$ new atoms. Substitute the subformulas in $A$ at the corresponding atoms in $\gamma''$ to produce $\gamma'''$.
+        Call the resulting formula $\gamma'$. Observe that this formula has a junction depth of strictly $< n$, allowing us to apply the induction hypothesis. This produces a separated formula $\gamma''$ with $|A|$ new atoms. Substitute the subformulas in $A$ at the corresponding atoms in $\gamma''$ to produce $\gamma'''$.
 
-        Now, all subformulas in $A$ have a junction depth of $n - 2$. If all of these appear in the pure-present segment of $\gamma''$, the new junction depth of $\gamma'''$ grows to at-most $n - 2$. Similarly, if one of these substitutions occurs inside a pure-past / pure-future segment of $\gamma''$, the junction depth grows to at-most $n - 1$. This allows us to apply the induction hypothesis again, producing the fully separated formula $\gamma'''$.
+        Now, all subformulas in $A$ have a junction depth of $n - 2$. If all of these appear in the pure-present segment of $\gamma''$, the new junction depth of $\gamma'''$ grows to at most $n - 2$. Similarly, if one of these substitutions occurs inside a pure-past / pure-future segment of $\gamma''$, the junction depth grows to at most $n - 1$. This allows us to apply the induction hypothesis again, producing the fully separated formula $\gamma'''$.
     \end{description}
-    This proves the separation theorem over linear time.
 \end{proof}
 
 \subsection{Implying Expressive-Completeness}
@@ -460,39 +469,49 @@ Before we finally prove the separation theorem, notice that, since $U$ and $S$ a
 In this section, we provide an overview of the proof that \cref{theorem:separation-linear-final} implies expressive completeness. We start by proving an auxiliary result.
 \begin{lemma}
     \label{lemma:pulling-out-present-lemma}
-    Every formula of $m + 1$ variables $\varphi(t, x_1, \ldots, x_m)$ in the first-order monadic logic of order with the monadic relations $\{Q_1, Q_2, \cdots Q_k\}$ can be written in the form
+    Every formula with $m + 1$ free variables $\varphi(t, x_1, \ldots, x_m)$ in the first-order monadic logic of order with the monadic relations $\{Q_1, Q_2, \cdots Q_k\}$ can be written in the form
     \begin{equation*}
-        \bigvee_i \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m)
+        \bigvee_{i=1}^l \beta_i (t) \land \alpha_i(t, x_1, \ldots, x_m)
     \end{equation*}
-    for some $i$ where $t, x_1, \ldots, x_m$ are the $m + 1$ free variables in $\varphi$, $\beta_i(t)$ is quantifier free, and no atomic formula of the form $Q(t)$ appears in $\alpha_i(t, x)$ for any $Q \in \{Q_1, \ldots Q_k\}$.
+    for some $l$ where $t, x_1, \ldots, x_m$ are the $m + 1$ free variables in $\varphi$, $\beta_i(t)$ is quantifier free, and for all $i \in \{1, \ldots, l\}$ and $Q \in \{Q_1, \ldots, Q_k\}$, no atomic formula of the form $Q(t)$ appears in $\alpha_i(t, x_1, \ldots, x_m)$.
 \end{lemma}
 \begin{proof}
     We show this lemma by inducting on the quantifier depth of $\varphi$.
     \begin{description}
-        \item[Base case.] $\varphi$ is quantifier free. In this case, it's easy to see that the DNF form of $\varphi$ is what we need.
-        \item[Induction case.] Suppose the lemma holds for all formulas of quantifier depth $< n$, and $\varphi$ has quantifier depth $n$. Begin by writing all subformulas of the form $\forall y.\, \alpha$ as $\lnot \exists y.\, \lnot \alpha$. After this transformation, $\varphi$ is a boolean combination of atomic formulas of the form $Q(y)$, $y < z$ ($y, z \in \{t, x_1, \ldots, x_m\}$) and quantified subformulas $\exists y.\, \psi$ for some bound variable $y$.
+        \item[Base case.]
+            $\varphi$ is quantifier free. This allows us to write $\varphi$ in DNF form. Each literal in the DNF form will be $\pm \alpha$, where $\alpha$ is an atomic formula in the vocabulary. We can specify all possible $\alpha$ using the following grammar notation.
+            \begin{equation*}
+                \begin{aligned}
+                    \alpha &\Coloneqq Q(X) \mid X < X\\
+                    Q &\Coloneqq Q_1 \mid \cdots \mid Q_k\\
+                    X &\Coloneqq t \mid x_1 \mid \cdots \mid x_m
+                \end{aligned}
+            \end{equation*}
+            After replacing cases like $t < t$ to $\bot$  and $t = t$ to $\top$, we group all $Q(t)$ to $\beta(t)$ and the rest to $\alpha(t, x_1, \ldots, x_m)$ in each disjunct in the DNF. This completes this case.
+
+        \item[Induction case.] Suppose the lemma holds for all formulas of quantifier depth less than $n$, and suppose $\varphi$ has quantifier depth $n$. Begin by writing all subformulas of the form $\forall z.\, \alpha$ as $\lnot \exists z.\, \lnot \alpha$. After this transformation, $\varphi$ is a boolean combination of atomic formulas of the form $Q(y)$, $x < y$ for $x$ and $y$ in $\{t, x_1, \ldots, x_m\}$ and quantified subformulas $\exists z.\, \psi$ for some bound variable $z$.
 
         Observe that each $\psi$ in the previous form has a quantifier depth of $n-1$. Applying the induction hypothesis on $\psi$ gives us an equivalent formula
         \begin{equation*}
-            \psi \equiv \bigvee_i \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m, y)
+            \psi \equiv \bigvee_i \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m, z)
         \end{equation*}
-        Now, we simply push the existential quantifier deeper inside $\exists y.\, \psi$:
+        Now, we simply push the existential quantifier deeper inside $\exists z.\, \psi$:
         \begin{equation*}
             \begin{aligned}
-                \exists y.\, \psi &\longmapsto \exists y.\, \left( \bigvee_i \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m, y) \right)\\
-                &\longmapsto \bigvee_i \exists y.\, \left( \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m, y) \right)\\
-                &\longmapsto \bigvee_i \beta_i(t) \land \exists y.\, \alpha_i(t, x_1, \ldots, x_m, y)\\
+                \exists z.\, \psi &\longmapsto \exists z.\, \left( \bigvee_i \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m, z) \right)\\
+                &\longmapsto \bigvee_i \exists z.\, \left( \beta_i(t) \land \alpha_i(t, x_1, \ldots, x_m, z) \right)\\
+                &\longmapsto \bigvee_i \beta_i(t) \land \exists z.\, \alpha_i(t, x_1, \ldots, x_m, z)\\
             \end{aligned}
         \end{equation*}
         where all $\beta_i(t)$ remain quantifier free and no $Q(t)$ appears in any $\alpha_i$.
 
-        After writing each $\exists y.\, \psi$ in this form, $\varphi$ becomes a boolean combination of $Q(y)$, $y < z$ (again, $y, z \in \{t, x_1, \ldots, x_m\}$), and $\exists y.\, \alpha(t, x_1, \ldots x_m, y)$. We can now take the DNF form of this formula by treating each $\exists y.\, \alpha$ as though it were an atom. It isn't difficult to see that this final formula is what we need, proving the lemma.
+        After writing each $\exists z.\, \psi$ in this form, $\varphi$ becomes a boolean combination of $Q(y)$, $x < y$ for all $x$ and $y$ in $\{t, x_1, \ldots, x_m\}$, and $\exists z.\, \alpha(t, x_1, \ldots x_m, z)$. We can now take the DNF form of this formula by treating each $\exists z.\, \alpha$ as though it were an atom. It isn't difficult to see that this final formula is what we need, proving the lemma.
     \end{description}
 \end{proof}
 Notice that the primary arguments in the proof of \cref{lemma:pulling-out-present-lemma} are quite general. These arguments can be reused to show similar results in the case of more complex first-order relational vocabularies. For now, consider a useful corollary.
 \begin{corollary}
     \label{corollary:separate-present-form-fomlo}
-    Every single-variable formula $\varphi(t)$ in the first-order monadic order of logic can be written in the form
+    Every single-variable formula $\varphi(t)$ in the first-order monadic logic of order can be written in the form
     \begin{equation*}
         \bigvee_i \left( \beta_i(t) \land \bigwedge_j \left( \pm \exists y.\, \alpha_{i, j}\left(t, y\right) \right) \right)
     \end{equation*}
@@ -507,10 +526,10 @@ Finally, we consider the separation theorem.
     Every single-variable formula $\varphi(t)$ of the first-order monadic logic of order with the monadic relations $\{Q_1, \ldots, Q_m\}$ evaluated over linear time can be expressed by a formula in the temporal logic of the strict $S$ and $U$ over linear flows of time.
 \end{theorem}
 \begin{proof}
-    Before we begin the proof, note that, as per the established norms, the temporal language has access to the monadic relations $\{Q_1, \ldots, Q_m\}$ through the use of propositional atoms $\{q_1, \ldots, q_m\}$.
+    Before we begin the proof, note that, as per the established norms, the temporal language has access to the monadic relations $\{Q_1, \ldots, Q_m\}$ through the propositional atoms $\{q_1, \ldots, q_m\}$.
 
     We induct on the quantifier depth of $\varphi$.
-    \begin{description} %TODO: Figure out how to add indentation to paragraphs within description
+    \begin{description}
         \item[Base case.] $\varphi(t)$ is quantifier free. Construct a temporal formula by replacing all instances of $Q_i(t)$ in $\varphi$ with the propositional atom $q_i$. This resulting formula is clearly equivalent to $\varphi$ when evaluated at any time point $t$. Notably, it's a \textit{pure-present} formula.
         \item[Induction case.] Suppose $\varphi(t)$ has quantifier depth $n$. Write $\varphi(t)$ in the form presented in \cref{corollary:separate-present-form-fomlo}.
         \begin{equation}
@@ -534,18 +553,18 @@ Finally, we consider the separation theorem.
         \end{equation}
         Observe that each $\alpha'$ in $\varphi'$ satisfies the following properties.
         \begin{alphaenumerate}
-            \item Their quantifier depth is at-most $n - 1$.
+            \item Their quantifier depth is at most $n - 1$.
             \item They have a single free-variable ($y$).
-            \item They are equivalent to $\alpha$ \textit{if} $R_<$, $R_=$, and $R_>$ are modelled appropriately (which we'll discuss in a later part of the proof).
+            \item They are equivalent to $\alpha$ \textit{if} $R_<$, $R_=$, and $R_>$ are modelled \textit{appropriately} (we'll see what this means soon).
         \end{alphaenumerate}
-        These conditions allow us to use the induction hypothesis on $\alpha'$ to produce a temporal formula $\gamma$. Notably, since the increased pool of monads has created the new propositional atoms $r_>$, $r_=$, and $r_<$. $\gamma$ may contain these atoms.
+        These conditions allow us to use the induction hypothesis on $\alpha'$ to produce a temporal formula $\gamma$. Notably, the increased pool of monadic relations has created the new propositional atoms $r_>$, $r_=$, and $r_<$. $\gamma$ may contain these atoms.
 
         Now, observe that the existential quantifier in $\exists y.\, \alpha'(y)$ can be expressed in the temporal language as $\diamond \gamma$, where $\diamond$ is shorthand for \textit{at some point in time}. $\diamond$ can be expressed with $S$ and $U$ as follows:
         \begin{equation*}
             \diamond \gamma \equiv \gamma \lor U(\gamma,\top) \lor S(\gamma, \top)
         \end{equation*}
 
-        We proceed to construct temporal formulas $\gamma_{i, j}$ for each $\alpha'_{i, j}$ in \eqref{eq:present-separate-form-fomlo-without-t}. This allows us to construct the monolithic temporal formula $\psi$:
+        We proceed to construct temporal formulas $\gamma_{i, j}$ for each $\alpha'_{i, j}$ in \cref{eq:present-separate-form-fomlo-without-t}. This allows us to construct the monolithic temporal formula $\psi$:
         \begin{equation*}
             \psi \triangleq \bigvee_i \left( \rho_i \land \bigwedge_j \left( \pm \diamond \gamma_{i, j} \right) \right)
         \end{equation*}
@@ -553,9 +572,9 @@ Finally, we consider the separation theorem.
 
         Using \cref{theorem:separation-linear-final}, we now \textit{separate} $\psi$ into a boolean combination of pure-past, present, and future formulas. We write the separated formula as follows:
         \begin{equation*}
-            \psi \equiv \mathbf{B}(\psi_{<, 1}, \ldots, \psi_{<. m_<}, \psi_{=, 1}, \ldots, \psi_{<, m_=}, \psi_{>, 1}, \ldots \psi_{>, m_>})
+            \psi \equiv \mathbb{B}(\psi_{<, 1}, \ldots, \psi_{<. m_<}, \psi_{=, 1}, \ldots, \psi_{<, m_=}, \psi_{>, 1}, \ldots \psi_{>, m_>})
         \end{equation*}
-        where $\mathbf{B}$ abstracts the boolean combinations and the $\psi_{<, i}$, $\psi_{=, i}$, and $\psi_{>, i}$ are pure-past, present, and future formulas.
+        where $\mathbb{B}$ abstracts the boolean combinations and the $\psi_{<, i}$, $\psi_{=, i}$, and $\psi_{>, i}$ are pure-past, present, and future formulas.
 
         We earlier stated that if $R_<$, $R_=$, and $R_>$ are appropriately modelled, $\psi$ is equivalent to $\varphi(t)$. The correct values of $R_<$, $R_=$, and $R_>$ are, quite naturally,
         \begin{equation*}
@@ -565,11 +584,11 @@ Finally, we consider the separation theorem.
                 R_> &= \{s \mid t < s\}
             \end{aligned}
         \end{equation*}
-        Let the partial assignment of atoms over the flow of time $h$ represent this model.
+        Let $h$ be such an \textit{appropriate} assignment of atoms over the flow of time.
 
-        Now, consider a partial assignment $h_<$ that agrees with $h$ on all atoms but $r_<$, $r_=$, and $r_>$. $h_<$ models $r_<$ to $\top$ everywhere, and $r_>$ and $r_=$ to $\bot$ everywhere. This assignment, by its definition, agrees with $h$ on the past of $t$, and consequently, for each pure-past $\psi_{<, i}$,
+        Now, consider an assignment $h_<$ that agrees with $h$ on all atoms but $r_<$, $r_=$, and $r_>$. $h_<$ models $r_<$ to $\top$ everywhere, and $r_>$ and $r_=$ to $\bot$ everywhere. This assignment, by its definition, agrees with $h$ on the past of $t$, and consequently, for each pure-past $\psi_{<, i}$,
         \begin{equation*}
-            h \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi_{<, i}
+            h \vDash \psi_{<, i} \Longleftrightarrow h_< \vDash \psi_{<, i}
         \end{equation*}
         Construct the formula $\psi'_{<, i}$ by substituting all instances of $r_<$ in $\psi_{<, i}$ by $\top$ and all instances of $r_=$ and $r_>$ by $\bot$, i.e.,
         \begin{equation*}
@@ -581,19 +600,19 @@ Finally, we consider the separation theorem.
         \end{equation*}
         It's easy to see that
         \begin{equation*}
-            h_< \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi'_{<, i}
+            h_< \vDash \psi_{<, i} \Longleftrightarrow h_< \vDash \psi'_{<, i}
         \end{equation*}
         Hence,
         \begin{equation*}
-            h \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi_{<, i} \longleftrightarrow h_< \vDash \psi'_{<, i}
+            h \vDash \psi_{<, i} \Longleftrightarrow h_< \vDash \psi_{<, i} \Longleftrightarrow h_< \vDash \psi'_{<, i}
         \end{equation*}
         Observe that $\psi'_{<, i}$ no longer uses the additional atoms! And since $h$ and $h_<$ agree on all other atoms,
         \begin{equation*}
-            h \vDash \psi_{<, i} \longleftrightarrow h \vDash \psi'_{<, i}
+            h \vDash \psi_{<, i} \Longleftrightarrow h \vDash \psi'_{<, i}
         \end{equation*}
         We can similarly substitute the atoms in the $\psi_{>, i}$ and $\psi_{=, i}$ to get rid of $r_<$, $r_=$, and $r_>$ in $\psi$. Call this new formula $\psi'$.
         \begin{equation*}
-            \psi' \triangleq \mathbf{B}(\psi'_{<, 1}, \ldots, \psi'_{<. m_<}, \psi'_{=, 1}, \ldots, \psi'_{<, m_=}, \psi'_{>, 1}, \ldots \psi'_{>, m_>})
+            \psi' \triangleq \mathbb{B}(\psi'_{<, 1}, \ldots, \psi'_{<. m_<}, \psi'_{=, 1}, \ldots, \psi'_{<, m_=}, \psi'_{>, 1}, \ldots \psi'_{>, m_>})
         \end{equation*}
         We claim that $\psi'$ is equivalent to $\varphi(t)$. To see why, take any linear temporal structure $\mathcal{M} = (T, <, h)$ and a point $t \in T$ in the flow. Let $h'$ be the extension of $h$ with the appropriate valuations of $R_<$, $R_=$ and $R_>$ and $\mathcal{M}'$ be $(T, <, h')$. It's easy to see that the following double-implications immediately hold:
         \begin{equation*}
@@ -641,7 +660,7 @@ Marx suggested a separation property for this temporal language over ordered tre
     \label{fig:marx-regions}
 \end{figure}
 
-Unfortunately, Marx's proof of separation in \cite{xpathComplete} is incorrect. He fails to take into consideration that the $\Darrow$ modality is non-deterministic. This indicates that one cannot extend equation \eqref{eq:or-and-S-U} to $\Darrow$, as
+Unfortunately, Marx's proof of separation in \cite{xpathComplete} is incorrect. He fails to take into consideration that the $\Darrow$ modality is non-deterministic. This indicates that one cannot extend \cref{eq:or-and-S-U} to $\Darrow$, as
 \begin{equation*}
     \Darrow(a, b \land c) \not\equiv \Darrow(a, b) \land \Darrow(a, c)
 \end{equation*}
@@ -662,7 +681,7 @@ As with linear flows, we can define a notion of syntactically pure formulas in $
 \begin{definition}
     A temporal formula $\varphi$ in $\mathcal{X}_{until}$ is
     \begin{enumerate}
-        \item syntactically pure-present if it doesn't use any connectives.
+        \item syntactically pure-present if it doesn't use any connectives from $\{\Larrow, \Rarrow, \Uarrow, \Darrow\}$.
         \item syntactically pure-future if it's a boolean combination of $\Darrow$-formulas that don't use the $\Uarrow$ connective.
         \item syntactically pure-left if it's a boolean combination of $\Larrow$-formulas that contain pure-present, pure-future and/or smaller $\Larrow$-formulas of this form.
         \item syntactically pure-right if it's a boolean combination of $\Rarrow$-formulas that contain pure-present, pure-future, and/or smaller $\Rarrow$-formulas of this form.
@@ -677,7 +696,7 @@ In this subsection, we aim to show the following claim.
     \label{claim:partial-separation-trees}
     Let $\varphi$ be a formula in $\mathcal{X}_{until}$ such that all $\Darrow$-subformulas of $\varphi$ are syntactically pure-future. Then, $\varphi$ can be separated.
 \end{claim*}
-This claim can be seen as a consequence of two facts. First, \eqref{eq:or-and-S-U} is valid for the modalities $\pi \in \{\Uarrow, \Larrow, \Rarrow\}$. Second, the eliminations presented in \cite{xpathComplete} prove that formulas of the form $\Uarrow(a \land \pm \Darrow(p, q), b \lor \pm \Darrow(p, q))$ can be separated.
+This claim can be seen as a consequence of two facts. First, \cref{eq:or-and-S-U} is valid for the modalities $\pi \in \{\Uarrow, \Larrow, \Rarrow\}$. Second, the eliminations presented in \cite{xpathComplete} prove that formulas of the form $\Uarrow(a \land \pm \Darrow(p, q), b \lor \pm \Darrow(p, q))$ can be separated.
 
 \subsubsection{Separating $\Larrow$, $\Rarrow$ and $\Uarrow$}
 
@@ -709,13 +728,13 @@ Next, we lift a few eliminations from \cite{xpathComplete}.
 We now implement these eliminations in a more general setting.
 \begin{lemma}
     \label{lemma:partial-separation-trees-step3}
-    Let $\alpha$ and $\beta$ be formulas in $\mathcal{X}_{until}$ that (1) don't use the $\Larrow$, $\Rarrow$ and $\Darrow$ connectives, and (2) only use the $\Uarrow$ connective to insert the subformula $\Uarrow(\varphi, \psi)$ for some $\mathcal{X}_{until}$ formulas $\varphi$ and $\psi$. Then, $\Larrow(\alpha, \beta)$ can be written as a boolean combination of pure-$\Larrow$ formulas and $\Uarrow(\varphi, \psi)$.
+    Let $\alpha$ and $\beta$ be boolean combinations of propositional atoms from $\mathcal{P}$ and instances of $\Uarrow(\varphi, \psi)$, for \emph{any} $\mathcal{X}_{until} $formulas $\varphi$ and $\psi$. Then, $\Larrow(\alpha, \beta)$ can be written as a boolean combination of pure-$\Larrow$ formulas and $\Uarrow(\varphi, \psi)$.
     \begin{remark*}
         This lemma only yields a separated formula if $\Uarrow(\varphi, \psi)$ is a pure-past formula.
     \end{remark*}
 \end{lemma}
 \begin{proof}
-    Since $\Larrow$ and $\Rarrow$ satisfy a version of \eqref{eq:or-and-S-U}, we can follow the procedure outlined in \cref{lemma:separation-linear-step1} and write $\Larrow(\alpha, \beta)$ in the manner of \eqref{eq:dnf-form-S-alpha-beta} to get
+    Since $\Larrow$ and $\Rarrow$ satisfy a version of \cref{eq:or-and-S-U}, we can follow the procedure outlined in \cref{lemma:separation-linear-step1} and write $\Larrow(\alpha, \beta)$ in the manner of \cref{eq:dnf-form-S-alpha-beta} to get
     \begin{equation*}
         \Larrow(\alpha, \beta) \equiv \bigvee_i \bigwedge_j \Larrow\left(\alpha_{i, 1} \land \cdots \land \alpha_{i, m_i}, \beta_{j, 1} \lor \cdots \lor \beta_{j, n_i} \right)
     \end{equation*}
@@ -738,7 +757,7 @@ We now generalize this lemma a little further.
     Despite the stricter wording, this lemma is the counterpart of \cref{lemma:separation-linear-step2} with the connectives $S$ and $U$ substituted by $\Larrow$ and $\Uarrow$. As with that lemma, we induct on $(n_1, n_2)$, where $n_1$ is the highest $\Larrow$-depth at which a $\Uarrow(\varphi, \psi)$ appears in $\gamma$ and $n_2$ is the number of instances of $\Uarrow(\varphi, \psi)$ at depth $n_1$.
     \begin{description}
         \item[Base case.] $(n_1, n_2) = (1, 1)$. This is equivalent to \cref{lemma:partial-separation-trees-step3}.
-        \item[Induction step.] Take a subformula $\Larrow(\alpha', \beta')$ at $\Larrow$-depth $(n-1)$ such that (1) $\Larrow$ doesn't appear in $\alpha'$ and $\beta'$, and (2) $\Uarrow(\varphi, \psi)$ appears in at-least one of $\alpha'$ and $\beta'$. It's easy to see that applying \cref{lemma:partial-separation-trees-step3} to $\Larrow(\alpha', \beta')$ strictly reduces $(n_1, n_2)$, allowing us to apply the induction hypothesis.
+        \item[Induction step.] Take a subformula $\Larrow(\alpha', \beta')$ at $\Larrow$-depth $(n-1)$ such that (1) $\Larrow$ doesn't appear in $\alpha'$ and $\beta'$, and (2) $\Uarrow(\varphi, \psi)$ appears in at least one of $\alpha'$ and $\beta'$. It's easy to see that applying \cref{lemma:partial-separation-trees-step3} to $\Larrow(\alpha', \beta')$ strictly reduces $(n_1, n_2)$, allowing us to apply the induction hypothesis.
     \end{description}
     \begin{remark*}
         Since $\varphi$ and $\psi$ aren't proliferated in \cref{lemma:partial-separation-trees-step2}, they don't enter the pure-$\Larrow$ formulas in this lemma.
@@ -763,7 +782,7 @@ Before we proceed with the next result, note that Lemmas \ref{lemma:partial-sepa
 \begin{proof}
     Introduce new atoms $r_1, \ldots, r_n$ to $\mathcal{P}$ to produce $\mathcal{P}''$. In $\gamma$, replace each instance of $\Uarrow(\varphi_i, \psi_i)$ with $r_i$ to produce the formula $\gamma'$. Notice that $\gamma'$ has no $\Uarrow$-subformulas. Separate $\gamma'$ according to \cref{lemma:partial-separation-trees-step1} to get
     \begin{equation*}
-        \gamma' \equiv \mathbf{B}(\gamma_{\Larrow, 1}, \ldots, \gamma_{\Larrow, n_{\Larrow}}, \gamma_{\Rarrow, 1}, \ldots, \gamma_{\Rarrow, n_{\Rarrow}}, \gamma_{=, 1}, \ldots \gamma_{=, n_=})
+        \gamma' \equiv \mathbb{B}(\gamma_{\Larrow, 1}, \ldots, \gamma_{\Larrow, n_{\Larrow}}, \gamma_{\Rarrow, 1}, \ldots, \gamma_{\Rarrow, n_{\Rarrow}}, \gamma_{=, 1}, \ldots \gamma_{=, n_=})
     \end{equation*}
     where all $\gamma_{\Larrow, i}$ formulas only use the $\Larrow$ connective, all $\gamma_{\Rarrow, j}$ formulas only use the $\Rarrow$ connective, and all $\gamma_{=, k}$ use no connectives.. At this stage, replace all instances of $r_i$ by $\Uarrow(\varphi_i, \psi_i)$ in the $\gamma_{\Larrow, i}$, $\gamma_{\Rarrow, j}$, and $\gamma_{=, k}$ to produce $\gamma'_{\Larrow, i}$, $\gamma'_{\Rarrow, j}$ and $\gamma'_{=, k}$. The $\gamma'_{=, k}$ already satisfy our condition; hence, we only apply \cref{lemma:partial-separation-trees-step5} to the others to prove this lemma.
 \end{proof}
@@ -773,7 +792,7 @@ We can now state an interesting corollary.
     Let $\gamma$ be a formula in $\mathcal{X}_{until}$ that doesn't use the $\Darrow$ connective. Then, $\gamma$ can be separated.
 \end{corollary}
 \begin{proof}
-    This is a simple matter of noticing that all $\Uarrow$-formulas that don't use the $\Darrow$ connective are syntactically pure-past.
+    This is a simple matter of noticing that all $\Uarrow$-formulas that don't use the $\Darrow$ connective are syntactically pure-past and applying \cref{lemma:partial-separation-trees-step6}.
 \end{proof}
 
 \subsubsection{Separating $\Darrow$, $\Rarrow$, and $\Larrow$}
@@ -830,7 +849,7 @@ We can extend this reasoning further by reusing the method used to prove \cref{l
 %                \psi' &\equiv \bigwedge_i \bigvee_j \pm \psi'_{i, j}
 %            \end{aligned}
 %        \end{equation*}
-%        where each $\varphi'_{i, j}$ and $\psi'_{i, j}$ are pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, or atoms. Hence, by token of the procedure used in \eqref{eq:dnf-form-S-alpha-beta}, we have
+%        where each $\varphi'_{i, j}$ and $\psi'_{i, j}$ are pure-left $\Larrow$-formulas, pure-right $\Rarrow$-formulas, or atoms. Hence, by token of the procedure used in \cref{eq:dnf-form-S-alpha-beta}, we have
 %        \begin{equation*}
 %            \begin{aligned}
 %                \Uarrow(\varphi, \psi) \equiv \bigvee_i \bigwedge_j \Uarrow(\pm \varphi'_{i, 1} \land \cdots \land \pm \varphi'_{i, n_i} , \pm \psi'_{j, 1} \lor \cdots \lor \pm \psi'_{j, m_j})
@@ -854,7 +873,7 @@ We now restate some of the eliminations justified in the appendix of \cite{xpath
     \label{eq:theta-defn}
     \theta \triangleq \Larrow\left(\varphi \lor \left( \psi \land \Darrow\left( \varphi, \psi \right) \right), \top \right) \lor \Rarrow \left( \varphi \lor \left( \psi \land \Darrow \left( \varphi, \psi \right) \right), \top \right)
 \end{equation}
-$\theta$ merely states that ``my parent satisfies $\Darrow(\varphi, \psi)$ because of a sibling of mine.'' Hence, $\varphi \lor \theta$ implies $\Darrow(\varphi, \psi)$ at the parent. Similarly, $\lnot \theta$ states that ``no sibling of mine is responsible for my parent satisfying $\Darrow(\varphi, \psi)$.'' Consequently, $\lnot \varphi \land \lnot \psi \land \lnot \theta$ implies $\lnot \Darrow(\varphi, \psi)$ at the parent. Notably, $\theta$ is a disjunction of a pure-left and a pure-right formula, and hence can appear inside the scope of a $\Uarrow$ in a pure-past formula.
+$\theta$ merely states that ``my parent satisfies $\Darrow(\varphi, \psi)$ because of a sibling of mine.'' Hence, $\varphi \lor \theta$ implies $\Darrow(\varphi, \psi)$ at the parent. \textit{(Note the one-way implication.)} Similarly, $\lnot \theta$ states that ``no sibling of mine is responsible for my parent satisfying $\Darrow(\varphi, \psi)$.'' Consequently, $\lnot \varphi \land \lnot \psi \land \lnot \theta$ implies $\lnot \Darrow(\varphi, \psi)$ at the parent. Notably, $\theta$ is a disjunction of a pure-left and a pure-right formula, and hence can appear inside the scope of a $\Uarrow$ in a pure-past formula.
 
 Now, we move onto the eliminations.
 
@@ -921,11 +940,11 @@ We begin with the following lemma.
     \begin{equation*}
         \gamma \equiv \bigvee_i \bigwedge_j \Uarrow( \pm \alpha_{i, 1} \land \cdots \land \pm \alpha_{i, n_i}, \pm \beta_{j, 1} \lor \cdots \lor \pm \beta_{j, n_j})
     \end{equation*}
-    where the $\alpha_{i, k_i}$ and $\beta_{j, k_j}$ can be atoms, instances of $\Darrow(\varphi, \psi)$, and semantically pure $\pi$-formulas for $\pi \in \{\Larrow, \Rarrow, \Uarrow\}$. For each $\{i, j\}$, we can write the corresponding $\Uarrow$-formula in $\gamma$ as
+    where the $\alpha_{i, k_i}$ and $\beta_{j, k_j}$ can be atoms, instances of $\Darrow(\varphi, \psi)$, and syntactically pure $\pi$-formulas for $\pi \in \{\Larrow, \Rarrow, \Uarrow\}$. For each $\{i, j\}$, we can write the corresponding $\Uarrow$-formula in $\gamma$ as
     \begin{equation*}
         \gamma_{i, j} \triangleq \Uarrow(\alpha' \land \pm \Darrow(\varphi, \psi), \beta' \lor \pm \Darrow(\varphi, \psi))
     \end{equation*}
-    where \textit{(naturally)} $\alpha'$ and $\beta'$ are conjunctions and disjunctions of semantically pure past, left, present, and right formulas. As we've done many times before, we employ the eliminations detailed in \cref{sec:eliminations-trees} at each $\gamma_{i, j}$.
+    where \textit{(naturally)} $\alpha'$ and $\beta'$ are conjunctions and disjunctions of syntactically pure past, left, present, and right formulas. As we've done many times before, we employ the eliminations detailed in \cref{sec:eliminations-trees} at each $\gamma_{i, j}$.
 
     Let $A = \{\alpha', \beta', \varphi, \psi\}$ and let $B = A \cup \{\theta\}$ for $\theta$ defined in \cref{eq:theta-defn}. From our discussion in \cref{sec:eliminations-trees}, we know that the eliminations produce syntactically-separated formulas that connect the items in $B$ using the boolean operators, the $\Uarrow$ connective, and the $\Darrow$ connective.
 
@@ -1009,8 +1028,8 @@ We finally consider the case of the $\Darrow$ formula that contains $\Darrow$ su
     We begin by defining a measure $\lambda$ on pure-future $\Darrow$ formulas.
     \begin{equation*}
         \lambda(\varphi) = \begin{cases}
-            0, & \text{$\varphi$ has no proper $\Darrow$ subformulas}\\
-            1 + \max_{\psi \in S(\varphi)} \left\{\lambda\left(\psi\right)\right\} & \text{$S(\varphi)$ contains all proper $\Darrow$ subformulas in $\varphi$}
+            0 & \text{if $\varphi$ has no proper $\Darrow$ subformulas.}\\
+            1 + \max_{\psi \in S(\varphi)} \left\{\lambda\left(\psi\right)\right\} & \text{if $S(\varphi)$ contains all proper $\Darrow$ subformulas in $\varphi$.}
         \end{cases}
     \end{equation*}
     We induct on the $(m, n)$, where $n$ is the length of the sequence and $m$ is the maximum $\lambda$-score of the formulas in $\{\gamma_1, \ldots, \gamma_n\}$.
@@ -1162,7 +1181,7 @@ Now for the main result of this subsection.
     \begin{description}
         \item[Base case.] $n = 0$. Our assumptions ensure that the label of $t$ and $t'$ are identical, completing this case.
         \item[Induction step.]
-            Without loss of generality, suppose the spoiler plays a $\sigma$ move and places a second pebble at the node $s$ in $\mathcal{M}$. Observe that this means $k_\sigma > 0$. Derive the tuple $\myvec{m_\sigma}$ from $\myvec{k}$ using \eqref{eq:m-sigma-defn}. Build the set $A$ containing all (up-to equivalence) $\mathcal{X}_{until}$ formulas depth bound by $\myvec{m_\sigma}$ using \cref{lemma:count-limiter-efgames}.
+            Without loss of generality, suppose the spoiler plays a $\sigma$ move and places a second pebble at the node $s$ in $\mathcal{M}$. Observe that this means $k_\sigma > 0$. Derive the tuple $\myvec{m_\sigma}$ from $\myvec{k}$ using \cref{eq:m-sigma-defn}. Build the set $A$ containing all (up-to equivalence) $\mathcal{X}_{until}$ formulas depth bound by $\myvec{m_\sigma}$ using \cref{lemma:count-limiter-efgames}.
 
             We now build the $\sigma$-formula that the spoiler hopes to use. Let $\alpha$ be the conjunction of all formulas $\varphi$ in $A$ such that $\mathcal{M}, s \vDash \varphi$. In a sense, $\alpha$ is the most \textit{specific} formula depth bound by $\myvec{m_\sigma}$ that the node $s$ can model. Hence, $\alpha$ must be the target condition.
 
@@ -1190,7 +1209,7 @@ Now for the main result of this subsection.
             \begin{equation*}
                 \mathcal{M}, t \vDash \sigma(\alpha, \beta) \qquad \text{and} \qquad \mathcal{M}', t' \nvDash \sigma(\alpha, \beta)
             \end{equation*}
-            Since $\varphi$ is depth-bound by $\myvec{k}$, it follows that $\sigma(\alpha, \beta)$ is also depth-bound by $\myvec{k}$. Observe that this means $k_\sigma > 0$. Additionally, $\alpha$ and $\beta$ are depth bound by $\myvec{m_\sigma}$ (defined in \eqref{eq:m-sigma-defn}), the sum of which is $< n$.
+            Since $\varphi$ is depth-bound by $\myvec{k}$, it follows that $\sigma(\alpha, \beta)$ is also depth-bound by $\myvec{k}$. Observe that this means $k_\sigma > 0$. Additionally, $\alpha$ and $\beta$ are depth bound by $\myvec{m_\sigma}$ (defined in \cref{eq:m-sigma-defn}), the sum of which is $< n$.
 
             Now, there is a point $s \in \mathcal{M}$ that can be reached by moving in the direction of $\sigma$ such that $\mathcal{M}, s \vDash \alpha$ and all points $r$ on the path from $t$ to $s$ yield $\mathcal{M}, r \vDash \beta$.
 
@@ -1248,7 +1267,7 @@ The intuition behind this construction is as follows. The labelling of the centr
 \end{equation}
 Where $t'_i$ and $s'_i$ are the roots of $T'_i$ and $S'_i$ respectively. This gives us a mixed $\Darrow$ formula that differentiates $\mathcal{T}'$ and $\mathcal{S}'$.
 
-We now claim that there is no pure $\Darrow$ formula that differentiates $\mathcal{T}'$ and $\mathcal{S}'$. Towards this, we present winning strategies for the duplicator in the $\Darrow$-only EF-game played on $T'_i$ and $S'_i$ that only affords the spoiler an insufficient number of $\Darrow$ moves. These strategies capitalize on the duplicator's ability to punish the spoiler for descending too quickly. As a consequence, the spoiler can take at-most two-steps forward in each round. We will elaborate on this in \cref{lemma:speedbreaker}. Notably, if the EF-game permitted a single additional $\Uarrow$ move, the application of \cref{theorem:ef-games-working-principle} to \cref{eq:darrow-uarrow-game-eqn} yields a winning strategy for the spoiler.
+We now claim that there is no pure $\Darrow$ formula that differentiates $\mathcal{T}'$ and $\mathcal{S}'$. Towards this, we present winning strategies for the duplicator in the $\Darrow$-only EF-game played on $T'_i$ and $S'_i$ that only affords the spoiler an insufficient number of $\Darrow$ moves. These strategies capitalize on the duplicator's ability to punish the spoiler for descending too quickly. As a consequence, the spoiler can take at most two steps forward in each round. We will elaborate on this in \cref{lemma:speedbreaker}. Notably, if the EF-game permitted a single additional $\Uarrow$ move, the application of \cref{theorem:ef-games-working-principle} to \cref{eq:darrow-uarrow-game-eqn} yields a winning strategy for the spoiler.
 
 %We begin by formally proving the principle behind \cref{eq:darrow-uarrow-game-eqn}.
 %\begin{lemma}
