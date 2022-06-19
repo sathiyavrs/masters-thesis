@@ -84,7 +84,7 @@
 % \EventLocation{Chennai, India}
 % \EventLogo{}
 % \SeriesVolume{1}
-\ArticleNo{37}
+\ArticleNo{38}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% A few shortcuts for Leftarrow, etc
@@ -119,11 +119,13 @@ The separation property, invented by Dov Gabbay in \cite{Gabbay1981}, is a stran
 
 Separation has many interesting applications beyond expressive completeness. A beautiful one can be found in \cite{DecPastImpFuture89}, which describes how a separable temporal language can simultaneously be \textit{declarative} (i.e., specifies correct behaviour) and \textit{imperative} (i.e., provides instructions to achieve correct behaviour). Another use-case, described in \cite{Lichtenstein1985TheGO}, shows that formulas in a separable logic can be written as a boolean combination of safety and liveness properties. A more thorough exposition of the applications of separation can be found in \cite{GabbayBirthday05}.
 
-As we earlier implied, temporal languages have been studied for a variety of models of time. A particularly interesting and useful class of temporal logics model time as \textit{unranked ordered trees}. The usefulness of these languages stems directly from the fact that many natural structures in computer science (the nested words of \cite{alur2009}, XML, and other structured data) can be encoded as ordered trees. In \cite{marx2005conditional}, Marx describes \textit{Conditional XPath}, a language capable of expressing any first-order property over finite ordered trees. He simplifies this language to its core in \cite{xpathComplete}, and proposes a separation property for it.
+As we earlier implied, temporal languages have been studied for a variety of models of time. A particularly interesting and useful class of temporal logics model time as \textit{unranked ordered trees}. The usefulness of these languages stems directly from the fact that many natural structures in computer science (the nested words of \cite{alur2009}, XML, and other structured data) can be encoded as ordered trees.
+
+In \cite{xpathConditional}, Marx introduces \textit{Conditional XPath}, an extension of the XML path specification language XPath. XPath statements are evaluated over the well-understood Document Object Model of the input XML file, which arranges the contents of the file in an ordered tree. Marx motivates the extensions contained in Conditional XPath by showing that the base XPath language isn't sufficiently expressive (see \cite{xpathConditional}). By contrast, Conditional XPath is capable of expressing any first-order property over finite ordered trees (see \cite{marx2005conditional}). Marx simplifies Conditional XPath to its core in \cite{xpathComplete}, and proposes a separation property for it.
 
 Unfortunately, the proof Marx employs for his separation property is incorrect. The mistake lies in an unnamed lemma, and has been commented on in \cite{BeJe07, nwtl}. Further attempts to prove a separation result have been made in \cite{BeCl16}, with mostly negative results.
 
-In this thesis, we explore the separation of Conditional XPath over unranked ordered trees. We note Marx's mistakes, and show that his arguments in \cite{xpathComplete} naturally lead to a \textit{partial} separation property, whereby a subset of formulas can be separated. We also believe that certain simple formulas \textit{cannot} be separated; through the use of EF games adapted from \cite{EtWi00}, we show a result that implies that separation of such a formula is unlikely. Separately, we also justify Marx's choice of regions by showing that a more desirable set of regions cannot yield separation.
+In this thesis, we explore the separation of Conditional XPath over unranked ordered trees. We note Marx's mistakes, and show that his arguments in \cite{xpathComplete} naturally lead to a \textit{partial} separation property, whereby a subset of formulas can be separated. We also believe that certain simple formulas \textit{cannot} be separated; through the use of EF games adapted from \cite{EtWi00}, we show a result that indicates that separation of a particular simple formula is unlikely. Separately, we also justify Marx's choice of regions by showing that a more desirable set of regions cannot yield separation.
 
 The structure of this document is as follows. In \cref{sec:preliminaries}, we discuss basic notions regarding temporal languages. In \cref{sec:linear-time}, we provide a (mostly) self-contained exposition of Gabbay's proof of separation over linear time (see \cite{DecPastImpFuture89, gabbay1994}). We discuss our main results in \cref{sec:ordered-trees}, and present avenues for future work in \cref{sec:conclusions}.
 
@@ -134,18 +136,18 @@ Before discussing separation, we need to define some standard notions. A \textit
 
 The first-order vocabulary over these structures contains the ordering relation $<$ and a collection of \textit{monadic} relations $Q_1, Q_2, \cdots$ that match the propositions $q_1, q_2, \cdots$ in $\mathcal{P}$. An assignment $h$ of atoms in a time flow $(T, <)$ assigns to each $Q_i$ a subset of $T$ where the atom $q_i$ is true. Augmented with the assignment, the triplet $(T, <, h)$ is called a \textit{temporal structure}. First-order formulas are evaluated over these structures in the usual way. In this discussion, we pay special attention to first-order formulas with a single free-variable; they quite naturally mirror temporal formulas.
 
-Instead of free variables and quantification, temporal languages employ \textit{temporal connectives} to reason through time. Popular connectives used in temporal languages over linear time include $F$, $P$, $G$, $H$, $U$, and $S$, each called \textit{future}, \textit{past}, \textit{globally}, \textit{history}, \textit{until} and \textit{since} respectively. In this paper, we will limit our discussion to connectives that are definable by monadic first-order formulas.
+Instead of variables and quantification, temporal languages employ \textit{temporal connectives} to reason through time. Popular connectives used in temporal languages over linear time include $F$, $P$, $G$, $H$, $U$, and $S$, each called \textit{future}, \textit{past}, \textit{globally}, \textit{history}, \textit{until} and \textit{since} respectively. In this paper, we will limit our discussion to connectives that are definable by monadic first-order formulas.
 \begin{note*}
-    Unless otherwise specified, when we refer to \textit{connectives} in this thesis, we refer to \textit{temporal connectives}.
+    Unless otherwise specified, when we refer to \textit{connectives} in this thesis, we mean \textit{temporal connectives}.
 \end{note*}
 
-Temporal formulas are evaluated at points in time. In a temporal structure $\mathcal{M} = (T, <, h)$, atoms are evaluated as
+Temporal formulas are evaluated at points in time. At a point $t \in T$ in the temporal structure $\mathcal{M} = (T, <, h)$, the atom $q \in \mathcal{P}$ is evaluated as
 \begin{equation*}
-    \mathcal{M}, t \vDash p \Longleftrightarrow (T, <, h[x \mapsto t]) \vDash p(x) \Longleftrightarrow t \in h(p)\\
+    \mathcal{M}, t \vDash q \Longleftrightarrow (T, <, h[x \mapsto t]) \vDash Q(x) \Longleftrightarrow t \in h(Q)\\
 \end{equation*}
 As per the standard notation, the assignment $h[x \mapsto t]$ assigns the time point $t$ to the first-order variable $x$. To simplify the presentation, we use $\mathcal{M}, t \vDash \varphi(t)$ to mean $(T, <, h[x \mapsto t]) \vDash \varphi(x)$.
 
-For a generic connective $\sharp$ of arity $n$, let $\varphi_\sharp(t, X_1, \cdots X_n)$ be the monadic first-order formula defining it. Here, $t$ is the point in time that the connective is evaluated at, and the $X_i$ are monadic (second-order) variables. These variables expect a single-variable first-order formula, as shown below
+For a generic connective $\sharp$ of arity $n$, let $\varphi_\sharp(t, X_1, \cdots X_n)$ be the monadic first-order formula defining it. Here, $t$ is the point in time that the connective is evaluated against and the $X_i$ are monadic (second-order) variables. These variables expect a single-variable first-order formula, as shown below
 \begin{equation*}
     \mathcal{M}, t \vDash \sharp(A_1, \cdots A_n) \Longleftrightarrow \mathcal{M}, t \vDash \varphi_\sharp(t, \alpha_{A_1}, \cdots \alpha_{A_n})
 \end{equation*}
@@ -157,7 +159,7 @@ We illustrate this behaviour with an example. The connective $F$ is defined by t
 \end{equation*}
 Hence, we have
 \begin{equation*}
-    \mathcal{M}, t \vDash F q_i \Longleftrightarrow \varphi_F(t, Q_i)
+    \mathcal{M}, t \vDash F(q_i) \Longleftrightarrow \varphi_F(t, Q_i)
 \end{equation*}
 We similarly define the other main connectives
 \begin{equation*}
@@ -169,28 +171,35 @@ We similarly define the other main connectives
         \varphi_S(t, X_1, X_2) &\triangleq \exists x.\, \left[ \left( x < t \right) \land X_1(x) \land \forall y \left( \left( x < y < t \right) \to X_2(y) \right) \right]\\
     \end{aligned}
 \end{equation*}
+This gives us the following
+\begin{equation*}
+    \mathcal{M}, t \vDash P(F(q_i)) \Longleftrightarrow \mathcal{M}, t \vDash \varphi_P(t, \varphi_F[X \mapsto Q_i])
+\end{equation*}
+This is a simple composition of the definitions of $\varphi_F$ and $\varphi_P$.
+
 Note that, unlike the typical definition of $U$, $\varphi_U$ doesn’t rely on the present point $t$. Such an until is referred to in the literature by either the \textit{strict} until (see \cite{gastinStrictUntil06}) or the \textit{strong} until (see \cite{BeCl16}). This particular behaviour makes observing separation much easier.
 
+We now define the notion of \textit{Expressive Completeness}.
 \begin{definition}[Expressive Completeness]
     \label{expressive-completeness-definition}
     A temporal language is \textbf{first-order expressively complete} over a class of time flows if there exists a temporal formula $A$ for any first-order formula with one free variable $\varphi(t)$ such that
-\begin{equation*}
-    \mathcal{M}, t \vDash A \Longleftrightarrow \mathcal{M}[x \mapsto t] \vDash \varphi(x)
-\end{equation*}
+    \begin{equation*}
+        \mathcal{M}, t \vDash A \Longleftrightarrow \mathcal{M}[x \mapsto t] \vDash \varphi(x)
+    \end{equation*}
     for any flow $\mathcal{M}$ in the class.
 \end{definition}
-On a related note, a flow of time $(T, <)$ is termed to be expressively complete if there exists an expressively complete temporal language over it.
+Expressive completeness is a natural milestone for temporal languages, and is the primary application of separation. As promised, we will study this in detail in \cref{sec:linear-time}. Separately, note that a flow of time $(T, <)$ is termed to be expressively complete if there exists an expressively complete temporal language over it.
 
 \section{Linear Flows}
 \label{sec:linear-time}
 
-In \cite{gabbay1994}, Gabbay showed how the temporal language $\mathbf{L}$ with the \textsf{strict until} $U$ and \textsf{strict since} $S$ connectives satisfies the separation property over the integer time flow $(\mathbb{Z}, <)$.
+In \cite{gabbay1994}, Gabbay showed how the temporal language $\mathbf{L}$ with the \textit{strict until} $U$ and \textit{strict since} $S$ connectives satisfies the separation property over the integer time flow $(\mathbb{Z}, <)$.
 
-To discuss this further, we need the notion of \textit{regions} and \textit{pure formulas}. Informally, the flow of time $(T, <)$ is partitioned into a set of regions. The positions of these regions depends on the position of the time point $t$ where the temporal formula is being evaluated. For the flow $(\mathbb{Z}, <)$, Gabbay selected three regions:
+To discuss this further, we need the notion of \textit{regions} and \textit{pure formulas}. Informally, the flow of time $(T, <)$ is partitioned into a set of regions. The exact partition and the area covered by the individual regions depends on the position of the time point $t$ where the temporal formula is being evaluated. For the flow $(\mathbb{Z}, <)$ and the point $t \in \mathbb{Z}$, Gabbay selected three regions:
 \begin{itemize}
-    \item The \textit{past} of $t$, formally defined as $\{ x \mid x \in \mathbb{Z} \land x < t\}$.
+    \item The \textit{past} of $t$, formally defined as $\{ x \in \mathbb{Z} \mid x < t\}$.
     \item The \textit{present}, which is simply $\{ t \}$.
-    \item The \textit{future} of $t$, which naturally is $\{x \mid x \in \mathbb{Z} \land t < x\}$
+    \item The \textit{future} of $t$, which naturally is $\{x \in \mathbb{Z} \mid t < x\}$
 \end{itemize}
 Note that these regions are disjoint, and that the union of these regions produces the entire flow. Also, notice that these regions are first-order definable.
 
@@ -202,17 +211,17 @@ Note that these regions are disjoint, and that the union of these regions produc
 \end{figure}
 
 % TODO: Consider writing these in \begin{definition}
-Now, we define \textit{pure formulas}. For any flow $(T, <)$, we denote two assignments $h$ and $h'$ to be in \textit{agreement} over a region $R \subset T$ \textit{iff} for every atom $q \in \mathcal{P}$ and every point $s \in R$,
+Now, we define \textit{pure formulas}. For any flow $(T, <)$, we call two assignments $h$ and $h'$ to be in \textit{agreement} over a region $R \subset T$ \textit{iff} for every atom $q \in \mathcal{P}$ and every point $s \in R$,
 \begin{equation*}
-    s \in h(q) \Longleftrightarrow s \in h'(q)
+    s \in h(Q) \Longleftrightarrow s \in h'(Q)
 \end{equation*}
-Now, call a temporal formula $A$ \textit{pure} with respect to a region $R$ if, for any two assignments $h$ and $h'$ that agree on $R$,
+Now, call a temporal formula $\gamma$ \textit{pure} with respect to a region $R$ if, for any two assignments $h$ and $h'$ that agree on $R$,
 \begin{equation*}
-    (T, <, h), t \vDash A \Longleftrightarrow (T, <, h'), t \vDash A
+    (T, <, h), t \vDash \gamma \Longleftrightarrow (T, <, h'), t \vDash \gamma
 \end{equation*}
-In other words, $A$ is true on $h'$ \textit{iff} $A$ is true on $h$. We use the terms \textit{pure past}, \textit{pure present}, or \textit{pure future} to denote pure formulas in the past, present, and future regions respectively.
+In other words, $\gamma$ is true on $h'$ \textit{iff} $\gamma$ is true on $h$. We use the terms \textit{pure past}, \textit{pure present}, or \textit{pure future} to denote pure formulas in the past, present, and future regions respectively.
 
-It's easy to see that formulas that don't use the $S$ and $U$ connectives are pure-present. In a similar vein, formulas that are rooted by a $S$ connective and don't use $S$ connectives are pure-past. We formalize this understanding using the notion of \textit{syntactically pure} formulas. To simplify presentation, we refer to formulas rooted by a $U$ (or an $S$) as $U$-formulas (or $S$-formulas, respectively).
+It's easy to see that formulas that don't use the $S$ and $U$ connectives are pure-present. In a similar vein, formulas that are rooted by a $S$ connective and don't use the $U$ connective are pure-past. We formalize this understanding using the notion of \textit{syntactically pure} formulas. To simplify presentation, we refer to formulas rooted by a $U$ (or an $S$) as $U$-formulas (or $S$-formulas, respectively).
 \begin{definition}
     A temporal formula $\varphi$ in the temporal language of $S$ and $U$ is
     \begin{enumerate}
@@ -222,23 +231,23 @@ It's easy to see that formulas that don't use the $S$ and $U$ connectives are pu
     \end{enumerate}
 \end{definition}
 
-Finally, call a formula $A$ \textbf{syntactically separated} if it is a boolean combination of syntactically pure formulas. Now, we can state the separation property
+Finally, call a formula $\gamma$ \textbf{syntactically separated} if it is a boolean combination of syntactically pure formulas. Now, we can state the separation property.
 \begin{claim*}[Separation Property for linear flows]
     \label{claim:separation-property-linear-time}
     Every temporal formula $A$ in the language of $S$ and $U$ over linear time can be equivalently represented by a separated formula.
 \end{claim*}
-The proof of this claim is quite involved, and is presented in full detail in \cite{gabbay1994, DecPastImpFuture89}. In the next few sections, we'll provide most of Gabbay et. al.'s proof, parts of which we use in later sections. To mirror their notation, we'll write $U$ formulas as $U(p, q)$ instead of $q \,\mathcal{U}\, p$.
+The proof of this claim is quite involved, and is presented in full detail in \cite{gabbay1994, DecPastImpFuture89}. In the next few sections, we'll provide most of Gabbay et. al.'s proof. Parts of this proof will be later used in \cref{sec:ordered-trees}. To mirror their notation, we'll write $U$ formulas as $U(p, q)$ instead of $q \,\mathcal{U}\, p$.
 
 \subsection{Separating $S$ and $U$ over linear time}
 
 As a reminder, we restate the definitions of $U$ and $S$
 \begin{equation*}
     \begin{aligned}
-        \mathcal{M}, t \vDash U(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (t < x) \land p(x) \land \forall y \left( t < y < x \to q\left( y \right) \right)\\
-        \mathcal{M}, t \vDash S(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (x < t) \land p(x) \land \forall y \left( x < y < t \to q\left( y \right) \right)
+        \mathcal{M}, t \vDash U(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (t < x) \land P(x) \land \forall y \left( t < y < x \to Q\left( y \right) \right)\\
+        \mathcal{M}, t \vDash S(p, q) &\Longleftrightarrow \mathcal{M}, t \vDash \exists x.\, (x < t) \land P(x) \land \forall y \left( x < y < t \to Q\left( y \right) \right)
     \end{aligned}
 \end{equation*}
-For convenience, we refer to the left condition ($p$) in $U(p, q)$ as the \textit{target} condition and the right condition ($q$) as the \textit{path} condition. Observe that, over linear time, a formula composed only of $U$s is a pure future formula, a formula composed of $S$es is a pure past formula. The task, therefore, is to transform formulas with both $U$s and $S$es.
+For convenience, we refer to the left condition ($p$) in $U(p, q)$ as the \textit{target} condition and the right condition ($q$) as the \textit{path} condition. Observe that, over linear time, a formula that only uses the $U$ connective is a pure future formula and a formula that only uses the $S$ connective is a pure past formula. The task, therefore, is to transform formulas that use both $U$ and $S$.
 
 Over the integer time flow $(\mathbb{Z}, <)$, these connectives naturally possess the following properties
 \begin{equation}
@@ -248,6 +257,8 @@ Over the integer time flow $(\mathbb{Z}, <)$, these connectives naturally posses
         U(\alpha, \beta \land \gamma) &\equiv U(\alpha, \beta) \land U(\alpha, \gamma)
     \end{aligned}
 \end{equation}
+We will refer to this property later.
+
 In addition, their negations can be usefully rewritten as
 \begin{equation*}
     \begin{aligned}
@@ -258,75 +269,77 @@ In addition, their negations can be usefully rewritten as
 where the semantics of $G$ and $H$ are
 \begin{equation*}
     \begin{aligned}
-        \mathcal{M}, t \vDash G(\alpha) &\Longleftrightarrow \mathcal{M}, t \vDash \forall t'.\; t' > t \to \varphi_\alpha(t') \\
-        \mathcal{M}, t \vDash H(\alpha) &\Longleftrightarrow \mathcal{M}, t \vDash \forall t'.\; t' < t \to \varphi_\alpha(t')
+        \mathcal{M}, t \vDash G(\alpha) &\Longleftrightarrow \mathcal{M}, t \vDash \forall t'.\; [(t' > t) \to \varphi_\alpha(t')] \\
+        \mathcal{M}, t \vDash H(\alpha) &\Longleftrightarrow \mathcal{M}, t \vDash \forall t'.\; [(t' < t) \to \varphi_\alpha(t')]
     \end{aligned}
 \end{equation*}
 Here, $\varphi_\alpha$ is the first-order translation of $\alpha$.
 
-Our strategy involves \textit{pulling-out} $U$s from inside $S$ and vice versa. We accomplish this by writing all temporal formulas in a standard notation, and then applying a sequence of \textit{elimination} rules. In the next section, we describe these rules.
+Our strategy involves \textit{pulling-out} $U$s from inside an $S$ and vice versa. We accomplish this by writing all temporal formulas in a standard notation and strategically applying a sequence of \textit{elimination} rules. In the next section, we describe these rules.
 
 \subsubsection{Eliminations}
 \label{sec:eliminations-linear}
 
-Let $\alpha$, $\beta$, $\varphi$ and $\psi$ be boolean combinations of propositional atoms. In the following subsections, we pull out a $U(\varphi, \psi)$ from inside an $S$ under a variety of minimal configurations. In later sections, we show that these configurations suffice.
+Let $\alpha$, $\beta$, $\varphi$ and $\psi$ be boolean combinations of propositional atoms. In the following subsections, we pull out a $U(\varphi, \psi)$ from inside an $S$ under a variety of minimal configurations.
 
-\paragraph*{$S(\alpha \land U(\varphi, \psi), \beta)$}
-This formula requires $U(\varphi, \psi)$ to be true at a point $t'$ in the past of $t$. This in turn implies $\varphi$ at some point $t''$ ahead of $t'$. This naturally breaks down into three cases: $t'' > t$, $t'' = t$, and $t' < t'' < t$. The translation is
+\paragraph*{$\blacktriangleright\;\, S(\alpha \land U(\varphi, \psi), \beta)$}
+This formula requires $\alpha \land U(\varphi, \psi)$ to be true at a point $t'$ in the past of $t$. This in turn implies $\varphi$ at some point $t''$ ahead of $t'$. This naturally breaks down into three cases: $t'' > t$, $t'' = t$, and $t' < t'' < t$. The translation is
 \begin{equation*}
     \begin{aligned}
         &S(\varphi \land \beta \land S(\alpha, \psi \land \beta), \beta)\\
         \lor \quad &\left(S(\alpha, \psi \land \beta) \land \left(\varphi \lor \left(\psi \land U(\varphi, \psi) \right) \right) \right)
     \end{aligned}
-\end{equation*}
+\end{equation*} \lipicsEnd
 
-\paragraph*{$S(\alpha \land \lnot U(\varphi, \psi), \beta)$}
+\paragraph*{$\blacktriangleright\;\, S(\alpha \land \lnot U(\varphi, \psi), \beta)$}
 In this case, we immediately rewrite $\lnot U(\varphi, \psi)$ as $G(\lnot \alpha) \lor U(\lnot \alpha \land \lnot \beta, \lnot \alpha)$. This gives us
 \begin{equation*}
     \begin{aligned}
-        S(\alpha \land \lnot &U(\varphi, \psi), \beta) \equiv\\
         &S(\alpha \land G(\lnot \varphi), \beta) \\
         \lor \quad &S(\alpha \land U(\lnot \varphi \land \lnot \psi, \lnot \varphi), \beta)
     \end{aligned}
 \end{equation*}
-where each individual case can be translated using the ideas used to rewrite $S(\alpha \land U(\varphi, \psi), \beta)$.
+where each disjunct can be translated by applying the ideas used to rewrite $S(\alpha \land U(\varphi, \psi), \beta)$. \lipicsEnd
 
-\paragraph*{$S(\alpha, U(\varphi, \psi))$}
-It's instructive to recognize how $S(\alpha, U(\varphi, \psi))$ could be translated. Unlike the previous cases, the Until fragment needs to be true at each point in the path to $\alpha$. This could involve multiple segments in this path where $\psi$ is true till $\varphi$ is true. Wonderfully, this is \textit{indistinguishable} from the case where, at each point in the path, either $\varphi$ or $\psi$ is true. This formula is translated to % TODO: Fix this formula
+\paragraph*{$\blacktriangleright\;\, S(\alpha, U(\varphi, \psi))$}
+It's instructive to understand how $S(\alpha, U(\varphi, \psi))$ could be translated. Unlike the previous cases, $U(\varphi, \psi)$ fragment needs to be true at each point in the path to $\alpha$. This could involve multiple segments in this path where $\psi$ is true till $\varphi$ is true. Wonderfully, this is \textit{indistinguishable} from the case where, at each point in the path, either $\varphi$ or $\psi$ is true. This formula is translated to % TODO: Fix this formula
 \begin{equation*}
     \begin{aligned}
         &S(\alpha, \bot) \\
         \lor \quad &S(\alpha, \varphi \lor \psi) \land \left[ \varphi \lor \left(\psi \land U\left(\varphi, \psi \right) \right) \right] \\
     \end{aligned}
 \end{equation*}
-Here, $S(\alpha, \bot)$ can only be true if $\alpha$ is true at the previous point. Otherwise, we'll need $U(\varphi, \psi)$ to be satisfied at the previous location, hence the $\varphi \lor (\psi \land U(\varphi, \psi))$ at the present. At each point $t'$ in the path to $\alpha$, if $t' + 1 \vDash \varphi$, $t' \vDash U(\varphi, \psi)$. Otherwise, $t' + 1 \vDash \psi$. At this point, we can use an inductive argument, starting from the previous point, to prove the correctness of this translation.
+Here, $S(\alpha, \bot)$ can only be true if $\alpha$ is true at the previous point. Otherwise, we'll need $U(\varphi, \psi)$ to be satisfied at the previous location, hence the $\varphi \lor (\psi \land U(\varphi, \psi))$ at the present. At each point $t'$ in the path to $\alpha$, if $t' + 1 \vDash \varphi$, $t' \vDash U(\varphi, \psi)$. Otherwise, $t' + 1 \vDash \psi$. At this point, we can use an inductive argument, starting from the previous point, to prove the correctness of this translation. \lipicsEnd
 
-\paragraph*{$S(\alpha, \beta \lor U(\varphi, \psi))$}
+\paragraph*{$\blacktriangleright\;\, S(\alpha, \beta \lor U(\varphi, \psi))$}
 
 % I had some trouble extending this analysis to translate $S(\alpha, \beta \lor U(\varphi, \psi))$. Gabbay's presentation is confusing, as he provides an unnecessarily complicated translation for this, but later presents a cleverer translation embedded in his translation of $S(\alpha \land U(\varphi, \psi), \beta \lor U(\varphi, \psi))$, a more complex formula. Gratifyingly, this translation uses elements of my translation of $S(\alpha, U(\varphi, \psi))$.
 
-The idea is to attempt to enforce $U(\varphi, \psi)$ at each point in the path \textit{iff} we can detect an earlier point in the path which needed to satisfy it. A simple way to detect these points is to look for the moment where $\lnot \beta$ was true, and check whether, along the way to that point, $\lnot \varphi$ was true at each step. Accordingly, $S(\lnot \beta \land \lnot \alpha, \lnot \varphi \land \lnot \alpha)$ does the trick. Here, the $\lnot \alpha$ is to ensure that we specifically look for points in the future of $\alpha$, the leftmost point in our consideration.
+The idea is to attempt to enforce $U(\varphi, \psi)$ at each point in the path to $\alpha$ \textit{only if} it is essential. This harsh necessity can be estimated by looking a \textit{little further} down the path for a point where $\lnot \beta$ was true (implying the requirement for $U(\varphi, \psi)$ to be true at that point) with $\lnot \varphi$ true at all points on the ``little'' path to it. Call such a point an \textit{unfulfilled} point. The formula $S(\lnot \beta \land \lnot \alpha, \lnot \varphi \land \lnot \alpha)$ detects these unfulfilled points. Here, the $\lnot \alpha$ ensures that we specifically look for points in the future of $\alpha$, the leftmost point in our consideration.
 
-It's important to recognize that we are capable of recognizing such points at each step of the path to $\alpha$. This means that, if we recognized such a point that's 3 steps away, we recognized it at 2 and 1 step away too. This allows us a simple fix: $S(\lnot \beta, \lnot \varphi \land \lnot \alpha) \to \varphi \lor \psi$. If $\varphi$ was true, we will not see this point in our next search. Otherwise, $\psi$ would be true, allowing for the possibility of enforcement in the future.
+Observe that, for $U(\varphi, \psi)$ to be true at a detected unfulfilled point, the current point must either satisfy $\varphi$, or satisfy $\psi$ and let a future point satisfy $\varphi$. This suggests the following quick fix:
+\begin{equation*}
+    S(\lnot \beta, \lnot \varphi \land \lnot \alpha) \to (\varphi \lor \psi)
+\end{equation*}
 
-The overall translation now is
+It's important to recognize that we are capable of performing this fix at each point on the path to $\alpha$. If we implemented this idea, and if we recognized and ``fixed'' an unfulfilled point that's 3 steps away, we would've done the same 2 steps away and 1 step away. If $\varphi$ was true at the second step, we wouldn't have recognized this point three steps away (as it is no longer unfulfilled; it has been fulfilled at the second step). Hence, $\psi$ must've been true at the second step. This means that, until we see a $\varphi$ true at the current point, we will continue to ``fix'' the unfulfilled point. This crucial observation forms the backbone of the following translation.
 \begin{equation*}
     \begin{aligned}
-    S(\alpha, \lnot \alpha \land (S(\lnot \beta \land \lnot \alpha, \lnot \varphi \land \lnot \alpha) \to \varphi \lor \psi)) \\
+    S(\alpha, \lnot \alpha \land (S(\lnot \beta \land \lnot \alpha, \lnot \varphi \land \lnot \alpha) \to (\varphi \lor \psi))) \\
     \quad \land \quad S(\lnot \beta \land \lnot \alpha, \lnot \varphi \land \lnot \alpha) \to (\varphi \lor (\psi \land U(\varphi, \psi)))
     \end{aligned}
-\end{equation*}
+\end{equation*} \lipicsEnd
 
-\paragraph*{$S(\alpha, \beta \lor \lnot U(\varphi, \psi))$}
-This case is very similar to the previous case. The points we search for must be in danger of satisfying $U(\varphi, \psi)$; hence, we look for $S(\lnot \beta \land \lnot \alpha, \psi \land \lnot \alpha)$. We fix these points by requiring $\varphi$ to be false. In the worst-case, we've dragged on the possible \textit{until} to the present, at which point we can extinguish all hope. This gives us the overall translation:
+\paragraph*{$\blacktriangleright\;\, S(\alpha, \beta \lor \lnot U(\varphi, \psi))$}
+This case is very similar to the previous case. The points we search for must be in danger of satisfying $U(\varphi, \psi)$; hence, we look for $S(\lnot \beta \land \lnot \alpha, \psi \land \lnot \alpha)$. We fix these points by requiring $\varphi$ to be false. In the worst-case, we've dragged on the possible \textit{until} to the present, at which point we extinguish all hope. This gives us the overall translation:
 \begin{equation*}
     \begin{aligned}
-    S(\alpha, \lnot \alpha \land (S(\lnot \beta \land \lnot \alpha, \psi \land \lnot \alpha) \to \not \varphi)) \\
+    S(\alpha, \lnot \alpha \land (S(\lnot \beta \land \lnot \alpha, \psi \land \lnot \alpha) \to \lnot \varphi)) \\
     \quad \land \quad S(\lnot \beta \land \lnot \alpha, \psi \land \lnot \alpha) \to ((\lnot \psi \land \lnot \varphi) \lor (\lnot U(\varphi, \psi)))
     \end{aligned}
-\end{equation*}
+\end{equation*} \lipicsEnd
 
-\paragraph*{$S(\alpha \land U(\varphi,\psi), \beta \lor U(\varphi, \psi))$}
+\paragraph*{$\blacktriangleright\;\, S(\alpha \land U(\varphi,\psi), \beta \lor U(\varphi, \psi))$}
 This is a neat combination of $S(\alpha \land U(\varphi, \psi), \beta)$ and $S(\alpha, \beta \lor U(\varphi, \psi))$. The translation is simple. \footnote{\textit{I believe Gabbay made a typo in this particular example. \cite{xpathComplete} mentions this.}}
 \begin{equation*}
     \begin{aligned}
@@ -334,12 +347,13 @@ This is a neat combination of $S(\alpha \land U(\varphi, \psi), \beta)$ and $S(\
         \lor \quad \quad S(\varphi \land S(\alpha, \psi), S(\lnot \beta, \lnot \varphi) \to \varphi \lor \psi)\\
         \quad \land \quad S(\lnot \beta, \lnot \varphi) \to (\varphi \lor (\psi \land U(\varphi, \psi)))
     \end{aligned}
-\end{equation*}
+\end{equation*} \lipicsEnd
+
 We can similarly write separated equivalents for all possible $S(\alpha \land \pm U(\varphi, \psi), \beta \lor \pm U(\varphi, \psi))$. The details are presented in \cite{gabbay1994, DecPastImpFuture89}.
 
 \subsubsection{Putting it all together}
 
-The eliminations presented in the previous section lend credence to the idea of separation. Amazingly, Gabbay presents a neat induction scheme that builds on these rules to separate \textit{every} temporal formula in the language. In this section, we present an overview of his arguments (presented in more detail in \cite{gabbay1994}).
+The eliminations presented in the previous section lend credence to the idea of separation. Amazingly, Gabbay presents a neat induction scheme that builds on these rules to separate \textit{every} temporal formula in the language. In this section, we present an overview of his arguments (which are presented in greater detail in \cite{gabbay1994}).
 
 \begin{lemma}
 \label{lemma:separation-linear-step1}
@@ -672,7 +686,7 @@ This is made explicit in \cref{fig:darrow-a-b-and-c}.
     \label{fig:darrow-a-b-and-c}
 \end{figure}
 
-We present our results in the next few sections. In \cref{sec:partial-separation-start}, we describe how a class of $\mathcal{X}_{until}$ formulas can be separated. In \cref{sec:ef-games-start}, we present the arguments behind our belief that certain formulas can never be separated. Separately, in \cref{sec:finer-partition}, we show that a more desirable partitioning of the tree only leads back to Marx's regions.
+We present our results in the next few sections. In \cref{sec:partial-separation-start}, we describe how a class of $\mathcal{X}_{until}$ formulas can be separated. We believe this class is the largest class of formulas that can be separated. In \cref{sec:ef-games-start}, we present the arguments behind our belief that certain formulas (outside the previously mentioned class) can never be separated. Separately, in \cref{sec:finer-partition}, we show that a more desirable partitioning of the tree only leads back to Marx's regions, justifying them somewhat.
 
 \subsection{Partial Separation of $\mathcal{X}_{until}$}
 \label{sec:partial-separation-start}
@@ -700,7 +714,7 @@ This claim can be seen as a consequence of two facts. First, \cref{eq:or-and-S-U
 
 \subsubsection{Separating $\Larrow$, $\Rarrow$ and $\Uarrow$}
 
-Before we prove our claim, we prove a few lemmas.
+We start with a few lemmas.
 \begin{lemma}
     \label{lemma:partial-separation-trees-step1}
     Let $\varphi$ be a formula in $\mathcal{X}_{until}$ that doesn't use the $\Uarrow$ and $\Darrow$ connectives. Then, $\varphi$ can be separated.
@@ -728,7 +742,7 @@ Next, we lift a few eliminations from \cite{xpathComplete}.
 We now implement these eliminations in a more general setting.
 \begin{lemma}
     \label{lemma:partial-separation-trees-step3}
-    Let $\alpha$ and $\beta$ be boolean combinations of propositional atoms from $\mathcal{P}$ and instances of $\Uarrow(\varphi, \psi)$, for \emph{any} $\mathcal{X}_{until} $formulas $\varphi$ and $\psi$. Then, $\Larrow(\alpha, \beta)$ can be written as a boolean combination of pure-$\Larrow$ formulas and $\Uarrow(\varphi, \psi)$.
+    Let $\alpha$ and $\beta$ be boolean combinations of propositional atoms from $\mathcal{P}$ and instances of $\Uarrow(\varphi, \psi)$, for \emph{any} $\mathcal{X}_{until}$ formulas $\varphi$ and $\psi$. Then, $\Larrow(\alpha, \beta)$ can be written as a boolean combination of pure-$\Larrow$ formulas and $\Uarrow(\varphi, \psi)$.
     \begin{remark*}
         This lemma only yields a separated formula if $\Uarrow(\varphi, \psi)$ is a pure-past formula.
     \end{remark*}
@@ -873,11 +887,11 @@ We now restate some of the eliminations justified in the appendix of \cite{xpath
     \label{eq:theta-defn}
     \theta \triangleq \Larrow\left(\varphi \lor \left( \psi \land \Darrow\left( \varphi, \psi \right) \right), \top \right) \lor \Rarrow \left( \varphi \lor \left( \psi \land \Darrow \left( \varphi, \psi \right) \right), \top \right)
 \end{equation}
-$\theta$ merely states that ``my parent satisfies $\Darrow(\varphi, \psi)$ because of a sibling of mine.'' Hence, $\varphi \lor \theta$ implies $\Darrow(\varphi, \psi)$ at the parent. \textit{(Note the one-way implication.)} Similarly, $\lnot \theta$ states that ``no sibling of mine is responsible for my parent satisfying $\Darrow(\varphi, \psi)$.'' Consequently, $\lnot \varphi \land \lnot \psi \land \lnot \theta$ implies $\lnot \Darrow(\varphi, \psi)$ at the parent. Notably, $\theta$ is a disjunction of a pure-left and a pure-right formula, and hence can appear inside the scope of a $\Uarrow$ in a pure-past formula.
+$\theta$ merely states that ``my parent satisfies $\Darrow(\varphi, \psi)$ because of a sibling of mine.'' Hence, $\varphi \lor \theta$ implies $\Darrow(\varphi, \psi)$ at the parent \textit{(note the one-way implication)}. Similarly, $\lnot \theta$ states that ``no sibling of mine is responsible for my parent satisfying $\Darrow(\varphi, \psi)$.'' Consequently, $\lnot \varphi \land \lnot \psi \land \lnot \theta$ implies $\lnot \Darrow(\varphi, \psi)$ at the parent. Notably, $\theta$ is a disjunction of a pure-left and a pure-right formula, and hence can appear inside the scope of a $\Uarrow$ in a pure-past formula.
 
 Now, we move onto the eliminations.
 
-\paragraph*{$\Uarrow(\alpha \land \Darrow(\varphi, \psi), \beta)$}
+\paragraph*{$\blacktriangleright\;\, \Uarrow(\alpha \land \Darrow(\varphi, \psi), \beta)$}
 
 This formula requires $\Darrow(\varphi, \psi)$ to be true at the ancestor node that satisfies $\alpha$. The path taken by this $\Darrow$-formula can deviate from the ancestral path to $\alpha$ at any point. With $\theta$, we can measure when it deviates. Hence, this formula is equivalent to
 \begin{equation*}
@@ -885,9 +899,9 @@ This formula requires $\Darrow(\varphi, \psi)$ to be true at the ancestor node t
         &\Uarrow(\beta \land (\theta \lor \varphi) \land \Uarrow(\alpha, \beta \land \psi), \beta) \\
         \lor \quad &\Uarrow(\alpha, \beta \land \psi) \land \left( \theta \lor \varphi \lor \left( \psi \land \Darrow(\varphi, \psi) \right) \right) \\
     \end{aligned}
-\end{equation*}
+\end{equation*} \lipicsEnd
 
-\paragraph*{$\Uarrow(\alpha \land \lnot \Darrow(\varphi, \psi), \beta)$}
+\paragraph*{$\blacktriangleright\;\, \Uarrow(\alpha \land \lnot \Darrow(\varphi, \psi), \beta)$}
 
 We again have an ancestral path to $\alpha$, and at that point $\Darrow(\varphi, \psi)$ cannot be true. This indicates that $\Darrow(\varphi, \psi)$ cannot be true along this ancestral path as well, indicating that, we must either hit a point on the path where $\lnot \varphi \land \lnot \psi$ is true, or we need to force $\lnot \Darrow(\varphi, \psi)$ at the present. This can be observed in the following separated formula.
 \begin{equation*}
@@ -895,9 +909,9 @@ We again have an ancestral path to $\alpha$, and at that point $\Darrow(\varphi,
         &\Uarrow(\lnot \theta \land \lnot \varphi \land \lnot \psi \land \beta \land \Uarrow(\alpha, \beta \land \lnot \varphi \land \lnot \theta), \beta)\\
         \lor \quad &\Uarrow(\alpha, \beta \land \lnot \varphi \land \lnot \theta) \land \lnot \theta \land ((\lnot \varphi \land \lnot \psi) \lor (\lnot \varphi \land \lnot \Darrow(\varphi, \psi)))
     \end{aligned}
-\end{equation*}
+\end{equation*} \lipicsEnd
 
-\paragraph*{$\Uarrow(\alpha, \beta \lor \Darrow(\varphi, \psi))$}
+\paragraph*{$\blacktriangleright\;\, \Uarrow(\alpha, \beta \lor \Darrow(\varphi, \psi))$}
 
 As in \cref{sec:eliminations-linear}, we use the idea of the \textit{unfulfilled} point. This time, such points are detected by noticing that $\lnot \varphi \land \lnot \theta$ are true along the ancestral path to a $\lnot \beta$. We attempt to fulfil the point by ensuring $(\varphi \lor \theta) \lor \psi$. This gives us the entire formula
 \begin{equation*}
@@ -905,9 +919,9 @@ As in \cref{sec:eliminations-linear}, we use the idea of the \textit{unfulfilled
         &\Uarrow(\alpha, \lnot \alpha \land (\Uarrow(\lnot \beta \land \lnot \alpha, \lnot \alpha \land \lnot \varphi \land \lnot \theta) \to (\psi \lor \varphi \lor \theta)))\\
         \land \quad &\Uarrow(\lnot \beta \land \lnot \alpha, \lnot \alpha \land \lnot \varphi \land \lnot \theta) \to (\varphi \lor \theta \lor (\psi \land \Darrow(\varphi, \psi)))
     \end{aligned}
-\end{equation*}
+\end{equation*} \lipicsEnd
 
-\paragraph*{$\Uarrow(\alpha, \beta \lor \lnot \Darrow(\varphi, \psi))$}
+\paragraph*{$\blacktriangleright\;\, \Uarrow(\alpha, \beta \lor \lnot \Darrow(\varphi, \psi))$}
 
 Again, as in \cref{sec:eliminations-linear}, we use the idea of a dangerous point. We look for ancestral paths to a $\lnot \beta$ that satisfy $\psi$ at each point. If we find such a path, we enforce $\lnot \varphi \land \lnot \theta$. This gives the formula
 \begin{equation*}
@@ -915,7 +929,7 @@ Again, as in \cref{sec:eliminations-linear}, we use the idea of a dangerous poin
         &\Uarrow(\alpha, \lnot \alpha \land (\Uarrow(\lnot \alpha \land \lnot \beta, \psi \land \lnot \alpha) \to (\lnot \varphi \land \lnot \theta)))\\
         \land \quad &\Uarrow(\lnot \alpha \land \lnot \beta, \psi \land \lnot \alpha) \to (\lnot \theta \land \lnot \varphi \land (\lnot \psi \lor \lnot \Darrow(\varphi, \psi)))
     \end{aligned}
-\end{equation*}
+\end{equation*} \lipicsEnd
 
 In the same vein, we can separate any combination of $\Uarrow(\alpha \pm \Darrow(\varphi, \psi), \beta \lor \pm \Darrow(\varphi, \psi))$. We refer to \cite{xpathComplete} for the full arguments. Notably, if $\alpha$, $\beta$, $\varphi$, and $\psi$ were replaced by atoms, the formulas on the right would be syntactically separated. And if $\theta$ was also replaced by an atom, the formulas on the right only use the $\Uarrow$ and $\Darrow$ connectives. Observe that the only instance of $\Darrow$ in all cases would be $\Darrow(\varphi, \psi)$.
 
@@ -1069,7 +1083,7 @@ Marx's proof in \cite{xpathComplete} fails because he expects to easily pull out
 \begin{equation*}
     \Darrow(\alpha, \beta) \not\equiv \bigvee_i \bigwedge_j \Darrow( \pm \alpha_{i, 1} \land \cdots \land \pm \alpha_{i, n_i}, \pm \beta_{j, 1} \lor \cdots \lor \pm \beta_{j, n_j})
 \end{equation*}
-The argument we presented in \cref{fig:darrow-a-b-and-c} shows why this isn't possible.
+The argument presented in \cref{fig:darrow-a-b-and-c} shows why this isn't possible.
 
 There are bigger consequences of this non-determinism. $\Darrow$ formulas that appear in the path condition of other $\Darrow$ formulas don't necessarily traverse the same path as their parent, as made evident in \cref{fnreliable}.
 
@@ -1258,7 +1272,7 @@ For convenience, we construct two additional classes of trees: $\mathcal{T}' \tr
     \label{structureinit}
 \end{figure}
 
-The full recursive definition is pictorially represented in \Cref{structureinit}. Note that, since we don't need to accommodate $\Larrow$ and $\Rarrow$ moves, the ordering of the children of a node isn't important. We merely orient the children of the root $T_{i - 1}$ and $S_{i - 1}$ to be at either side of the downward path containing a $c$ to simplify our discussion. We will refer to the downward path from the root to a leaf of any tree in $\mathcal{T}' \cup \mathcal{S}'$ that repeatedly takes the middle child at each branching point as the \textit{central path} of the tree.
+The full recursive definition is pictorially represented in \Cref{structureinit}. Note that, since we don't need to accommodate $\Larrow$ and $\Rarrow$ moves, the ordering of the children of a node isn't important. We merely orient the root's children $T_{i - 1}$ and $S_{i - 1}$ to be at either side of the downward path containing a $c$ to simplify our discussion. We will refer to the downward path from the root to a leaf of any tree in $\mathcal{T}' \cup \mathcal{S}'$ that repeatedly takes the middle child at each branching point as the \textit{central path} of the tree.
 
 The intuition behind this construction is as follows. The labelling of the central path of all trees in $\mathcal{T}'$ produces a word in $c (bc)^* ba$. Trees in $\mathcal{S}'$ cannot yield similarly labelled paths. In fact, all paths from the root to an $a$ in each $S' \in \mathcal{S}'$ must contain two consecutive $b$s. This indicates that, for all $i \in \mathbb{N}$,
 \begin{equation}
